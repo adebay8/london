@@ -161,15 +161,17 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
                             </div>
                             <button
                               onClick={(e) => { e.stopPropagation(); onResearch(n.id); }}
-                              title={n.researchProfile ? "Re-research" : "Research"}
+                              title={n.researchProfile ? "Re-research" : "Research this area"}
                               disabled={n.researchJobs?.[0]?.status === "running"}
-                              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded text-sm transition-opacity ${
+                              className={`shrink-0 rounded border px-2 py-1 text-xs font-medium transition-colors ${
                                 n.researchJobs?.[0]?.status === "running"
-                                  ? "opacity-30 cursor-not-allowed"
-                                  : "opacity-50 hover:opacity-100 hover:bg-[var(--bg-hover)]"
-                              } ${n.researchProfile ? "text-[var(--status-info)]" : "text-[var(--text-muted)]"}`}
+                                  ? "border-[var(--border-primary)] text-[var(--text-muted)] cursor-not-allowed"
+                                  : n.researchProfile
+                                    ? "border-[var(--status-info)] text-[var(--status-info)] bg-[var(--status-info-bg)] hover:opacity-80"
+                                    : "border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--status-info-bg)]"
+                              }`}
                             >
-                              🔍
+                              {n.researchJobs?.[0]?.status === "running" ? "..." : n.researchProfile ? "Redo" : "Research"}
                             </button>
                             {renderStatusButtons(n)}
                           </div>
