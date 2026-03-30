@@ -158,13 +158,13 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
                                   onClick={(e) => { e.stopPropagation(); onResearch(n.id); }}
                                   title={n.researchProfile ? "Re-research" : "Research this area"}
                                   disabled={n.researchJobs?.[0]?.status === "running"}
-                                  className={`text-sm transition-opacity ${
+                                  className={`flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-[10px] text-white transition-opacity ${
                                     n.researchJobs?.[0]?.status === "running"
-                                      ? "opacity-30 cursor-not-allowed animate-pulse"
-                                      : "opacity-60 hover:opacity-100"
+                                      ? "opacity-50 cursor-not-allowed animate-pulse"
+                                      : "hover:opacity-80"
                                   }`}
                                 >
-                                  🔍
+                                  {n.researchJobs?.[0]?.status === "running" ? "..." : "▶"}
                                 </button>
                               </div>
                               <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
