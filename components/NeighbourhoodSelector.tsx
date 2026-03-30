@@ -150,29 +150,29 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
                     {!isBoroughCollapsed && (
                       <div className="ml-4 space-y-1 py-1">
                         {items.sort((a, b) => a.name.localeCompare(b.name)).map((n) => (
-                          <div key={n.id} className="flex items-center justify-between rounded-lg bg-[var(--bg-primary)] px-3 py-2">
+                          <div key={n.id} className="flex items-center gap-3 rounded-lg bg-[var(--bg-primary)] px-3 py-2">
                             <div className="min-w-0 flex-1">
-                              <div className="text-sm text-[var(--text-primary)]">{n.name}</div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-sm text-[var(--text-primary)]">{n.name}</span>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); onResearch(n.id); }}
+                                  title={n.researchProfile ? "Re-research" : "Research this area"}
+                                  disabled={n.researchJobs?.[0]?.status === "running"}
+                                  className={`text-sm transition-opacity ${
+                                    n.researchJobs?.[0]?.status === "running"
+                                      ? "opacity-30 cursor-not-allowed animate-pulse"
+                                      : "opacity-60 hover:opacity-100"
+                                  }`}
+                                >
+                                  🔍
+                                </button>
+                              </div>
                               <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
                                 <span className="font-mono">{n.postcodes}</span>
                                 {n.researchJobs?.[0]?.status === "running" && <span className="text-[var(--status-info)]">Researching...</span>}
                                 {n.researchProfile && <span className="text-[var(--status-info)]">{n.researchProfile.fitScore.toFixed(1)}</span>}
                               </div>
                             </div>
-                            <button
-                              onClick={(e) => { e.stopPropagation(); onResearch(n.id); }}
-                              title={n.researchProfile ? "Re-research" : "Research this area"}
-                              disabled={n.researchJobs?.[0]?.status === "running"}
-                              className={`shrink-0 rounded border px-2 py-1 text-xs font-medium transition-colors ${
-                                n.researchJobs?.[0]?.status === "running"
-                                  ? "border-[var(--border-primary)] text-[var(--text-muted)] cursor-not-allowed"
-                                  : n.researchProfile
-                                    ? "border-[var(--status-info)] text-[var(--status-info)] bg-[var(--status-info-bg)] hover:opacity-80"
-                                    : "border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--status-info-bg)]"
-                              }`}
-                            >
-                              {n.researchJobs?.[0]?.status === "running" ? "..." : n.researchProfile ? "Redo" : "Research"}
-                            </button>
                             {renderStatusButtons(n)}
                           </div>
                         ))}
