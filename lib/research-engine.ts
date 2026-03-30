@@ -1,6 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import type { PerplexityResult, ResearchData } from "./types";
 import { perplexityQueries, analysisSystemPrompt, analysisUserPrompt } from "./prompts";
+
+export type AnalysisProvider = "claude" | "openai";
 
 // --- Phase 1: Perplexity data gathering ---
 
@@ -35,7 +38,7 @@ export async function gatherResearchData(area: string, borough: string): Promise
   return results;
 }
 
-// --- Phase 2: Claude analysis ---
+// --- Phase 2: Analysis ---
 
 export function parseAnalysisResponse(text: string): ResearchData {
   let cleaned = text.trim();
@@ -55,7 +58,7 @@ export function parseAnalysisResponse(text: string): ResearchData {
   return parsed as ResearchData;
 }
 
-export async function analyseResearchData(
+async function analyseWithClaude(
   area: string,
   borough: string,
   researchData: PerplexityResult[]
@@ -71,13 +74,50 @@ export async function analyseResearchData(
 
   const rawResponse = message.content[0].type === "text" ? message.content[0].text : "";
   const data = parseAnalysisResponse(rawResponse);
-
   return { data, rawResponse };
+}
+
+async function analyseWithOpenAI(
+  area: string,
+  borough: string,
+  researchData: PerplexityResult[]
+): Promise<{ data: ResearchData; rawResponse: string }> {
+  const openai = new OpenAI();
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    response_format: { type: "json_object" },
+    max_tokens: 4096,
+    messages: [
+      { role: "system", content: analysisSystemPrompt() },
+      { role: "user", content: analysisUserPrompt(area, borough, researchData) },
+    ],
+  });
+
+  const rawResponse = completion.choices[0].message.content ?? "";
+  const data = parseAnalysisResponse(rawResponse);
+  return { data, rawResponse };
+}
+
+export async function analyseResearchData(
+  area: string,
+  borough: string,
+  researchData: PerplexityResult[],
+  provider: AnalysisProvider = "openai"
+): Promise<{ data: ResearchData; rawResponse: string }> {
+  if (provider === "openai") {
+    return analyseWithOpenAI(area, borough, researchData);
+  }
+  return analyseWithClaude(area, borough, researchData);
 }
 
 // --- Full research pipeline ---
 
-export async function runResearch(area: string, borough: string): Promise<{ data: ResearchData; rawResponse: string }> {
+export async function runResearch(
+  area: string,
+  borough: string,
+  provider: AnalysisProvider = "openai"
+): Promise<{ data: ResearchData; rawResponse: string }> {
   const perplexityResults = await gatherResearchData(area, borough);
-  return analyseResearchData(area, borough, perplexityResults);
+  return analyseResearchData(area, borough, perplexityResults, provider);
 }

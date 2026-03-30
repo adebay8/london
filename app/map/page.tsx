@@ -37,17 +37,6 @@ export default function MapPage() {
       setNeighbourhoods(data);
       return;
     }
-    // Auto-trigger research if yes or maybe
-    if (status === "yes" || status === "maybe") {
-      const neighbourhood = neighbourhoods.find((n) => n.id === id);
-      if (neighbourhood && !neighbourhood.researchProfile) {
-        fetch("/api/research", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ neighbourhoodId: id }),
-        });
-      }
-    }
   }, [neighbourhoods]);
 
   const handleBulkStatusChange = useCallback(async (ids: string[], status: string | null) => {
@@ -73,20 +62,20 @@ export default function MapPage() {
       return;
     }
 
-    // Auto-trigger research for yes/maybe
-    if (status === "yes" || status === "maybe") {
-      for (const id of ids) {
-        const n = neighbourhoods.find((n) => n.id === id);
-        if (n && !n.researchProfile) {
-          fetch("/api/research", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ neighbourhoodId: id }),
-          });
-        }
-      }
-    }
   }, [neighbourhoods]);
+
+  const handleResearch = useCallback(async (id: string) => {
+    setNeighbourhoods((prev) =>
+      prev.map((n) =>
+        n.id === id ? { ...n, researchJobs: [{ status: "running" }] } : n
+      )
+    );
+    await fetch("/api/research", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ neighbourhoodId: id }),
+    });
+  }, []);
 
   const selectedOptions: Record<string, string> = {};
   for (const n of neighbourhoods) {
@@ -105,7 +94,7 @@ export default function MapPage() {
 
   return (
     <div className="flex h-full">
-      <NeighbourhoodSelector neighbourhoods={neighbourhoods} onStatusChange={handleStatusChange} onBulkStatusChange={handleBulkStatusChange} />
+      <NeighbourhoodSelector neighbourhoods={neighbourhoods} onStatusChange={handleStatusChange} onBulkStatusChange={handleBulkStatusChange} onResearch={handleResearch} />
       <div className="flex-1">
         <LondonMap selectedOptions={selectedOptions} districts={districts} />
       </div>

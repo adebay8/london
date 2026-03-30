@@ -38,6 +38,19 @@ export default function Sidebar() {
       {/* Spacer */}
       <div className="flex-1" />
 
+      {/* Settings */}
+      <Link
+        href="/settings"
+        title="Settings"
+        className={`flex h-10 w-10 items-center justify-center rounded-lg text-lg transition-colors ${
+          pathname.startsWith("/settings")
+            ? "bg-[var(--bg-sidebar-item-active)] text-white"
+            : "bg-[var(--bg-sidebar-item)] text-[var(--text-sidebar)] hover:bg-[var(--bg-sidebar-hover)] hover:text-[var(--text-sidebar-hover)]"
+        }`}
+      >
+        ⚙️
+      </Link>
+
       {/* Theme toggle */}
       <button
         onClick={toggle}

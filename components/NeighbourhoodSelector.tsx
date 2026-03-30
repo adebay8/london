@@ -17,6 +17,7 @@ interface Props {
   neighbourhoods: Neighbourhood[];
   onStatusChange: (id: string, status: string | null) => void;
   onBulkStatusChange: (ids: string[], status: string | null) => void;
+  onResearch: (id: string) => void;
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -25,7 +26,7 @@ const STATUS_COLORS: Record<string, string> = {
   maybe: "bg-[var(--status-maybe-bg)] text-[var(--status-maybe)] border-[var(--status-maybe)]",
 };
 
-export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, onBulkStatusChange }: Props) {
+export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, onBulkStatusChange, onResearch }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [collapsedZones, setCollapsedZones] = useState<Set<number>>(new Set());
   const [collapsedBoroughs, setCollapsedBoroughs] = useState<Set<string>>(new Set());
@@ -158,6 +159,18 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
                                 {n.researchProfile && <span className="text-[var(--status-info)]">{n.researchProfile.fitScore.toFixed(1)}</span>}
                               </div>
                             </div>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); onResearch(n.id); }}
+                              title={n.researchProfile ? "Re-research" : "Research"}
+                              disabled={n.researchJobs?.[0]?.status === "running"}
+                              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded text-sm transition-opacity ${
+                                n.researchJobs?.[0]?.status === "running"
+                                  ? "opacity-30 cursor-not-allowed"
+                                  : "opacity-50 hover:opacity-100 hover:bg-[var(--bg-hover)]"
+                              } ${n.researchProfile ? "text-[var(--status-info)]" : "text-[var(--text-muted)]"}`}
+                            >
+                              🔍
+                            </button>
                             {renderStatusButtons(n)}
                           </div>
                         ))}

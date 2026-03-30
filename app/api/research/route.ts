@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { runResearch } from "@/lib/research-engine";
+import { runResearch, type AnalysisProvider } from "@/lib/research-engine";
 import { calculateFitScore } from "@/lib/scoring";
 
 export async function GET() {
@@ -37,21 +37,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Neighbourhood not found" }, { status: 404 });
   }
 
+  const providerSetting = await prisma.setting.findUnique({ where: { key: "analysisProvider" } });
+  const provider: AnalysisProvider = (providerSetting?.value as AnalysisProvider) ?? "openai";
+
   const job = await prisma.researchJob.create({
     data: { neighbourhoodId, status: "running", startedAt: new Date() },
   });
 
   // Run async — don't block the response
-  runResearchAndSave(neighbourhood.id, neighbourhood.name, neighbourhood.borough, job.id).catch(
+  runResearchAndSave(neighbourhood.id, neighbourhood.name, neighbourhood.borough, job.id, provider).catch(
     (err) => console.error(`Research failed for ${neighbourhood.name}:`, err)
   );
 
   return NextResponse.json({ jobId: job.id, status: "running" });
 }
 
-async function runResearchAndSave(neighbourhoodId: string, name: string, borough: string, jobId: string) {
+async function runResearchAndSave(neighbourhoodId: string, name: string, borough: string, jobId: string, provider: AnalysisProvider) {
+  const modelLabel = provider === "openai" ? "gpt-4o" : "claude-sonnet-4-20250514";
   try {
-    const { data, rawResponse } = await runResearch(name, borough);
+    const { data, rawResponse } = await runResearch(name, borough, provider);
     const fitScore = calculateFitScore({
       transport: data.transport.score,
       safety: data.safety.score,
@@ -76,7 +80,7 @@ async function runResearchAndSave(neighbourhoodId: string, name: string, borough
         fitScore,
         rawResponse,
         researchedAt: new Date(),
-        modelUsed: "claude-sonnet-4-20250514 + perplexity-sonar",
+        modelUsed: `${modelLabel} + perplexity-sonar`,
       },
       create: {
         neighbourhoodId,
@@ -91,7 +95,7 @@ async function runResearchAndSave(neighbourhoodId: string, name: string, borough
         cons: JSON.stringify(data.cons),
         fitScore,
         rawResponse,
-        modelUsed: "claude-sonnet-4-20250514 + perplexity-sonar",
+        modelUsed: `${modelLabel} + perplexity-sonar`,
       },
     });
 

@@ -71,3 +71,10 @@ model JournalEntry {
 
   @@map("journal_entries")
 }
+
+model Setting {
+  key   String @id
+  value String
+
+  @@map("settings")
+}
