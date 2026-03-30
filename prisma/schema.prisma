@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Neighbourhood {
+  id        String   @id @default(cuid())
+  name      String
+  borough   String
+  zone      Int
+  postcodes String
+  status    String?
+  updatedAt DateTime @default(now()) @updatedAt
+
+  researchProfile ResearchProfile?
+  researchJobs    ResearchJob[]
+  journalEntries  JournalEntry[]
+
+  @@unique([name, borough])
+  @@map("neighbourhoods")
+}
+
+model ResearchProfile {
+  id              String   @id @default(cuid())
+  neighbourhoodId String   @unique
+  overview        String
+  safety          String   // JSON string
+  transport       String   // JSON string
+  rentValue       String   // JSON string
+  newBuilds       String   // JSON string
+  amenities       String   // JSON string
+  areaQuality     String   // JSON string
+  pros            String   // JSON string (array)
+  cons            String   // JSON string (array)
+  fitScore        Float
+  rawResponse     String
+  researchedAt    DateTime @default(now())
+  modelUsed       String
+
+  neighbourhood Neighbourhood @relation(fields: [neighbourhoodId], references: [id])
+
+  @@map("research_profiles")
+}
+
+model ResearchJob {
+  id              String    @id @default(cuid())
+  neighbourhoodId String
+  status          String    @default("pending")
+  startedAt       DateTime?
+  completedAt     DateTime?
+  error           String?
+
+  neighbourhood Neighbourhood @relation(fields: [neighbourhoodId], references: [id])
+
+  @@map("research_jobs")
+}
+
+model JournalEntry {
+  id               String   @id @default(cuid())
+  neighbourhoodId  String?
+  content          String
+  decision         String?
+  fitScoreSnapshot Float?
+  createdAt        DateTime @default(now())
+
+  neighbourhood Neighbourhood? @relation(fields: [neighbourhoodId], references: [id])
+
+  @@map("journal_entries")
+}
