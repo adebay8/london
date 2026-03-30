@@ -158,10 +158,10 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
                                   onClick={(e) => { e.stopPropagation(); onResearch(n.id); }}
                                   title={n.researchProfile ? "Re-research" : "Research this area"}
                                   disabled={n.researchJobs?.[0]?.status === "running"}
-                                  className={`flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-[10px] text-white transition-opacity ${
+                                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] transition-all ${
                                     n.researchJobs?.[0]?.status === "running"
-                                      ? "opacity-50 cursor-not-allowed animate-pulse"
-                                      : "hover:opacity-80"
+                                      ? "bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed animate-pulse"
+                                      : "bg-[var(--bg-tertiary)] text-[var(--text-muted)] hover:bg-[var(--accent)] hover:text-white"
                                   }`}
                                 >
                                   {n.researchJobs?.[0]?.status === "running" ? "..." : "▶"}
