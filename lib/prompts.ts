@@ -15,7 +15,7 @@ export function perplexityQueries(area: string, borough: string): string[] {
     `Current 1-bed new build rental prices in ${area}, ${borough}, London 2025-2026`,
     `Transport links and commute time from ${area} ${borough} to Westminster London`,
     `Crime rates and safety in ${area} ${borough} London neighbourhood`,
-    `New build developments with concierge gym in ${area} ${borough} London`,
+    `New build residential developments in ${area} ${borough} London with official website links concierge gym managed building`,
     `What is ${area} ${borough} London like to live in, amenities, lifestyle`,
     // Resident opinions & reviews
     `site:reddit.com OR site:mumsnet.com living in ${area} ${borough} London pros cons honest review`,
@@ -69,7 +69,8 @@ Return ONLY valid JSON matching this exact structure:
       {
         "name": "development name",
         "features": ["concierge", "gym", etc],
-        "priceRange": "£X,XXX - £X,XXX pcm"
+        "priceRange": "£X,XXX - £X,XXX pcm",
+        "url": "https://development-website.com (official development site, NOT a Rightmove/Zoopla listing)"
       }
     ],
     "sources": ["source URLs or names"]

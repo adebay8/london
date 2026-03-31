@@ -211,7 +211,11 @@ export default function ResearchProfilePage() {
               <ul className="mt-3 space-y-2">
                 {profile.newBuilds.developments.map((dev, i) => (
                   <li key={i} className="text-xs text-[var(--text-secondary)]">
-                    <span className="font-medium text-[var(--text-primary)]">{dev.name}</span>
+                    <span className="font-medium text-[var(--text-primary)]">
+                      {dev.url ? (
+                        <a href={dev.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-[var(--accent)]">{dev.name} ↗</a>
+                      ) : dev.name}
+                    </span>
                     {dev.priceRange && <span className="ml-1 text-[var(--text-muted)]">({dev.priceRange})</span>}
                     {dev.features.length > 0 && (
                       <span className="ml-1 text-[var(--text-muted)]">— {dev.features.join(", ")}</span>

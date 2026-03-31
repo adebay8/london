@@ -59,6 +59,7 @@ export interface NewBuildsScore {
     name: string;
     features: string[];
     priceRange: string;
+    url: string;
   }[];
   sources: string[];
 }
