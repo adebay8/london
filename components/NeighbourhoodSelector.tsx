@@ -28,8 +28,12 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, onBulkStatusChange, onResearch }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [collapsedZones, setCollapsedZones] = useState<Set<number>>(new Set());
-  const [collapsedBoroughs, setCollapsedBoroughs] = useState<Set<string>>(new Set());
+  // User-collapsed: explicitly closed by clicking the toggle
+  const [userCollapsedZones, setUserCollapsedZones] = useState<Set<number>>(new Set());
+  const [userCollapsedBoroughs, setUserCollapsedBoroughs] = useState<Set<string>>(new Set());
+  // Manually expanded: user opened an auto-collapsed (all-no) section
+  const [manuallyExpandedZones, setManuallyExpandedZones] = useState<Set<number>>(new Set());
+  const [manuallyExpandedBoroughs, setManuallyExpandedBoroughs] = useState<Set<string>>(new Set());
 
   const grouped = useMemo(() => {
     const zones: Record<number, Record<string, Neighbourhood[]>> = {};
@@ -60,18 +64,71 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
     return result;
   }, [grouped, searchQuery]);
 
+  function isAllNo(items: Neighbourhood[]): boolean {
+    return items.length > 0 && items.every((n) => n.status === "no");
+  }
+
+  function isZoneCollapsed(zone: number, allItems: Neighbourhood[]): boolean {
+    if (userCollapsedZones.has(zone)) return true;
+    if (isAllNo(allItems) && !manuallyExpandedZones.has(zone)) return true;
+    return false;
+  }
+
+  function isBoroughCollapsed(borough: string, items: Neighbourhood[]): boolean {
+    if (userCollapsedBoroughs.has(borough)) return true;
+    if (isAllNo(items) && !manuallyExpandedBoroughs.has(borough)) return true;
+    return false;
+  }
+
   const toggleZone = useCallback((zone: number) => {
-    setCollapsedZones((prev) => { const next = new Set(prev); next.has(zone) ? next.delete(zone) : next.add(zone); return next; });
-  }, []);
+    // Get all items in this zone to check if it's auto-collapsed
+    const allItems = Object.values(grouped[zone] ?? {}).flat();
+    const autoCollapsed = allItems.length > 0 && allItems.every((n) => n.status === "no");
+
+    if (autoCollapsed) {
+      // Toggle manual expansion for auto-collapsed zones
+      setManuallyExpandedZones((prev) => {
+        const next = new Set(prev);
+        next.has(zone) ? next.delete(zone) : next.add(zone);
+        return next;
+      });
+    } else {
+      // Normal toggle
+      setUserCollapsedZones((prev) => {
+        const next = new Set(prev);
+        next.has(zone) ? next.delete(zone) : next.add(zone);
+        return next;
+      });
+    }
+  }, [grouped]);
 
   const toggleBorough = useCallback((borough: string) => {
-    setCollapsedBoroughs((prev) => { const next = new Set(prev); next.has(borough) ? next.delete(borough) : next.add(borough); return next; });
-  }, []);
+    // Find items for this borough across all zones
+    let items: Neighbourhood[] = [];
+    for (const boroughs of Object.values(grouped)) {
+      if (boroughs[borough]) items = boroughs[borough];
+    }
+    const autoCollapsed = items.length > 0 && items.every((n) => n.status === "no");
+
+    if (autoCollapsed) {
+      setManuallyExpandedBoroughs((prev) => {
+        const next = new Set(prev);
+        next.has(borough) ? next.delete(borough) : next.add(borough);
+        return next;
+      });
+    } else {
+      setUserCollapsedBoroughs((prev) => {
+        const next = new Set(prev);
+        next.has(borough) ? next.delete(borough) : next.add(borough);
+        return next;
+      });
+    }
+  }, [grouped]);
 
   function getGroupStatus(items: Neighbourhood[]): string | null {
     const statuses = new Set(items.map((n) => n.status));
     if (statuses.size === 1) return items[0].status;
-    return null; // mixed
+    return null;
   }
 
   function renderGroupStatusButtons(items: Neighbourhood[]) {
@@ -129,25 +186,35 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
         {sortedZones.length === 0 && <p className="p-4 text-center text-sm text-[var(--text-muted)]">No results</p>}
         {sortedZones.map((zone) => {
           const boroughs = filteredZones[zone];
-          const isZoneCollapsed = collapsedZones.has(zone);
+          const allZoneItems = Object.values(boroughs).flat();
+          const zoneCollapsed = isZoneCollapsed(zone, allZoneItems);
+
           return (
             <div key={zone} className="mb-2">
-              <button onClick={() => toggleZone(zone)} className="flex w-full items-center gap-2 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] hover:text-[var(--text-secondary)]">
-                <span className={`text-[10px] transition-transform ${isZoneCollapsed ? "" : "rotate-90"}`}>▶</span>
-                Zone {zone}
-              </button>
-              {!isZoneCollapsed && Object.entries(boroughs).sort(([a], [b]) => a.localeCompare(b)).map(([borough, items]) => {
-                const isBoroughCollapsed = collapsedBoroughs.has(borough);
+              {/* Zone header with Y/N/M buttons */}
+              <div className="flex items-center gap-1 px-2 py-1">
+                <button
+                  onClick={() => toggleZone(zone)}
+                  className="flex items-center gap-2 flex-1 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+                >
+                  <span className={`text-[10px] transition-transform ${zoneCollapsed ? "" : "rotate-90"}`}>▶</span>
+                  Zone {zone}
+                </button>
+                {renderGroupStatusButtons(allZoneItems)}
+              </div>
+
+              {!zoneCollapsed && Object.entries(boroughs).sort(([a], [b]) => a.localeCompare(b)).map(([borough, items]) => {
+                const boroughCollapsed = isBoroughCollapsed(borough, items);
                 return (
                   <div key={borough} className="ml-2">
                     <div className="flex items-center gap-1 rounded px-2 py-1.5 hover:bg-[var(--bg-hover)]">
                       <button onClick={() => toggleBorough(borough)} className="flex items-center gap-2 flex-1 text-sm text-[var(--text-secondary)]">
-                        <span className={`text-[10px] transition-transform ${isBoroughCollapsed ? "" : "rotate-90"}`}>▶</span>
+                        <span className={`text-[10px] transition-transform ${boroughCollapsed ? "" : "rotate-90"}`}>▶</span>
                         <span className="flex-1 text-left">{borough}</span>
                       </button>
                       {renderGroupStatusButtons(items)}
                     </div>
-                    {!isBoroughCollapsed && (
+                    {!boroughCollapsed && (
                       <div className="ml-4 space-y-1 py-1">
                         {items.sort((a, b) => a.name.localeCompare(b.name)).map((n) => (
                           <div key={n.id} className="flex items-center gap-3 rounded-lg bg-[var(--bg-primary)] px-3 py-2">
