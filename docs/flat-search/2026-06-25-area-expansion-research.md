@@ -111,3 +111,31 @@ Mirror the existing dual-portal + BTR-portal method. Patterns to templatize per 
 ## Open items the live skill should resolve (not pre-baked)
 - Exact current 1-bed asking rents per development (skill pulls live from Zoopla/Rightmove + operator portals).
 - Per-building completion years for newest-first ranking in the new areas (start from: One West Point 2022; Dickens Yard ~2013–2020 phased; Grand Union 2021+; Acton Gardens 2011+ phased; Brent Cross Town 2025+).
+
+---
+
+## Dry-run notes (Grand Union) — 2026-06-25
+
+**URLs validated** against `meta.areas[grand-union].searchUrls` in `flat-search/listings.json`.
+
+### Rightmove
+URL: `https://www.rightmove.co.uk/property-to-rent/Alperton.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&keywords=Grand%20Union&furnishTypes=furnished`
+- **Returned live data** (9 listings, all ≤ £2,000). URL is well-formed: area slug `Alperton`, `minBedrooms=1&maxBedrooms=1`, `maxPrice=2000`, keyword filter `Grand%20Union`.
+- Roster hits (indirect): **Lavey House** and **Celeste House** appear with address "Grand Union, London HA0" — these are named buildings *within* the Grand Union development, not named in the roster.
+- **Suggested roster additions:** `Lavey House`, `Celeste House`. Also seen: `Allium House` and `Alperton Depot (330 Ealing Road)` — the latter may be an early Grand Union phase; worth verifying.
+- Non-roster returns (expected noise): Fairbanks Court (Atlip Road), Unison House, Vicars Bridge Close — outside the development; roster filter would correctly drop these.
+- **No URL fixes needed.**
+
+### Zoopla
+URL: `https://www.zoopla.co.uk/to-rent/flats/1-bedroom/alperton/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Alperton%2C%20London&radius=0.5&search_source=to-rent`
+- **Returned live data** (22 listings, all ≤ £2,000). URL is well-formed: `price_max=2000`, `price_min=1600`, 1-bed flats, `q=Alperton%2C%20London`, `radius=0.5`.
+- **No Grand Union building names surfaced.** Results are geographically broad (HA9 Wembley, NW10 Park Royal, W5 Ealing) — Zoopla lacks a `keywords` equivalent so the `radius=0.5` search pulls general Alperton-area stock. This is expected; roster filtering will be the mechanism to keep only Grand Union buildings.
+- Only nearby overlap: Unison House (HA0) — not a Grand Union building.
+- **No URL fixes needed.** Note: because Zoopla returns no building-name filter, the first real `/beaufort-flats` run should expect high noise and rely entirely on roster matching to narrow results.
+
+### Roster gap summary
+Current roster: `Grand Union`, `Waterview House`, `Beresford Avenue`, `Lyon Square`, `Cassia House`, `Vista House`.
+Gaps identified from live Rightmove data:
+- **Add:** `Lavey House`, `Celeste House` (confirmed Grand Union address on Rightmove).
+- **Investigate:** `Allium House`, `Alperton Depot` / `330 Ealing Road` — may be Grand Union phases; verify before adding.
+- No evidence that Waterview House, Beresford Avenue, Lyon Square, Cassia House, or Vista House are wrong — they simply weren't listed on the day of this dry run (not unusual for BTR buildings with low vacancy).
