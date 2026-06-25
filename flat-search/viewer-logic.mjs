@@ -1,5 +1,5 @@
-// Pure view logic. Single source of truth — inlined verbatim into flats.html between
-// /*LOGIC_START*/ and /*LOGIC_END*/ so the tested logic and the rendered logic cannot drift.
+// Pure view logic. Single source of truth — its function bodies are inlined verbatim into
+// flats.html (between the logic markers) so the tested logic and the rendered logic cannot drift.
 export function budgetTier(price, budget) {
   return price > budget.inMax ? "over" : "in";
 }

@@ -82,6 +82,5 @@ test("flats.html embeds valid data and the logic block matches viewer-logic.mjs"
   assert.ok(logic, "LOGIC markers present");
   const mjs = readFileSync(new URL("flat-search/viewer-logic.mjs", ROOT), "utf8")
     .replace(/^export /gm, "").trim();
-  assert.ok(logic[1].includes("function compareListings"), "logic inlined");
-  assert.ok(logic[1].includes(mjs.split("\n").slice(-8).join("\n")), "inlined logic matches module tail");
+  assert.equal(logic[1].trim(), mjs, "inlined logic is byte-identical to viewer-logic.mjs (minus export)");
 });
