@@ -71,3 +71,17 @@ test("groupByArea keeps roster order and drops empty areas", () => {
   const groups = L.groupByArea([{ area: "c" }, { area: "a" }], areas);
   assert.deepEqual(groups.map(g => g.area.id), ["a", "c"], "roster order, empties dropped");
 });
+
+test("flats.html embeds valid data and the logic block matches viewer-logic.mjs", () => {
+  const html = readFileSync(new URL("flat-search/flats.html", ROOT), "utf8");
+  const data = html.match(/\/\*DATA_START\*\/([\s\S]*?)\/\*DATA_END\*\//);
+  assert.ok(data, "DATA markers present");
+  const parsed = JSON.parse(data[1]);
+  assert.equal(parsed.meta.areas.length, 8, "embedded store has 8 areas");
+  const logic = html.match(/\/\*LOGIC_START\*\/([\s\S]*?)\/\*LOGIC_END\*\//);
+  assert.ok(logic, "LOGIC markers present");
+  const mjs = readFileSync(new URL("flat-search/viewer-logic.mjs", ROOT), "utf8")
+    .replace(/^export /gm, "").trim();
+  assert.ok(logic[1].includes("function compareListings"), "logic inlined");
+  assert.ok(logic[1].includes(mjs.split("\n").slice(-8).join("\n")), "inlined logic matches module tail");
+});
