@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import * as L from "../flat-search/viewer-logic.mjs";
 
 const ROOT = new URL("../", import.meta.url);
 const store = JSON.parse(readFileSync(new URL("flat-search/listings.json", ROOT)));
@@ -35,4 +36,38 @@ test("every listing maps to a known area and is correctly keyed/classified", () 
     const expected = x.price > store.meta.budget.inMax ? "over" : "in";
     assert.equal(x.budgetTier, expected, `${x.id} budgetTier`);
   }
+});
+
+const BUDGET = { min: 1600, inMax: 1850, searchMax: 2000 };
+const TH = { slow: 45, stale: 90, problem: 150 };
+const NOW = Date.parse("2026-06-25T00:00:00Z");
+
+test("budgetTier splits at inMax", () => {
+  assert.equal(L.budgetTier(1850, BUDGET), "in");
+  assert.equal(L.budgetTier(1851, BUDGET), "over");
+});
+
+test("daysOnMarket and staleTier honour availableNow", () => {
+  assert.equal(L.daysOnMarket(null, NOW), null);
+  const old = "2025-12-01";
+  assert.ok(L.daysOnMarket(old, NOW) > 150);
+  assert.equal(L.staleTier({ listedDate: old, availableNow: false }, TH, NOW), "ok", "future avail never stale");
+  assert.equal(L.staleTier({ listedDate: old, availableNow: true }, TH, NOW), "problem");
+});
+
+test("compareListings orders by area tier then scheme then phase then price", () => {
+  const areaById = { anchor: { tier: "anchor" }, t1: { tier: 1 }, t2: { tier: 2 } };
+  const mk = (area, scheme, phaseYear, price) => ({ area, scheme, phaseYear, price });
+  const sorted = [
+    mk("t2", "btr", 2025, 1600), mk("anchor", "private", 2016, 1800), mk("t1", "private", 2020, 1700)
+  ].sort((a, b) => L.compareListings(a, b, areaById));
+  assert.deepEqual(sorted.map(x => x.area), ["anchor", "t1", "t2"], "anchor first");
+  const within = [mk("t1","private",2021,1600), mk("t1","btr",2018,1900)].sort((a,b)=>L.compareListings(a,b,areaById));
+  assert.equal(within[0].scheme, "btr", "BTR floats up within group");
+});
+
+test("groupByArea keeps roster order and drops empty areas", () => {
+  const areas = [{ id: "a" }, { id: "b" }, { id: "c" }];
+  const groups = L.groupByArea([{ area: "c" }, { area: "a" }], areas);
+  assert.deepEqual(groups.map(g => g.area.id), ["a", "c"], "roster order, empties dropped");
 });
