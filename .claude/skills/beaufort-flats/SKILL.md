@@ -60,8 +60,14 @@ Aggregators MISS most BTR. Each run, also sweep:
 **Identity key** `id` = `area` + "-" + kebab(building) + "-" + price (area-scoped, so the same building name in two areas never collides). Across platforms/agents, same area+building+price = the SAME flat → merge into one entry with multiple `sources[]` (`{platform,url,agent}`).
 - Already in store (same id): keep `firstSeen`; `lastSeen` = today; `status` = "active"; `isNew` = **false**. Update price/availability/sources if changed.
 - Not in store: add. `firstSeen` = `lastSeen` = today; `status` = "active"; `isNew` = **true**.
-- In store but NOT found this run: `status` = "gone"; `isNew` = false. **Do not delete** (renders struck-through).
+- In store but NOT found this run → **verify the link before delisting — NEVER assume "not found in search" = gone** (search fetches are noisy and miss live listings). WebFetch the listing's saved `sources[].url`(s) and decide:
+  - Page is **removed / 404 / "no longer on the market" / "this property has been removed"** → `status` = "gone", `goneReason` = "removed", `isNew` = false. **Do not delete** (kept for history).
+  - Page shows **"Let Agreed" / "Let" / tenancy agreed** → `status` = "gone", `goneReason` = "let-agreed", `isNew` = false.
+  - Page **still renders live** (full active details, no removal/let-agreed banner) → keep `status` = "active", `isNew` = false, clear any `unconfirmed`, set `lastConfirmed` = today.
+  - Fetch **blocked / ambiguous / can't tell** → keep `status` = "active", `isNew` = false, set `unconfirmed` = true, leave `lastSeen` unchanged. **Never delist on a failed or inconclusive check.**
+  - A previously-`unconfirmed` listing that reappears in a later run's search → clear `unconfirmed`, set `lastConfirmed`/`lastSeen` = today.
 - Set `area` and `budgetTier` (`"over"` if `price > meta.budget.inMax`, else `"in"`) on every listing.
+- Listing status fields: `status` ("active"|"gone"), `goneReason` ("removed"|"let-agreed"|absent), `unconfirmed` (true when kept active but the link couldn't be re-confirmed), `lastConfirmed` (date the link was last verified live). The viewer renders `unconfirmed` as an active card with a dashed "unconfirmed" chip; `gone` shows a "removed" or "let agreed" label in the collapsed history section.
 - Set `meta.lastRun` = today (from environment/system context — do not invent).
 
 ### 6. Assign block age (newest-first ranking)
@@ -74,7 +80,7 @@ Use `area.phaseYears[building]` where present (higher year = newer = ranks first
 - Run `node --test scripts/verify-flat-search.mjs` — must pass before reporting.
 
 ### 8. Report
-Summarise per area: active count, **how many NEW this run** (name them), how many newly gone, and the top newest-in-budget pick **per tier** (anchor / Tier 1 / Tier 2). Tell the user to open `flat-search/flats.html`.
+Summarise per area: active count, **how many NEW this run** (name them), how many newly **delisted** (split removed vs let-agreed) and how many kept active but **unconfirmed**, and the top newest-in-budget pick **per tier** (anchor / Tier 1 / Tier 2). Tell the user to open `flat-search/flats.html`.
 
 ## Maintaining areas
 - **Add an area:** append an object to `meta.areas[]` (id, name, borough, zone, tier, buildingRoster, phaseYears, btrOperators, operatorPortals, searchUrls with `price_max=2000`, expectedBand, flags) and run. No code change needed.
