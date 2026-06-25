@@ -35,6 +35,12 @@ test("every listing maps to a known area and is correctly keyed/classified", () 
     assert.ok(x.price <= store.meta.budget.searchMax, `${x.id} within £${store.meta.budget.searchMax}`);
     const expected = x.price > store.meta.budget.inMax ? "over" : "in";
     assert.equal(x.budgetTier, expected, `${x.id} budgetTier`);
+    assert.ok(["active", "gone"].includes(x.status), `${x.id} status valid`);
+    if ("goneReason" in x) assert.ok(["removed", "let-agreed"].includes(x.goneReason), `${x.id} goneReason enum`);
+    if ("unconfirmed" in x) {
+      assert.equal(typeof x.unconfirmed, "boolean", `${x.id} unconfirmed boolean`);
+      assert.ok(!(x.unconfirmed && x.status === "gone"), `${x.id} gone listings are not unconfirmed`);
+    }
   }
 });
 
