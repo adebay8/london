@@ -28,12 +28,13 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, onBulkStatusChange, onResearch }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
-  // User-collapsed: explicitly closed by clicking the toggle
   const [userCollapsedZones, setUserCollapsedZones] = useState<Set<number>>(new Set());
-  const [userCollapsedBoroughs, setUserCollapsedBoroughs] = useState<Set<string>>(new Set());
-  // Manually expanded: user opened an auto-collapsed (all-no) section
   const [manuallyExpandedZones, setManuallyExpandedZones] = useState<Set<number>>(new Set());
+  const [userCollapsedBoroughs, setUserCollapsedBoroughs] = useState<Set<string>>(new Set());
   const [manuallyExpandedBoroughs, setManuallyExpandedBoroughs] = useState<Set<string>>(new Set());
+
+
+  // Auto-collapse of "all no" zones/boroughs is handled by isZoneCollapsed/isBoroughCollapsed
 
   const grouped = useMemo(() => {
     const zones: Record<number, Record<string, Neighbourhood[]>> = {};

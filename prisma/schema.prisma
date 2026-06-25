@@ -16,9 +16,11 @@ model Neighbourhood {
   status    String?
   updatedAt DateTime @default(now()) @updatedAt
 
-  researchProfile ResearchProfile?
-  researchJobs    ResearchJob[]
-  journalEntries  JournalEntry[]
+  researchProfile    ResearchProfile?
+  researchJobs       ResearchJob[]
+  journalEntries     JournalEntry[]
+  apartmentBuildings ApartmentBuilding[]
+  ranking            Ranking?
 
   @@unique([name, borough])
   @@map("neighbourhoods")
@@ -70,6 +72,56 @@ model JournalEntry {
   neighbourhood Neighbourhood? @relation(fields: [neighbourhoodId], references: [id])
 
   @@map("journal_entries")
+}
+
+model ApartmentBuilding {
+  id              String   @id @default(cuid())
+  neighbourhoodId String
+  placeId         String   @unique
+  name            String
+  address         String
+  lat             Float
+  lng             Float
+  googleMapsUri   String
+  types           String   // JSON string[]
+  fetchedAt       DateTime @default(now())
+
+  neighbourhood Neighbourhood @relation(fields: [neighbourhoodId], references: [id])
+  amenities     BuildingAmenity[]
+
+  @@index([neighbourhoodId])
+  @@map("apartment_buildings")
+}
+
+model BuildingAmenity {
+  id            String   @id @default(cuid())
+  buildingId    String
+  category      String
+  name          String
+  address       String
+  lat           Float
+  lng           Float
+  placeId       String
+  googleMapsUri String
+  walkMins      Float
+  walkMeters    Int
+  fetchedAt     DateTime @default(now())
+
+  building ApartmentBuilding @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@index([buildingId])
+  @@unique([buildingId, placeId])
+  @@map("building_amenities")
+}
+
+model Ranking {
+  id              String @id @default(cuid())
+  neighbourhoodId String @unique
+  position        Int
+
+  neighbourhood Neighbourhood @relation(fields: [neighbourhoodId], references: [id])
+
+  @@map("rankings")
 }
 
 model Setting {

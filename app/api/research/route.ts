@@ -44,9 +44,11 @@ export async function POST(request: Request) {
     data: { neighbourhoodId, status: "running", startedAt: new Date() },
   });
 
+  console.log(`[research] Research requested for ${neighbourhood.name} (${neighbourhood.borough}), job ${job.id}, provider: ${provider}`);
+
   // Run async — don't block the response
   runResearchAndSave(neighbourhood.id, neighbourhood.name, neighbourhood.borough, job.id, provider).catch(
-    (err) => console.error(`Research failed for ${neighbourhood.name}:`, err)
+    (err) => console.error(`[research] Research failed for ${neighbourhood.name}:`, err)
   );
 
   return NextResponse.json({ jobId: job.id, status: "running" });
@@ -55,7 +57,8 @@ export async function POST(request: Request) {
 async function runResearchAndSave(neighbourhoodId: string, name: string, borough: string, jobId: string, provider: AnalysisProvider) {
   const modelLabel = provider === "openai" ? "gpt-4o" : "claude-sonnet-4-20250514";
   try {
-    const { data, rawResponse } = await runResearch(name, borough, provider);
+    const { data, rawResponse } = await runResearch(name, borough, neighbourhoodId, provider);
+    console.log(`[research] Calculating fit score for ${name}...`);
     const fitScore = calculateFitScore({
       transport: data.transport.score,
       safety: data.safety.score,
@@ -99,11 +102,15 @@ async function runResearchAndSave(neighbourhoodId: string, name: string, borough
       },
     });
 
+    console.log(`[research] Profile saved for ${name}, fitScore: ${fitScore}`);
+
     await prisma.researchJob.update({
       where: { id: jobId },
       data: { status: "done", completedAt: new Date() },
     });
+    console.log(`[research] Job ${jobId} complete for ${name}`);
   } catch (error) {
+    console.error(`[research] Job ${jobId} failed for ${name}:`, error instanceof Error ? error.message : error);
     await prisma.researchJob.update({
       where: { id: jobId },
       data: { status: "failed", completedAt: new Date(), error: error instanceof Error ? error.message : String(error) },

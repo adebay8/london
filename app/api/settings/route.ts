@@ -12,6 +12,7 @@ export async function GET() {
     perplexity: !!process.env.PERPLEXITY_API_KEY,
     anthropic: !!process.env.ANTHROPIC_API_KEY,
     openai: !!process.env.OPENAI_API_KEY,
+    googlePlaces: !!process.env.GOOGLE_PLACES_API_KEY,
   };
 
   return NextResponse.json({ settings: settingsMap, apiKeyStatus });

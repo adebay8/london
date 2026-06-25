@@ -93,7 +93,8 @@ Return ONLY valid JSON matching this exact structure:
 export function analysisUserPrompt(
   area: string,
   borough: string,
-  researchData: { query: string; content: string; citations: string[] }[]
+  researchData: { query: string; content: string; citations: string[] }[],
+  apartmentBuildings?: { name: string; address: string; googleMapsUri: string }[]
 ): string {
   const officialData = researchData
     .slice(0, OPINION_QUERY_START_INDEX)
@@ -105,6 +106,19 @@ export function analysisUserPrompt(
     .map((r) => `### ${r.query}\n${r.content}\nSources: ${r.citations.join(", ") || "none"}`)
     .join("\n\n");
 
+  let apartmentSection = "";
+  if (apartmentBuildings && apartmentBuildings.length > 0) {
+    const list = apartmentBuildings.map((b) => `- ${b.name} — ${b.address} (${b.googleMapsUri})`).join("\n");
+    apartmentSection = `
+
+## Google Places: Apartment Buildings Found
+
+The following apartment buildings/complexes were found via Google Places API in this area. Reference these by name in your newBuilds analysis where relevant:
+
+${list}
+`;
+  }
+
   return `Analyse the neighbourhood "${area}" in ${borough}, London.
 
 ## Official / Marketing Data
@@ -114,6 +128,6 @@ ${officialData}
 ## Resident Opinions & Reviews
 
 ${opinionData}
-
+${apartmentSection}
 Return the structured JSON analysis.`;
 }

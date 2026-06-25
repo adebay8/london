@@ -96,6 +96,39 @@ export interface ResearchData {
   cons: string[];
 }
 
+// --- Apartment building shapes ---
+
+export interface ApartmentBuildingRow {
+  id: string;
+  neighbourhoodId: string;
+  placeId: string;
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+  googleMapsUri: string;
+  types: string[];
+  fetchedAt: string;
+  neighbourhood?: NeighbourhoodRow;
+  amenities?: BuildingAmenityRow[];
+  _count?: { amenities: number };
+}
+
+export interface BuildingAmenityRow {
+  id: string;
+  buildingId: string;
+  category: string;
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+  placeId: string;
+  googleMapsUri: string;
+  walkMins: number;
+  walkMeters: number;
+  fetchedAt: string;
+}
+
 // --- Journal shapes ---
 
 export interface JournalEntryRow {

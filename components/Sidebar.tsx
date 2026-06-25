@@ -7,7 +7,9 @@ import { useTheme } from "./ThemeProvider";
 const NAV_ITEMS = [
   { href: "/map", label: "Map", icon: "🗺️" },
   { href: "/research", label: "Research", icon: "🔬" },
+  { href: "/apartments", label: "Apartments", icon: "🏢" },
   { href: "/compare", label: "Compare", icon: "⚖️" },
+  { href: "/rankings", label: "Rankings", icon: "🏆" },
   { href: "/journal", label: "Journal", icon: "📓" },
 ];
 

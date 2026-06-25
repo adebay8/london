@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 interface SettingsData {
   settings: Record<string, string>;
-  apiKeyStatus: { perplexity: boolean; anthropic: boolean; openai: boolean };
+  apiKeyStatus: { perplexity: boolean; anthropic: boolean; openai: boolean; googlePlaces: boolean };
 }
 
 export default function SettingsPage() {
@@ -87,6 +87,7 @@ export default function SettingsPage() {
             { name: "Perplexity", env: "PERPLEXITY_API_KEY", configured: data.apiKeyStatus.perplexity },
             { name: "Anthropic (Claude)", env: "ANTHROPIC_API_KEY", configured: data.apiKeyStatus.anthropic },
             { name: "OpenAI", env: "OPENAI_API_KEY", configured: data.apiKeyStatus.openai },
+            { name: "Google Places", env: "GOOGLE_PLACES_API_KEY", configured: data.apiKeyStatus.googlePlaces },
           ].map((key) => (
             <div key={key.name} className="flex items-center justify-between rounded-lg bg-[var(--bg-secondary)] px-4 py-3">
               <div>
