@@ -38,9 +38,13 @@ WebFetch each kept listing's detail page; extract the listed/added date:
 - **Rightmove:** "Added on DD/MM/YYYY" or "Reduced on" (Reduced resets the clock → use as effective `listedDate`).
 - Fallback: lower listing-ID magnitude = older.
 - `availableNow` = true only if availability is "now"/immediate/a past date. A FUTURE date → false.
+- `availableDate` = the concrete availability date as ISO `"YYYY-MM-DD"` when the page gives one (e.g. "Available 5 Aug 2026" → `"2026-08-05"`); `null` for "now"/"immediate"/"Ask agent"/unknown (no extra fetch — it's on the same detail page). This feeds the move-timing fit (step 3b). Prefer an exact date; don't guess.
 - **Staleness rule:** a long-listed flat is a red flag ONLY when `availableNow` is true. Future-dated availability = early marketing, never flag.
 - Thresholds in `meta.staleThresholdsDays` (slow 45 / stale 90 / problem 150). The viewer recomputes daysOnMarket live — store only `listedDate` + `availableNow`.
 - Watch evergreen/placeholder listings (on-site dev agents keep standing listings live for months → availableNow + very high dom → buried in the problem tier).
+
+### 3b. Move-timing fit (the user's notice window)
+The user is on a periodic tenancy that needs **two whole rent periods of notice**, so their earliest move-out is a step function (see `docs/superpowers/specs/2026-06-26-move-timing-window-design.md`). Config lives in `meta.moveTiming` (`rentPeriodAnchorDay` 14, `noticePeriodsRequired` 2, `overlapIdealDays` 7, `overlapMaxDays` 14, `noticeServedDate` null=rolling). You **store only `availableDate`** (step 3) — the viewer recomputes the move-out floor, notice deadline, and per-listing `timingFit` (`ideal`/`workable`/`early`/`late`/`unknown`) live each render via `viewer-logic.mjs`. **Nothing is dropped or re-tiered on timing** — it's a chip + sort only (over-budget pattern). Because the listing horizon (~4–6 wk) sits behind the user's lead time (~2.5–3.5 mo), expect almost everything to read `early` for now; well-timed (Sep-dated) stock surfaces from ~August. BTR is the bridge — operators let you pick a future start date, so an `early` BTR unit is reachable where a private immediate-let isn't.
 
 ### 4. Tag the letting scheme (BTR vs private)
 Set `scheme` = `"btr"|"private"|"unknown"`, plus `operator`. Decide in order:
@@ -81,6 +85,7 @@ Use `area.phaseYears[building]` where present (higher year = newer = ranks first
 
 ### 8. Report
 Summarise per area: active count, **how many NEW this run** (name them), how many newly **delisted** (split removed vs let-agreed) and how many kept active but **unconfirmed**, and the top newest-in-budget pick **per tier** (anchor / Tier 1 / Tier 2). Tell the user to open `flat-search/flats.html`.
+- **Timing line:** state the current move-out floor + notice deadline (days left), and the best **well-timed** (`ideal`/`workable`) pick per tier — *separately* from the newest-in-budget pick. If nothing is well-timed yet, say so plainly ("all live stock is too early; Sep-dated stock expected from ~August — hold or negotiate a BTR start date") rather than implying no options.
 
 ## Maintaining areas
 - **Add an area:** append an object to `meta.areas[]` (id, name, borough, zone, tier, buildingRoster, phaseYears, btrOperators, operatorPortals, searchUrls with `price_max=2000`, expectedBand, flags) and run. No code change needed.

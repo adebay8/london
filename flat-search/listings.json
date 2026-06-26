@@ -1,145 +1,1504 @@
 {
   "meta": {
-    "lastRun": "2026-06-25",
-    "budget": { "min": 1600, "inMax": 1850, "searchMax": 2000 },
-    "staleThresholdsDays": { "slow": 45, "stale": 90, "problem": 150 },
+    "lastRun": "2026-06-26",
+    "budget": {
+      "min": 1600,
+      "inMax": 1850,
+      "searchMax": 2000
+    },
+    "staleThresholdsDays": {
+      "slow": 45,
+      "stale": 90,
+      "problem": 150
+    },
     "staleRule": "Days-on-market is only a red flag when availableNow is true. A long-listed flat with a FUTURE availability date is early-marketing, not stale. tier 'problem' (>150d & availableNow) is hidden by default.",
     "areas": [
       {
-        "id": "beaufort-colindale", "name": "Beaufort Park + Colindale Gardens (NW9)",
-        "borough": "Barnet", "zone": "4", "tier": "anchor",
-        "buildingRoster": ["Capri House","Goldhawk House","Golding House","Fairbank House","Fermont House","Argent House","Castleton House","Cornelia House","Celeste House","Croft House","Pinnacle House","Bantam House","Battalion House","Amiot House","Amelia House","Allard House","Grevillea House","Duxford Tower","Draper House","Adrienne Apartments","Claremont Apartments","Sterling House","Foxglove House","Curtiss House","Lismore Boulevard","Reverence House","Charcot Road","Florence House"],
-        "phaseYears": {"Duxford Tower":2025,"Draper House":2025,"Foxglove House":2020,"Fairbank House":2021,"Fermont House":2020,"Cornelia House":2019,"Celeste House":2019,"Castleton House":2019,"Capri House":2019,"Golding House":2016,"Goldhawk House":2016,"Argent House":2017,"Claremont Apartments":2013,"Amelia House":2012,"Allard House":2012,"Adrienne Apartments":2007,"Lismore Boulevard":2021,"Reverence House":2021,"Grevillea House":2020,"Charcot Road":2020,"Florence House":2020},
-        "btrOperators": ["Way of Life","Savills","UNCLE","L&Q"],
-        "operatorPortals": ["https://www.wayoflife.co.uk/","https://www.uncle.co.uk/colindale/","https://www.lqpricedin.co.uk/"],
+        "id": "beaufort-colindale",
+        "name": "Beaufort Park + Colindale Gardens (NW9)",
+        "borough": "Barnet",
+        "zone": "4",
+        "tier": "anchor",
+        "buildingRoster": [
+          "Capri House",
+          "Goldhawk House",
+          "Golding House",
+          "Fairbank House",
+          "Fermont House",
+          "Argent House",
+          "Castleton House",
+          "Cornelia House",
+          "Celeste House",
+          "Croft House",
+          "Pinnacle House",
+          "Bantam House",
+          "Battalion House",
+          "Amiot House",
+          "Amelia House",
+          "Allard House",
+          "Grevillea House",
+          "Duxford Tower",
+          "Draper House",
+          "Adrienne Apartments",
+          "Claremont Apartments",
+          "Sterling House",
+          "Foxglove House",
+          "Curtiss House",
+          "Lismore Boulevard",
+          "Reverence House",
+          "Charcot Road",
+          "Florence House"
+        ],
+        "phaseYears": {
+          "Duxford Tower": 2025,
+          "Draper House": 2025,
+          "Foxglove House": 2020,
+          "Fairbank House": 2021,
+          "Fermont House": 2020,
+          "Cornelia House": 2019,
+          "Celeste House": 2019,
+          "Castleton House": 2019,
+          "Capri House": 2019,
+          "Golding House": 2016,
+          "Goldhawk House": 2016,
+          "Argent House": 2017,
+          "Claremont Apartments": 2013,
+          "Amelia House": 2012,
+          "Allard House": 2012,
+          "Adrienne Apartments": 2007,
+          "Lismore Boulevard": 2021,
+          "Reverence House": 2021,
+          "Grevillea House": 2020,
+          "Charcot Road": 2020,
+          "Florence House": 2020
+        },
+        "btrOperators": [
+          "Way of Life",
+          "Savills",
+          "UNCLE",
+          "L&Q"
+        ],
+        "operatorPortals": [
+          "https://www.wayoflife.co.uk/",
+          "https://www.uncle.co.uk/colindale/",
+          "https://www.lqpricedin.co.uk/"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/colindale/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Colindale%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/Colindale.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&keywords=Beaufort%20Park&furnishTypes=furnished"
         },
-        "expectedBand": "in", "flags": []
+        "expectedBand": "in",
+        "flags": []
       },
       {
-        "id": "ealing-broadway", "name": "Ealing Broadway — Dickens Yard / Filmworks",
-        "borough": "Ealing", "zone": "3", "tier": 1,
-        "buildingRoster": ["Dickens Yard","Filmworks","Longfield Avenue"],
-        "phaseYears": {"Dickens Yard":2016,"Filmworks":2021},
-        "btrOperators": ["Berkeley/St George","Landsec"],
-        "operatorPortals": ["https://www.dickensyard.co.uk/","https://www.filmworksealing.com/"],
+        "id": "ealing-broadway",
+        "name": "Ealing Broadway — Dickens Yard / Filmworks",
+        "borough": "Ealing",
+        "zone": "3",
+        "tier": 1,
+        "buildingRoster": [
+          "Dickens Yard",
+          "Filmworks",
+          "Longfield Avenue"
+        ],
+        "phaseYears": {
+          "Dickens Yard": 2016,
+          "Filmworks": 2021
+        },
+        "btrOperators": [
+          "Berkeley/St George",
+          "Landsec"
+        ],
+        "operatorPortals": [
+          "https://www.dickensyard.co.uk/",
+          "https://www.filmworksealing.com/"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/london/w5/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Ealing%20Broadway%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/Ealing-Broadway.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&keywords=Dickens%20Yard&furnishTypes=furnished"
         },
-        "expectedBand": "over", "flags": []
+        "expectedBand": "over",
+        "flags": []
       },
       {
-        "id": "acton-gardens", "name": "Acton Gardens / South Acton",
-        "borough": "Ealing", "zone": "3", "tier": 1,
-        "buildingRoster": ["Acton Gardens","Bollo Lane","Bridge House","The Square","Vista Apartments","Watercolour Apartments","Sidon Apartments"],
-        "phaseYears": {"Acton Gardens":2019,"Sidon Apartments":2022},
-        "btrOperators": ["L&Q","Countryside/Vistry","Metra Living"],
-        "operatorPortals": ["https://www.youractongardens.co.uk/homes-rent","https://www.metra.co.uk/"],
+        "id": "acton-gardens",
+        "name": "Acton Gardens / South Acton",
+        "borough": "Ealing",
+        "zone": "3",
+        "tier": 1,
+        "buildingRoster": [
+          "Acton Gardens",
+          "Bollo Lane",
+          "Bridge House",
+          "The Square",
+          "Vista Apartments",
+          "Watercolour Apartments",
+          "Sidon Apartments"
+        ],
+        "phaseYears": {
+          "Acton Gardens": 2019,
+          "Sidon Apartments": 2022
+        },
+        "btrOperators": [
+          "L&Q",
+          "Countryside/Vistry",
+          "Metra Living"
+        ],
+        "operatorPortals": [
+          "https://www.youractongardens.co.uk/homes-rent",
+          "https://www.metra.co.uk/"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/london/w3/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=South%20Acton%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/South-Acton.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&keywords=Acton%20Gardens&furnishTypes=furnished"
         },
-        "expectedBand": "over", "flags": []
+        "expectedBand": "over",
+        "flags": []
       },
       {
-        "id": "grand-union", "name": "Grand Union, Alperton",
-        "borough": "Brent", "zone": "3/4", "tier": 2,
-        "buildingRoster": ["Grand Union","Waterview House","Beresford Avenue","Lyon Square","Cassia House","Vista House","Lavey House","Celeste House","Allium House"],
-        "phaseYears": {"Grand Union":2021,"Lavey House":2021,"Celeste House":2021,"Allium House":2021},
-        "btrOperators": ["Berkeley/St George"],
-        "operatorPortals": ["https://www.berkeleygroup.co.uk/developments/london/alperton/grand-union","https://www.johnsand.co/development/grand-union"],
+        "id": "grand-union",
+        "name": "Grand Union, Alperton",
+        "borough": "Brent",
+        "zone": "3/4",
+        "tier": 2,
+        "buildingRoster": [
+          "Grand Union",
+          "Waterview House",
+          "Beresford Avenue",
+          "Lyon Square",
+          "Cassia House",
+          "Vista House",
+          "Lavey House",
+          "Celeste House",
+          "Allium House"
+        ],
+        "phaseYears": {
+          "Grand Union": 2021,
+          "Lavey House": 2021,
+          "Celeste House": 2021,
+          "Allium House": 2021
+        },
+        "btrOperators": [
+          "Berkeley/St George"
+        ],
+        "operatorPortals": [
+          "https://www.berkeleygroup.co.uk/developments/london/alperton/grand-union",
+          "https://www.johnsand.co/development/grand-union"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/alperton/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Alperton%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/Alperton.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&keywords=Grand%20Union&furnishTypes=furnished"
         },
-        "expectedBand": "over", "flags": ["zoneCaveat"]
+        "expectedBand": "over",
+        "flags": [
+          "zoneCaveat"
+        ]
       },
       {
-        "id": "north-acton", "name": "North Acton / Portal Way",
-        "borough": "Ealing", "zone": "2/3", "tier": 2,
-        "buildingRoster": ["One West Point","Icon Tower","UNCLE Acton","Rehearsal Rooms","The Verdean","Legacy Point","Residence Building","Portal Way","Victoria Road"],
-        "phaseYears": {"One West Point":2022,"Icon Tower":2019,"UNCLE Acton":2021,"Rehearsal Rooms":2018,"The Verdean":2023,"Portal Way":2022,"Victoria Road":2021},
-        "btrOperators": ["AWOL","UNCLE"],
-        "operatorPortals": ["https://www.uncle.co.uk/acton/","https://www.onewestpoint.com/"],
+        "id": "north-acton",
+        "name": "North Acton / Portal Way",
+        "borough": "Ealing",
+        "zone": "2/3",
+        "tier": 2,
+        "buildingRoster": [
+          "One West Point",
+          "Icon Tower",
+          "UNCLE Acton",
+          "Rehearsal Rooms",
+          "The Verdean",
+          "Legacy Point",
+          "Residence Building",
+          "Portal Way",
+          "Victoria Road"
+        ],
+        "phaseYears": {
+          "One West Point": 2022,
+          "Icon Tower": 2019,
+          "UNCLE Acton": 2021,
+          "Rehearsal Rooms": 2018,
+          "The Verdean": 2023,
+          "Portal Way": 2022,
+          "Victoria Road": 2021
+        },
+        "btrOperators": [
+          "AWOL",
+          "UNCLE"
+        ],
+        "operatorPortals": [
+          "https://www.uncle.co.uk/acton/",
+          "https://www.onewestpoint.com/"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/north-acton/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=North%20Acton%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/North-Acton.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&furnishTypes=furnished"
         },
-        "expectedBand": "out", "flags": ["mostlyOverBudget"]
+        "expectedBand": "out",
+        "flags": [
+          "mostlyOverBudget"
+        ]
       },
       {
-        "id": "cricklewood", "name": "Cricklewood / Brent Cross West",
-        "borough": "Brent", "zone": "2/3", "tier": 2,
-        "buildingRoster": ["Gerard Court","Chichele Road","Cricklewood Lane","Exchange House"],
-        "phaseYears": {"Chichele Road":2010},
-        "btrOperators": ["Akelius"],
-        "operatorPortals": ["https://www.akelius.co.uk/en/search?city=London"],
+        "id": "cricklewood",
+        "name": "Cricklewood / Brent Cross West",
+        "borough": "Brent",
+        "zone": "2/3",
+        "tier": 2,
+        "buildingRoster": [
+          "Gerard Court",
+          "Chichele Road",
+          "Cricklewood Lane",
+          "Exchange House"
+        ],
+        "phaseYears": {
+          "Chichele Road": 2010
+        },
+        "btrOperators": [
+          "Akelius"
+        ],
+        "operatorPortals": [
+          "https://www.akelius.co.uk/en/search?city=London"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/cricklewood/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Cricklewood%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/Cricklewood.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&furnishTypes=furnished"
         },
-        "expectedBand": "in", "flags": ["natRail"]
+        "expectedBand": "in",
+        "flags": [
+          "natRail"
+        ]
       },
       {
-        "id": "hendon-waterside", "name": "Hendon Waterside / West Hendon",
-        "borough": "Barnet", "zone": "3/4", "tier": 2,
-        "buildingRoster": ["Hendon Waterside","Pacific House","Reflection House","Compass House","Schooner House","York House"],
-        "phaseYears": {"Hendon Waterside":2018},
-        "btrOperators": ["Barratt London"],
-        "operatorPortals": ["https://www.barratthomes.co.uk/new-homes/greater-london/H600901-Hendon-Waterside/"],
+        "id": "hendon-waterside",
+        "name": "Hendon Waterside / West Hendon",
+        "borough": "Barnet",
+        "zone": "3/4",
+        "tier": 2,
+        "buildingRoster": [
+          "Hendon Waterside",
+          "Pacific House",
+          "Reflection House",
+          "Compass House",
+          "Schooner House",
+          "York House"
+        ],
+        "phaseYears": {
+          "Hendon Waterside": 2018
+        },
+        "btrOperators": [
+          "Barratt London"
+        ],
+        "operatorPortals": [
+          "https://www.barratthomes.co.uk/new-homes/greater-london/H600901-Hendon-Waterside/"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/west-hendon/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1500&q=West%20Hendon%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/West-Hendon.html?minBedrooms=1&maxBedrooms=1&minPrice=1400&maxPrice=2000&keywords=Hendon%20Waterside&furnishTypes=furnished"
         },
-        "expectedBand": "in", "flags": ["safetyCaution","natRail"]
+        "expectedBand": "in",
+        "flags": [
+          "safetyCaution",
+          "natRail"
+        ]
       },
       {
-        "id": "brent-cross-town", "name": "Brent Cross Town",
-        "borough": "Barnet", "zone": "3", "tier": 2,
-        "buildingRoster": ["The Maple","Brent Cross Town","Claremont Park","Edward Street"],
-        "phaseYears": {"The Maple":2025},
-        "btrOperators": ["Related Argent"],
-        "operatorPortals": ["https://brentcrosstown.co.uk/rent-here","https://www.themaplenw2.com/"],
+        "id": "brent-cross-town",
+        "name": "Brent Cross Town",
+        "borough": "Barnet",
+        "zone": "3",
+        "tier": 2,
+        "buildingRoster": [
+          "The Maple",
+          "Brent Cross Town",
+          "Claremont Park",
+          "Edward Street"
+        ],
+        "phaseYears": {
+          "The Maple": 2025
+        },
+        "btrOperators": [
+          "Related Argent"
+        ],
+        "operatorPortals": [
+          "https://brentcrosstown.co.uk/rent-here",
+          "https://www.themaplenw2.com/"
+        ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/brent-cross/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Brent%20Cross%2C%20London&radius=0.5&search_source=to-rent",
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/Brent-Cross.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&keywords=Brent%20Cross%20Town&furnishTypes=furnished"
         },
-        "expectedBand": "out", "flags": ["brandNew","mostlyOverBudget","natRail"]
+        "expectedBand": "out",
+        "flags": [
+          "brandNew",
+          "mostlyOverBudget",
+          "natRail"
+        ]
       }
-    ]
+    ],
+    "moveTiming": {
+      "rentPeriodAnchorDay": 14,
+      "noticePeriodsRequired": 2,
+      "overlapIdealDays": 7,
+      "overlapMaxDays": 14,
+      "noticeServedDate": null
+    }
   },
   "listings": [
-    { "id": "beaufort-colindale-cornelia-house-1800", "area": "beaufort-colindale", "building": "Cornelia House", "street": "Caversham Road", "phaseYear": 2019, "phaseLabel": "Completed ~2019 — newer", "price": 1800, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-06-25", "epc": "B", "sizeSqft": 553, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/73541753/", "agent": "JOHNS&CO" }, { "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/90122052", "agent": "JOHNS&CO" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false },
-    { "id": "beaufort-colindale-celeste-house-1733", "area": "beaufort-colindale", "building": "Celeste House", "street": "Caversham Road", "phaseYear": 2019, "phaseLabel": "Completed ~2019/20 — newer", "price": 1733, "budgetTier": "in", "furnished": true, "available": "Ask agent", "availableNow": false, "listedDate": "2026-06-24", "epc": null, "sizeSqft": 455, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/128666687", "agent": "LDM Properties" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false },
-    { "id": "beaufort-colindale-castleton-house-1700", "area": "beaufort-colindale", "building": "Castleton House", "street": "Caversham Road", "phaseYear": 2019, "phaseLabel": "Completed ~2019 — newer (EPC C, age uncertain)", "price": 1700, "budgetTier": "in", "furnished": true, "available": "5 Aug 2026", "availableNow": false, "listedDate": "2026-06-06", "epc": "C", "sizeSqft": 548, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89267967", "agent": "Romans & Partners" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false },
-    { "id": "beaufort-colindale-grevillea-house-1820", "area": "beaufort-colindale", "building": "Grevillea House", "street": "Colindale Gardens (Bute Close)", "phaseYear": 2020, "phaseLabel": "Colindale Gardens (Redrow) — newer", "price": 1820, "budgetTier": "in", "furnished": true, "available": "15 Aug 2026", "availableNow": false, "listedDate": "2026-06-16", "epc": "B", "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89760054", "agent": "Charles William" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false },
-    { "id": "beaufort-colindale-charcot-road-1700", "area": "beaufort-colindale", "building": "Charcot Road", "street": "Charcot Road, Colindale Gardens", "phaseYear": 2020, "phaseLabel": "Colindale Gardens (Redrow) — newer", "price": 1700, "budgetTier": "in", "furnished": true, "available": "Ask agent", "availableNow": false, "listedDate": "2026-06-22", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89969550", "agent": "Dexters" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "beaufort-colindale-lismore-boulevard-1800", "area": "beaufort-colindale", "building": "Lismore Boulevard", "street": "Colindale Gardens", "phaseYear": 2021, "phaseLabel": "Colindale Gardens (Redrow) new build — newer", "price": 1800, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-06-17", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/110032067", "agent": "Empire Chase" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "beaufort-colindale-fermont-house-1950", "area": "beaufort-colindale", "building": "Fermont House", "street": "Beaufort Square", "phaseYear": 2020, "phaseLabel": "Late phase ~2018+ — newer", "price": 1950, "budgetTier": "over", "furnished": true, "available": "23 Jul 2026", "availableNow": false, "listedDate": "2026-06-08", "epc": "C", "sizeSqft": 549, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/88520766", "agent": "Let UK Home" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "beaufort-colindale-florence-house-1880", "area": "beaufort-colindale", "building": "Florence House", "street": "Lundy Close, Colindale Gardens", "phaseYear": 2020, "phaseLabel": "Colindale Gardens (Savills BTR) — newer", "price": 1880, "budgetTier": "over", "furnished": true, "available": "10 Jul 2026", "availableNow": false, "listedDate": "2026-06-13", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89673288", "agent": "Savills Lettings" }], "scheme": "btr", "operator": "Savills", "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "beaufort-colindale-florence-house-1950", "area": "beaufort-colindale", "building": "Florence House", "street": "Lundy Close, Colindale Gardens", "phaseYear": 2020, "phaseLabel": "Colindale Gardens (Savills BTR) — newer", "price": 1950, "budgetTier": "over", "furnished": true, "available": "17 Jul 2026", "availableNow": false, "listedDate": "2026-06-13", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89673318", "agent": "Savills Lettings" }], "scheme": "btr", "operator": "Savills", "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "beaufort-colindale-lismore-boulevard-2000", "area": "beaufort-colindale", "building": "Lismore Boulevard", "street": "Colindale Gardens", "phaseYear": 2021, "phaseLabel": "Colindale Gardens (Redrow) new build — newer", "price": 2000, "budgetTier": "over", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-06-17", "epc": null, "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/73475204/", "agent": "Benham & Reeves" }, { "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89805726", "agent": "Benham & Reeves" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "beaufort-colindale-fairbank-house-1800", "area": "beaufort-colindale", "building": "Fairbank House", "street": "Beaufort Square", "phaseYear": 2021, "phaseLabel": "Launched 2018, completed ~2021 — newer", "price": 1800, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2025-10-09", "epc": "B", "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/71520089/", "agent": "Benham and Reeves" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false, "unconfirmed": true },
-    { "id": "beaufort-colindale-golding-house-1750", "area": "beaufort-colindale", "building": "Golding House", "street": "Beaufort Square", "phaseYear": 2016, "phaseLabel": "Launched 2015 — older", "price": 1750, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2025-10-09", "epc": "C", "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/71522249/", "agent": "Benham and Reeves" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false, "unconfirmed": true },
-    { "id": "beaufort-colindale-fermont-house-1850", "area": "beaufort-colindale", "building": "Fermont House", "street": "Beaufort Square", "phaseYear": 2020, "phaseLabel": "Late phase ~2018+ — newer", "price": 1850, "budgetTier": "in", "furnished": true, "available": "9 Aug 2026", "availableNow": false, "listedDate": "2026-06-05", "epc": "B", "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/73380845/", "agent": "Benham and Reeves" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false, "lastConfirmed": "2026-06-25" },
-    { "id": "beaufort-colindale-amelia-house-1650", "area": "beaufort-colindale", "building": "Amelia House", "street": "Boulevard Drive", "phaseYear": 2012, "phaseLabel": "Earlier phase ~2010–13 — oldest (secure parking)", "price": 1650, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-04-18", "epc": "C", "sizeSqft": 454, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/72968081/", "agent": "London-Tokyo Property Services" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false, "unconfirmed": true },
-    { "id": "beaufort-colindale-lismore-boulevard-1750", "area": "beaufort-colindale", "building": "Lismore Boulevard", "street": "Colindale Gardens", "phaseYear": 2021, "phaseLabel": "Colindale Gardens (Redrow) new build — newer", "price": 1750, "budgetTier": "in", "furnished": true, "available": "Ask agent", "availableNow": false, "listedDate": "2026-06-04", "epc": "B", "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/73371279/", "agent": "Dexters" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false, "unconfirmed": true },
-    { "id": "beaufort-colindale-reverence-house-1850", "area": "beaufort-colindale", "building": "Reverence House", "street": "Colindale Gardens (Lismore Blvd)", "phaseYear": 2021, "phaseLabel": "Colindale Gardens (Redrow) — newer", "price": 1850, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-06-08", "epc": "B", "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/62846794/", "agent": "Empire Chase" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false, "unconfirmed": true },
-    { "id": "beaufort-colindale-lismore-boulevard-1850", "area": "beaufort-colindale", "building": "Lismore Boulevard", "street": "Colindale Gardens", "phaseYear": 2021, "phaseLabel": "Colindale Gardens (Redrow) new build — newer", "price": 1850, "budgetTier": "in", "furnished": true, "available": "Ask agent", "availableNow": false, "listedDate": null, "epc": null, "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/73380741/", "agent": "Benham and Reeves" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": false, "unconfirmed": true },
-    { "id": "ealing-broadway-dickens-yard-1700", "area": "ealing-broadway", "building": "Dickens Yard", "street": "Woodville Road, Ealing W5", "phaseYear": 2016, "phaseLabel": "Dickens Yard (Berkeley/St George) — Ealing Broadway", "price": 1700, "budgetTier": "in", "furnished": true, "available": "5 Aug 2027", "availableNow": false, "listedDate": "2026-06-22", "epc": "C", "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/90008760", "agent": "Kinleigh Folkard & Hayward" }], "scheme": "private", "operator": null, "schemeConfidence": "unverified", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "grand-union-allium-house-1830", "area": "grand-union", "building": "Allium House", "street": "Grand Union, Alperton HA0", "phaseYear": 2021, "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer", "price": 1830, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-06-23", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/90047154", "agent": "Letting Engine" }], "scheme": "private", "operator": null, "schemeConfidence": "unverified", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "grand-union-celeste-house-1755", "area": "grand-union", "building": "Celeste House", "street": "Grand Union, Alperton HA0", "phaseYear": 2021, "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer", "price": 1755, "budgetTier": "in", "furnished": true, "available": "29 Jul 2026", "availableNow": false, "listedDate": "2026-06-03", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/87902247", "agent": "Lessel" }], "scheme": "private", "operator": null, "schemeConfidence": "unverified", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "grand-union-lavey-house-1750", "area": "grand-union", "building": "Lavey House", "street": "Belgrave Road, Alperton HA0", "phaseYear": 2021, "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer", "price": 1750, "budgetTier": "in", "furnished": true, "available": "12 Jul 2026", "availableNow": false, "listedDate": "2026-02-18", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/160354484", "agent": "Yours Link" }], "scheme": "private", "operator": null, "schemeConfidence": "unverified", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "grand-union-lavey-house-1950", "area": "grand-union", "building": "Lavey House", "street": "Grand Union, Alperton HA0", "phaseYear": 2021, "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer", "price": 1950, "budgetTier": "over", "furnished": true, "available": "8 Aug 2026", "availableNow": false, "listedDate": "2026-06-04", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/132240377", "agent": "JOHNS&CO" }], "scheme": "private", "operator": null, "schemeConfidence": "unverified", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "north-acton-victoria-road-1800", "area": "north-acton", "building": "Victoria Road", "street": "Victoria Road, North Acton W3 6BT", "phaseYear": 2021, "phaseLabel": "Victoria Road (UNCLE Acton area) — newer", "price": 1800, "budgetTier": "in", "furnished": true, "available": "Ask agent", "availableNow": false, "listedDate": "2026-04-23", "epc": "B", "sizeSqft": 475, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/174831818", "agent": "Life Residential" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "north-acton-victoria-road-1850", "area": "north-acton", "building": "Victoria Road", "street": "Victoria Road, North Acton W3 6BT", "phaseYear": 2021, "phaseLabel": "Victoria Road (UNCLE Acton area) — newer", "price": 1850, "budgetTier": "in", "furnished": true, "available": "Ask agent", "availableNow": false, "listedDate": "2026-06-04", "epc": "B", "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/73374909/", "agent": "LiFE Residential" }, { "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89302203", "agent": "Life Residential" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "north-acton-rehearsal-rooms-1925", "area": "north-acton", "building": "Rehearsal Rooms", "street": "3 Victoria Road, North Acton W3 6HU", "phaseYear": 2018, "phaseLabel": "Rehearsal Rooms (BTR) — North Acton", "price": 1925, "budgetTier": "over", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-06-14", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/90103284", "agent": "Savills Lettings" }, { "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/90094581", "agent": "Right Now Residential" }], "scheme": "btr", "operator": "Rehearsal Rooms", "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "north-acton-rehearsal-rooms-1980", "area": "north-acton", "building": "Rehearsal Rooms", "street": "3 Victoria Road, North Acton W3 6HU", "phaseYear": 2018, "phaseLabel": "Rehearsal Rooms (BTR) — North Acton", "price": 1980, "budgetTier": "over", "furnished": true, "available": "10 Jul 2026", "availableNow": false, "listedDate": "2026-06-14", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/90103587", "agent": "Savills Lettings" }], "scheme": "btr", "operator": "Rehearsal Rooms", "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "north-acton-portal-way-1998", "area": "north-acton", "building": "Portal Way", "street": "Portal Way, North Acton W3", "phaseYear": 2022, "phaseLabel": "Portal Way / North Acton towers — newer", "price": 1998, "budgetTier": "over", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-06-02", "epc": "B", "sizeSqft": null, "sources": [{ "platform": "zoopla", "url": "https://www.zoopla.co.uk/to-rent/details/70924052/", "agent": "Cedar Estates" }, { "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/89210139", "agent": "Cedar Estates" }], "scheme": "private", "operator": null, "schemeConfidence": "confirmed", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "cricklewood-chichele-road-1845", "area": "cricklewood", "building": "Chichele Road", "street": "Chichele Road, NW2 3DA", "phaseYear": 2010, "phaseLabel": "Cricklewood — period/conversion, age uncertain", "price": 1845, "budgetTier": "in", "furnished": true, "available": "Now", "availableNow": true, "listedDate": "2026-05-30", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/88818318", "agent": "Abbeylord Properties" }], "scheme": "private", "operator": null, "schemeConfidence": "unverified", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true },
-    { "id": "hendon-waterside-hendon-waterside-1750", "area": "hendon-waterside", "building": "Hendon Waterside", "street": "Hendon Waterside, NW9", "phaseYear": 2018, "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer", "price": 1750, "budgetTier": "in", "furnished": true, "available": "Ask agent", "availableNow": false, "listedDate": "2026-06-24", "epc": null, "sizeSqft": null, "sources": [{ "platform": "rightmove", "url": "https://www.rightmove.co.uk/properties/90096690", "agent": "Right Now Residential" }], "scheme": "private", "operator": null, "schemeConfidence": "unverified", "schemeSource": "live-listing", "firstSeen": "2026-06-25", "lastSeen": "2026-06-25", "status": "active", "isNew": true }
+    {
+      "id": "beaufort-colindale-cornelia-house-1800",
+      "area": "beaufort-colindale",
+      "building": "Cornelia House",
+      "street": "Caversham Road",
+      "phaseYear": 2019,
+      "phaseLabel": "Completed ~2019 — newer",
+      "price": 1800,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-25",
+      "epc": "B",
+      "sizeSqft": 553,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73541753/",
+          "agent": "JOHNS&CO"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90122052",
+          "agent": "JOHNS&CO"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-celeste-house-1733",
+      "area": "beaufort-colindale",
+      "building": "Celeste House",
+      "street": "Caversham Road",
+      "phaseYear": 2019,
+      "phaseLabel": "Completed ~2019/20 — newer",
+      "price": 1733,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "24 Aug 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-24",
+      "epc": null,
+      "sizeSqft": 455,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/128666687",
+          "agent": "LDM Properties"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-08-24"
+    },
+    {
+      "id": "beaufort-colindale-castleton-house-1700",
+      "area": "beaufort-colindale",
+      "building": "Castleton House",
+      "street": "Caversham Road",
+      "phaseYear": 2019,
+      "phaseLabel": "Completed ~2019 — newer (EPC C, age uncertain)",
+      "price": 1700,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "5 Aug 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-06",
+      "epc": "C",
+      "sizeSqft": 548,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89267967",
+          "agent": "Romans & Partners"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-25",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-08-05"
+    },
+    {
+      "id": "beaufort-colindale-grevillea-house-1820",
+      "area": "beaufort-colindale",
+      "building": "Grevillea House",
+      "street": "Colindale Gardens (Bute Close)",
+      "phaseYear": 2020,
+      "phaseLabel": "Colindale Gardens (Redrow) — newer",
+      "price": 1820,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "15 Aug 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-16",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89760054",
+          "agent": "Charles William"
+        },
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/63823885/",
+          "agent": "Charles William"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-08-15"
+    },
+    {
+      "id": "beaufort-colindale-charcot-road-1700",
+      "area": "beaufort-colindale",
+      "building": "Charcot Road",
+      "street": "Charcot Road, Colindale Gardens",
+      "phaseYear": 2020,
+      "phaseLabel": "Colindale Gardens (Redrow) — newer",
+      "price": 1700,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "listedDate": "2026-06-22",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89969550",
+          "agent": "Dexters"
+        },
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73508947/",
+          "agent": "Dexters"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-lismore-boulevard-1800",
+      "area": "beaufort-colindale",
+      "building": "Lismore Boulevard",
+      "street": "Colindale Gardens",
+      "phaseYear": 2021,
+      "phaseLabel": "Colindale Gardens (Redrow) new build — newer",
+      "price": 1800,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-17",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/110032067",
+          "agent": "Empire Chase"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-fermont-house-1950",
+      "area": "beaufort-colindale",
+      "building": "Fermont House",
+      "street": "Beaufort Square",
+      "phaseYear": 2020,
+      "phaseLabel": "Late phase ~2018+ — newer",
+      "price": 1950,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "23 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-08",
+      "epc": "C",
+      "sizeSqft": 549,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/88520766",
+          "agent": "Let UK Home"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-07-23"
+    },
+    {
+      "id": "beaufort-colindale-florence-house-1880",
+      "area": "beaufort-colindale",
+      "building": "Florence House",
+      "street": "Lundy Close, Colindale Gardens",
+      "phaseYear": 2020,
+      "phaseLabel": "Colindale Gardens (Savills BTR) — newer",
+      "price": 1880,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "10 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-13",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89673288",
+          "agent": "Savills Lettings"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Savills",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-07-10"
+    },
+    {
+      "id": "beaufort-colindale-florence-house-1950",
+      "area": "beaufort-colindale",
+      "building": "Florence House",
+      "street": "Lundy Close, Colindale Gardens",
+      "phaseYear": 2020,
+      "phaseLabel": "Colindale Gardens (Savills BTR) — newer",
+      "price": 1950,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "17 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-13",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89673318",
+          "agent": "Savills Lettings"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90094821",
+          "agent": "Right Now Residential"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Savills",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-07-17"
+    },
+    {
+      "id": "beaufort-colindale-lismore-boulevard-2000",
+      "area": "beaufort-colindale",
+      "building": "Lismore Boulevard",
+      "street": "Colindale Gardens",
+      "phaseYear": 2021,
+      "phaseLabel": "Colindale Gardens (Redrow) new build — newer",
+      "price": 2000,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-17",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73475204/",
+          "agent": "Benham & Reeves"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89805726",
+          "agent": "Benham & Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-fairbank-house-1800",
+      "area": "beaufort-colindale",
+      "building": "Fairbank House",
+      "street": "Beaufort Square",
+      "phaseYear": 2021,
+      "phaseLabel": "Launched 2018, completed ~2021 — newer",
+      "price": 1800,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2025-10-09",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/71520089/",
+          "agent": "Benham and Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-25",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-golding-house-1750",
+      "area": "beaufort-colindale",
+      "building": "Golding House",
+      "street": "Beaufort Square",
+      "phaseYear": 2016,
+      "phaseLabel": "Launched 2015 — older",
+      "price": 1750,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2025-10-09",
+      "epc": "C",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/71522249/",
+          "agent": "Benham and Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-25",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-fermont-house-1850",
+      "area": "beaufort-colindale",
+      "building": "Fermont House",
+      "street": "Beaufort Square",
+      "phaseYear": 2020,
+      "phaseLabel": "Late phase ~2018+ — newer",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "9 Aug 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-05",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73380845/",
+          "agent": "Benham and Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-08-09"
+    },
+    {
+      "id": "beaufort-colindale-amelia-house-1650",
+      "area": "beaufort-colindale",
+      "building": "Amelia House",
+      "street": "Boulevard Drive",
+      "phaseYear": 2012,
+      "phaseLabel": "Earlier phase ~2010–13 — oldest (secure parking)",
+      "price": 1650,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-04-18",
+      "epc": "C",
+      "sizeSqft": 454,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/72968081/",
+          "agent": "London-Tokyo Property Services"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-25",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-lismore-boulevard-1750",
+      "area": "beaufort-colindale",
+      "building": "Lismore Boulevard",
+      "street": "Colindale Gardens",
+      "phaseYear": 2021,
+      "phaseLabel": "Colindale Gardens (Redrow) new build — newer",
+      "price": 1750,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "listedDate": "2026-06-04",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73371279/",
+          "agent": "Dexters"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-25",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-reverence-house-1850",
+      "area": "beaufort-colindale",
+      "building": "Reverence House",
+      "street": "Colindale Gardens (Lismore Blvd)",
+      "phaseYear": 2021,
+      "phaseLabel": "Colindale Gardens (Redrow) — newer",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-08",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/62846794/",
+          "agent": "Empire Chase"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-lismore-boulevard-1850",
+      "area": "beaufort-colindale",
+      "building": "Lismore Boulevard",
+      "street": "Colindale Gardens",
+      "phaseYear": 2021,
+      "phaseLabel": "Colindale Gardens (Redrow) new build — newer",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "listedDate": null,
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73380741/",
+          "agent": "Benham and Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-25",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "ealing-broadway-dickens-yard-1700",
+      "area": "ealing-broadway",
+      "building": "Dickens Yard",
+      "street": "Woodville Road, Ealing W5",
+      "phaseYear": 2016,
+      "phaseLabel": "Dickens Yard (Berkeley/St George) — Ealing Broadway",
+      "price": 1700,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "5 Aug 2027",
+      "availableNow": false,
+      "listedDate": "2026-06-22",
+      "epc": "C",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90008760",
+          "agent": "Kinleigh Folkard & Hayward"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-25",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2027-08-05"
+    },
+    {
+      "id": "grand-union-allium-house-1830",
+      "area": "grand-union",
+      "building": "Allium House",
+      "street": "Grand Union, Alperton HA0",
+      "phaseYear": 2021,
+      "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer",
+      "price": 1830,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-23",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90047154",
+          "agent": "Letting Engine"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "grand-union-celeste-house-1755",
+      "area": "grand-union",
+      "building": "Celeste House",
+      "street": "Grand Union, Alperton HA0",
+      "phaseYear": 2021,
+      "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer",
+      "price": 1755,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "29 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-03",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/87902247",
+          "agent": "Lessel"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-07-29"
+    },
+    {
+      "id": "grand-union-lavey-house-1750",
+      "area": "grand-union",
+      "building": "Lavey House",
+      "street": "Belgrave Road, Alperton HA0",
+      "phaseYear": 2021,
+      "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer",
+      "price": 1750,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "12 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-02-18",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/160354484",
+          "agent": "Yours Link"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-07-12"
+    },
+    {
+      "id": "grand-union-lavey-house-1950",
+      "area": "grand-union",
+      "building": "Lavey House",
+      "street": "Grand Union, Alperton HA0",
+      "phaseYear": 2021,
+      "phaseLabel": "Grand Union (Berkeley/St George) canalside — newer",
+      "price": 1950,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "8 Aug 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-04",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/132240377",
+          "agent": "JOHNS&CO"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-08-08"
+    },
+    {
+      "id": "north-acton-victoria-road-1800",
+      "area": "north-acton",
+      "building": "Victoria Road",
+      "street": "Victoria Road, North Acton W3 6BT",
+      "phaseYear": 2021,
+      "phaseLabel": "Victoria Road (UNCLE Acton area) — newer",
+      "price": 1800,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "listedDate": "2026-04-23",
+      "epc": "B",
+      "sizeSqft": 475,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/174831818",
+          "agent": "Life Residential"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "north-acton-victoria-road-1850",
+      "area": "north-acton",
+      "building": "Victoria Road",
+      "street": "Victoria Road, North Acton W3 6BT",
+      "phaseYear": 2021,
+      "phaseLabel": "Victoria Road (UNCLE Acton area) — newer",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "listedDate": "2026-06-04",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73374909/",
+          "agent": "LiFE Residential"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89302203",
+          "agent": "Life Residential"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "north-acton-rehearsal-rooms-1925",
+      "area": "north-acton",
+      "building": "Rehearsal Rooms",
+      "street": "3 Victoria Road, North Acton W3 6HU",
+      "phaseYear": 2018,
+      "phaseLabel": "Rehearsal Rooms (BTR) — North Acton",
+      "price": 1925,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-14",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90103284",
+          "agent": "Savills Lettings"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90094581",
+          "agent": "Right Now Residential"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Rehearsal Rooms",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "north-acton-rehearsal-rooms-1980",
+      "area": "north-acton",
+      "building": "Rehearsal Rooms",
+      "street": "3 Victoria Road, North Acton W3 6HU",
+      "phaseYear": 2018,
+      "phaseLabel": "Rehearsal Rooms (BTR) — North Acton",
+      "price": 1980,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "10 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-14",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90103587",
+          "agent": "Savills Lettings"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Rehearsal Rooms",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": "2026-07-10"
+    },
+    {
+      "id": "north-acton-portal-way-1998",
+      "area": "north-acton",
+      "building": "Portal Way",
+      "street": "Portal Way, North Acton W3",
+      "phaseYear": 2022,
+      "phaseLabel": "Portal Way / North Acton towers — newer",
+      "price": 1998,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-02",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/70924052/",
+          "agent": "Cedar Estates"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89210139",
+          "agent": "Cedar Estates"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "cricklewood-chichele-road-1845",
+      "area": "cricklewood",
+      "building": "Chichele Road",
+      "street": "Chichele Road, NW2 3DA",
+      "phaseYear": 2010,
+      "phaseLabel": "Cricklewood — period/conversion, age uncertain",
+      "price": 1845,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-05-30",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/88818318",
+          "agent": "Abbeylord Properties"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "hendon-waterside-hendon-waterside-1750",
+      "area": "hendon-waterside",
+      "building": "Hendon Waterside",
+      "street": "Hendon Waterside, NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1750,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-24",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90096690",
+          "agent": "Right Now Residential"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-25",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-26",
+      "availableDate": null
+    },
+    {
+      "id": "beaufort-colindale-golding-house-2000",
+      "area": "beaufort-colindale",
+      "building": "Golding House",
+      "street": "Beaufort Square",
+      "phaseYear": 2016,
+      "phaseLabel": "Launched 2015 — older",
+      "price": 2000,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-24",
+      "epc": "C",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73533177/",
+          "agent": "Evergreen"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "likely",
+      "schemeSource": "private-block",
+      "firstSeen": "2026-06-26",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": true,
+      "availableDate": null
+    },
+    {
+      "id": "hendon-waterside-hendon-waterside-1768",
+      "area": "hendon-waterside",
+      "building": "Hendon Waterside",
+      "street": "Nuthatch Apartments, Shearwater Drive, NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1768,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "5 Aug 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-20",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/149570471",
+          "agent": "SHIDAI Property"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-26",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": true,
+      "availableDate": "2026-08-05"
+    },
+    {
+      "id": "hendon-waterside-hendon-waterside-1850",
+      "area": "hendon-waterside",
+      "building": "Hendon Waterside",
+      "street": "Aven Apartments, Perryfield Way, NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-25",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73541333/",
+          "agent": "Charles William"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-26",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": true,
+      "availableDate": null
+    },
+    {
+      "id": "hendon-waterside-hendon-waterside-1795",
+      "area": "hendon-waterside",
+      "building": "Hendon Waterside",
+      "street": "Wryneck Apartments, Perryfield Way, NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1795,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-11",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73434276/",
+          "agent": "Benham and Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-26",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": true,
+      "availableDate": null
+    },
+    {
+      "id": "hendon-waterside-hendon-waterside-1900",
+      "area": "hendon-waterside",
+      "building": "Hendon Waterside",
+      "street": "Perryfield Way, Hendon, NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1900,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "27 Jun 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-18",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89497728",
+          "agent": "Global House Estates"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-26",
+      "lastSeen": "2026-06-26",
+      "status": "active",
+      "isNew": true,
+      "availableDate": "2026-06-27"
+    }
   ]
 }

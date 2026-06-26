@@ -6,11 +6,16 @@ import * as L from "../flat-search/viewer-logic.mjs";
 const ROOT = new URL("../", import.meta.url);
 const store = JSON.parse(readFileSync(new URL("flat-search/listings.json", ROOT)));
 
-test("meta has areas, budget, staleThresholds", () => {
+test("meta has areas, budget, staleThresholds, moveTiming", () => {
   assert.ok(Array.isArray(store.meta.areas) && store.meta.areas.length === 8, "8 areas");
   const b = store.meta.budget;
   assert.deepEqual([b.min, b.inMax, b.searchMax], [1600, 1850, 2000], "budget bands");
   assert.ok(store.meta.staleThresholdsDays, "stale thresholds kept");
+  const mt = store.meta.moveTiming;
+  assert.ok(mt, "moveTiming present");
+  assert.equal(mt.rentPeriodAnchorDay, 14, "anchor day");
+  assert.equal(mt.noticePeriodsRequired, 2, "two periods");
+  assert.ok(mt.overlapIdealDays <= mt.overlapMaxDays, "ideal ≤ max overlap");
 });
 
 test("area ids are unique and include the anchor", () => {
@@ -70,6 +75,57 @@ test("compareListings orders by area tier then scheme then phase then price", ()
   assert.deepEqual(sorted.map(x => x.area), ["anchor", "t1", "t2"], "anchor first");
   const within = [mk("t1","private",2021,1600), mk("t1","btr",2018,1900)].sort((a,b)=>L.compareListings(a,b,areaById));
   assert.equal(within[0].scheme, "btr", "BTR floats up within group");
+});
+
+const MT = { rentPeriodAnchorDay: 14, noticePeriodsRequired: 2, overlapIdealDays: 7, overlapMaxDays: 14, noticeServedDate: null };
+const iso = ms => new Date(ms).toISOString().slice(0, 10);
+
+test("moveOutFloor steps a month at the anchor-day boundary", () => {
+  const floor = d => iso(L.moveOutFloorMs(Date.parse(d + "T00:00:00Z"), MT));
+  assert.equal(floor("2026-06-26"), "2026-09-14", "26 Jun → 14 Sep");
+  assert.equal(floor("2026-07-10"), "2026-09-14", "10 Jul (≤14) → 14 Sep");
+  assert.equal(floor("2026-07-14"), "2026-09-14", "14 Jul (on anchor) → 14 Sep");
+  assert.equal(floor("2026-07-15"), "2026-10-14", "15 Jul (>14) → steps to 14 Oct");
+  assert.equal(floor("2026-12-20"), "2027-03-14", "Dec rollover → 14 Mar 2027");
+});
+
+test("noticeDeadline is the current period end; null once notice served", () => {
+  assert.equal(iso(L.noticeDeadlineMs(Date.parse("2026-06-26T00:00:00Z"), MT)), "2026-07-14");
+  assert.equal(L.noticeDeadlineMs(Date.parse("2026-06-26T00:00:00Z"), { ...MT, noticeServedDate: "2026-07-01" }), null);
+});
+
+test("timingRefMs pins the floor once notice is served (rolls otherwise)", () => {
+  const today = Date.parse("2026-08-20T00:00:00Z"); // well past the 14 Jul step
+  // rolling (not served): floor rolls forward to 14 Nov
+  assert.equal(iso(L.moveOutFloorMs(L.timingRefMs(today, MT), MT)), "2026-11-14");
+  // served 10 Jul: floor pinned to 14 Sep regardless of today
+  const served = { ...MT, noticeServedDate: "2026-07-10" };
+  assert.equal(iso(L.moveOutFloorMs(L.timingRefMs(today, served), served)), "2026-09-14");
+});
+
+test("timingFit buckets around the move-out floor", () => {
+  const NOWMS = Date.parse("2026-06-26T00:00:00Z");
+  const M = Date.parse("2026-09-14T00:00:00Z"); // floor for today
+  const fit = (availableDate, extra = {}) => L.timingFit({ availableDate, ...extra }, M, MT, NOWMS);
+  assert.equal(fit("2026-09-14"), "ideal", "available on move-out day (0d) → ideal");
+  assert.equal(fit("2026-09-07"), "ideal", "7d overlap → ideal");
+  assert.equal(fit("2026-09-06"), "workable", "8d overlap → workable");
+  assert.equal(fit("2026-08-31"), "workable", "14d overlap → workable");
+  assert.equal(fit("2026-08-30"), "early", "15d overlap → early (costly)");
+  assert.equal(fit("2026-09-20"), "late", "available after move-out → late (gap)");
+  assert.equal(fit(null), "unknown", "no date → unknown");
+  assert.equal(L.timingFit({ availableNow: true }, M, MT, NOWMS), "early", "available now → early");
+});
+
+test("compareListings: timingCtx floats well-timed flats up within a tier", () => {
+  const areaById = { t2: { tier: 2 } };
+  const ctx = { floorMs: Date.parse("2026-09-14T00:00:00Z"), moveTiming: MT, nowMs: Date.parse("2026-06-26T00:00:00Z") };
+  const early = { area: "t2", scheme: "btr", phaseYear: 2025, price: 1600, availableNow: true };
+  const ideal = { area: "t2", scheme: "private", phaseYear: 2010, price: 2000, availableDate: "2026-09-10" };
+  // without ctx: BTR/newest/cheapest wins (existing behaviour)
+  assert.equal([early, ideal].sort((a, b) => L.compareListings(a, b, areaById))[0], early);
+  // with ctx: the ideally-timed flat floats up despite worse scheme/phase/price
+  assert.equal([early, ideal].sort((a, b) => L.compareListings(a, b, areaById, ctx))[0], ideal);
 });
 
 test("groupByArea keeps roster order and drops empty areas", () => {
