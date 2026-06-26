@@ -61,6 +61,17 @@
   .epc { font-weight:700; } .epc.B { color:#2ecc71; } .epc.C { color:#f1c40f; } .epc.D { color:#e67e22; }
   details { margin-top:16px; } summary { cursor:pointer; color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.05em; padding:6px 0; }
   footer { color:var(--muted); font-size:12px; margin-top:30px; text-align:center; } footer code { color:var(--accent); }
+  /* personal want/reject controls (localStorage) */
+  .prefbar { display:flex; gap:8px; margin-top:12px; }
+  .pbtn { font-size:12px; font-weight:600; cursor:pointer; border-radius:8px; padding:5px 11px;
+    background:transparent; border:1px solid var(--line); color:var(--muted); }
+  .pbtn:hover { border-color:var(--muted); color:var(--txt); }
+  .pbtn.pwant.on { background:var(--new); color:#06210f; border-color:var(--new); }
+  .pbtn.preject.on { background:var(--gone); color:#2a0606; border-color:var(--gone); }
+  .card.pref-want { border-color:var(--new); box-shadow:inset 0 0 0 1px var(--new); opacity:1; }
+  .card.pref-want .title::before { content:"★ "; color:var(--new); }
+  .card.pref-reject { opacity:.5; }
+  .card.pref-reject .title { text-decoration:line-through; }
 </style>
 </head>
 <body>
@@ -144,7 +155,7 @@ window.FLAT_DATA = /*DATA_START*/{
           "Adrienne Apartments": 2007,
           "Lismore Boulevard": 2021,
           "Reverence House": 2021,
-          "Grevillea House": 2020,
+          "Grevillea House": 2019,
           "Charcot Road": 2020,
           "Florence House": 2020
         },
@@ -528,8 +539,8 @@ window.FLAT_DATA = /*DATA_START*/{
       "area": "beaufort-colindale",
       "building": "Grevillea House",
       "street": "Colindale Gardens (Bute Close)",
-      "phaseYear": 2020,
-      "phaseLabel": "Colindale Gardens (Redrow) — newer",
+      "phaseYear": 2019,
+      "phaseLabel": "Colindale Gardens (Redrow), completed ~Q3 2019 — newer",
       "price": 1820,
       "budgetTier": "in",
       "furnished": true,
@@ -1669,9 +1680,24 @@ function groupByArea(listings, areas) {
   const D = window.FLAT_DATA, M = D.meta;
   const TH = M.staleThresholdsDays, BUD = M.budget, NOW = Date.now();
   const areaById = Object.fromEntries(M.areas.map(a => [a.id, a]));
+
+  // --- Personal want/reject preferences: client-side only, localStorage keyed by listing id. ---
+  // Survives skill regen (ids are stable) and lives outside the store + pure logic. Per-device.
+  const PREF_KEY = "flatPrefs.v1";
+  let PREFS = {}; try { PREFS = JSON.parse(localStorage.getItem(PREF_KEY)) || {}; } catch (e) { PREFS = {}; }
+  const getPref = id => PREFS[id] || null;                 // "want" | "reject" | null
+  function setPref(id, v) {
+    if (v) PREFS[id] = v; else delete PREFS[id];
+    try { localStorage.setItem(PREF_KEY, JSON.stringify(PREFS)); } catch (e) {}
+  }
+  const prefRank = x => { const p = getPref(x.id); return p === "want" ? 0 : (p === "reject" ? 2 : 1); };
+  // Preference is the OUTERMOST sort key — want floats to top, reject sinks; existing order applies within each.
+  const comparePref = (a, b, tctx) => (prefRank(a) - prefRank(b)) || compareListings(a, b, areaById, tctx);
+  // All-tab filter state, hoisted so a want/reject re-render doesn't reset the user's search/filters.
+  let q = "", fArea = "", fScheme = "", fTiming = "", showOver = false, hideGone = true, wellTimedFirst = true;
   document.getElementById("sub").textContent =
     "Last run " + M.lastRun + " · " + M.areas.length + " areas · £" + BUD.min + "–" + BUD.inMax +
-    " in budget, to £" + BUD.searchMax + " shown (over collapsed) · days-on-market live";
+    " in budget, to £" + BUD.searchMax + " shown (over collapsed) · days-on-market live · ✓/✗ on each card saves your picks (this device)";
 
   // --- Move-timing (recomputed live each render against today) ---
   const MT = M.moveTiming || null;
@@ -1727,6 +1753,11 @@ function groupByArea(listings, areas) {
   function card(x, showArea) {
     const st = staleTier(x, TH, NOW), over = budgetTier(x.price, BUD) === "over";
     const cls = x.status === "gone" ? "gone" : (st === "problem" ? "problem" : (over ? "over" : (x.unconfirmed ? "unconfirmed" : "")));
+    const pf = getPref(x.id);
+    const prefbar = '<div class="prefbar">' +
+      '<button class="pbtn pwant' + (pf === "want" ? " on" : "") + '" data-id="' + x.id + '" data-pref="want" title="Want this — pin to top">✓ Want</button>' +
+      '<button class="pbtn preject' + (pf === "reject" ? " on" : "") + '" data-id="' + x.id + '" data-pref="reject" title="Not interested — strike out & sink">✗ Not interested</button>' +
+      '</div>';
     const badge = x.status === "gone"
       ? '<span class="badge ' + (x.goneReason === "let-agreed" ? "letagreed" : "gone") + '">' + (x.goneReason === "let-agreed" ? "let agreed" : "removed") + '</span>'
       : (x.isNew ? '<span class="badge new">new</span>' : "");
@@ -1742,10 +1773,10 @@ function groupByArea(listings, areas) {
     const scheme = x.scheme === "btr"
       ? ' <span class="badge btr" title="' + (x.schemeConfidence || "") + (x.schemeSource ? " · " + x.schemeSource : "") + '">' + (unverified ? "BTR?" : "BTR") + (x.operator ? " · " + x.operator : "") + '</span>'
       : (x.scheme === "private" ? ' <span class="badge private">private landlord</span>' : "");
-    return '<div class="card ' + cls + '"><div class="row1"><span class="title">' + x.building + '</span>' + badge + unconfB + timingChip(x) + scheme + overB + areaB + dupe +
+    return '<div class="card ' + cls + (pf ? ' pref-' + pf : '') + '"><div class="row1"><span class="title">' + x.building + '</span>' + badge + unconfB + timingChip(x) + scheme + overB + areaB + dupe +
       '<span class="price">£' + x.price.toLocaleString() + '</span></div>' +
       '<div class="meta"><span>' + x.street + '</span>' + avail + epc + size + domBadge(x) + '<span>first seen ' + x.firstSeen + '</span></div>' +
-      '<div class="phase">📅 ' + x.phaseLabel + '</div><div class="src">' + srcs + '</div></div>';
+      '<div class="phase">📅 ' + x.phaseLabel + '</div><div class="src">' + srcs + '</div>' + prefbar + '</div>';
   }
   // Split a list into shown (in-budget, active, not stale) and hidden (over / problem / gone).
   function partition(list) {
@@ -1763,7 +1794,7 @@ function groupByArea(listings, areas) {
   }
 
   function renderArea(area) {
-    const list = D.listings.filter(x => x.area === area.id).sort((a, b) => compareListings(a, b, areaById, TCTX));
+    const list = D.listings.filter(x => x.area === area.id).sort((a, b) => comparePref(a, b, TCTX));
     const p = partition(list);
     return '<div class="areahead"><b>' + area.name + '</b> · ' + area.borough + ' · Zone ' + area.zone +
       '<span class="chip t-' + area.tier + '">' + tierLabel(area.tier) + '</span>' + flagChips(area) + '</div>' +
@@ -1774,7 +1805,6 @@ function groupByArea(listings, areas) {
   }
 
   function renderAll() {
-    let q = "", fArea = "", fScheme = "", fTiming = "", showOver = false, hideGone = true, wellTimedFirst = true;
     const box = document.createElement("div");
     function draw() {
       let list = D.listings.slice();
@@ -1784,7 +1814,7 @@ function groupByArea(listings, areas) {
       if (!showOver) list = list.filter(x => budgetTier(x.price, BUD) === "in");
       if (hideGone) list = list.filter(x => x.status !== "gone");
       if (q) { const s = q.toLowerCase(); list = list.filter(x => (x.building + " " + x.street + " " + x.sources.map(z => z.agent).join(" ")).toLowerCase().includes(s)); }
-      list.sort((a, b) => compareListings(a, b, areaById, wellTimedFirst ? TCTX : null));
+      list.sort((a, b) => comparePref(a, b, wellTimedFirst ? TCTX : null));
       const wellTimed = MT ? list.filter(x => ["ideal", "workable"].includes(timingFit(x, FLOOR, MT, NOW))).length : 0;
       const stats = [["Showing", list.length], ["Well-timed", wellTimed], ["New", list.filter(x => x.isNew).length], ["BTR", list.filter(x => x.scheme === "btr").length]];
       box.querySelector("#allStats").innerHTML = stats.map(s => '<div class="stat"><div class="n">' + s[1] + '</div><div class="l">' + s[0] + '</div></div>').join("");
@@ -1802,6 +1832,13 @@ function groupByArea(listings, areas) {
       '<label style="color:var(--muted);font-size:13px"><input type="checkbox" id="fg" /> show gone</label>' +
       timingToggle + '</div>' +
       '<div class="stats" id="allStats"></div><div id="allList"></div>';
+    box.querySelector("#q").value = q;
+    box.querySelector("#fa").value = fArea;
+    box.querySelector("#fs").value = fScheme;
+    if (MT) box.querySelector("#ft").value = fTiming;
+    box.querySelector("#fo").checked = showOver;
+    box.querySelector("#fg").checked = !hideGone;
+    if (MT) box.querySelector("#fw").checked = wellTimedFirst;
     box.querySelector("#q").oninput = e => { q = e.target.value; draw(); };
     box.querySelector("#fa").onchange = e => { fArea = e.target.value; draw(); };
     box.querySelector("#fs").onchange = e => { fScheme = e.target.value; draw(); };
@@ -1823,6 +1860,14 @@ function groupByArea(listings, areas) {
   }
   tabsEl.innerHTML = tabs.map(t => '<div class="tab" data-id="' + t.id + '">' + t.label + (t.z ? '<span class="z">' + t.z + '</span>' : "") + '</div>').join("");
   [...tabsEl.children].forEach(c => c.onclick = () => select(c.dataset.id));
+  // Delegated want/reject clicks: toggle the pref (click the active choice again to clear), then re-render.
+  const currentTabId = () => { const a = [...tabsEl.children].find(c => c.classList.contains("active")); return a ? a.dataset.id : "beaufort-colindale"; };
+  view.addEventListener("click", e => {
+    const b = e.target.closest(".pbtn"); if (!b) return;
+    const id = b.dataset.id, choice = b.dataset.pref;
+    setPref(id, getPref(id) === choice ? null : choice);
+    select(currentTabId());
+  });
   select("beaufort-colindale");
 </script>
 </body>

@@ -10,7 +10,7 @@ Repeatable rental search across several areas. Re-runs the same criteria per are
 ## Files (all under `flat-search/`)
 - `flat-search/listings.json` — canonical store. **Read first, write last.** `meta.areas[]` is the area roster; `meta.budget` is the global budget.
 - `flat-search/viewer-logic.mjs` — pure view logic (budget/sort/group/staleness). Source of truth for the viewer's logic.
-- `flat-search/flats.html` — self-contained tabbed viewer. Embeds the store between `/*DATA_START*/…/*DATA_END*/` and an exact copy of `viewer-logic.mjs` (minus `export `) between `/*LOGIC_START*/…/*LOGIC_END*/`.
+- `flat-search/flats.html` — self-contained tabbed viewer. Embeds the store between `/*DATA_START*/…/*DATA_END*/` and an exact copy of `viewer-logic.mjs` (minus `export `) between `/*LOGIC_START*/…/*LOGIC_END*/`. It also carries a **client-side want/reject layer** (✓/✗ buttons per card, saved in `localStorage` key `flatPrefs.v1`, keyed by listing id; want pins to top, reject strikes out & sinks). This is plain HTML/CSS/JS outside both marker blocks — regen only swaps DATA (and LOGIC if changed), so it is preserved. Keep listing `id`s stable so saved prefs survive.
 - `scripts/verify-flat-search.mjs` — run `node --test scripts/verify-flat-search.mjs` after any edit.
 
 Background: `docs/flat-search/2026-06-25-area-expansion-research.md` (area dossier + sources); `docs/superpowers/specs/2026-06-25-multi-area-flat-search-design.md` (design).
