@@ -985,12 +985,12 @@
       "imageUrl": "https://lid.zoocdn.com/u/480/360/ce0559d0f26cab3c0fb0a31e550a8145e684e9b6.jpg"
     },
     {
-      "id": "beaufort-colindale-lismore-boulevard-1850",
+      "id": "beaufort-colindale-lassen-house-1850",
       "area": "beaufort-colindale",
-      "building": "Lismore Boulevard",
+      "building": "Lassen House",
       "street": "Colindale Gardens",
-      "phaseYear": 2021,
-      "phaseLabel": "Colindale Gardens (Redrow) new build — newer",
+      "phaseYear": 2018,
+      "phaseLabel": "Colindale Gardens (Redrow), Lassen House — Stage 1 (~2018)",
       "price": 1850,
       "budgetTier": "in",
       "furnished": true,
@@ -1087,12 +1087,12 @@
       "imageUrl": "https://lid.zoocdn.com/u/480/360/5a0c7a505c3c14e8969cdab5ac6f13fd853dc194.webp"
     },
     {
-      "id": "beaufort-colindale-lismore-boulevard-1900",
+      "id": "beaufort-colindale-greenwich-house-1900",
       "area": "beaufort-colindale",
-      "building": "Lismore Boulevard",
+      "building": "Greenwich House",
       "street": "Colindale Gardens NW9",
       "phaseYear": 2021,
-      "phaseLabel": "Colindale Gardens (Redrow) new build — newer",
+      "phaseLabel": "Colindale Gardens (Redrow), Greenwich House (~2021)",
       "price": 1900,
       "budgetTier": "over",
       "furnished": true,
