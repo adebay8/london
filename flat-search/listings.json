@@ -1,10 +1,11 @@
 {
   "meta": {
-    "lastRun": "2026-06-26",
+    "lastRun": "2026-06-27",
     "budget": {
       "min": 1600,
       "inMax": 1850,
-      "searchMax": 2000
+      "searchMax": 2000,
+      "btrMax": 2150
     },
     "staleThresholdsDays": {
       "slow": 45,
@@ -313,7 +314,8 @@
           "Edward Street"
         ],
         "phaseYears": {
-          "The Maple": 2025
+          "The Maple": 2025,
+          "Brent Cross Town": 2025
         },
         "btrOperators": [
           "Related Argent"
@@ -332,6 +334,58 @@
           "mostlyOverBudget",
           "natRail"
         ]
+      },
+      {
+        "id": "wembley-park",
+        "name": "Wembley Park (Quintain Living BTR)",
+        "borough": "Brent",
+        "zone": "3",
+        "tier": 1,
+        "buildingRoster": [
+          "Repton Gardens",
+          "Canada Gardens",
+          "The Robinson",
+          "Madison House",
+          "Beton House",
+          "Landsby",
+          "Montana House",
+          "Emerald Gardens",
+          "Alto",
+          "Ramsgate House",
+          "Mason Place",
+          "The Stage",
+          "Marathon House",
+          "3 Park Lane",
+          "Alameda",
+          "Ferrum",
+          "Wem Tower"
+        ],
+        "phaseYears": {
+          "Emerald Gardens": 2015,
+          "Alto": 2018,
+          "Landsby": 2018,
+          "Madison House": 2019,
+          "Canada Gardens": 2020,
+          "Repton Gardens": 2021,
+          "The Robinson": 2022,
+          "Beton House": 2023
+        },
+        "btrOperators": [
+          "Quintain Living",
+          "UNCLE",
+          "Dandi"
+        ],
+        "operatorPortals": [
+          "https://www.quintainliving.com/wembley/1-bedroom-flat-to-rent",
+          "https://uncle.co.uk/wembley/one-bedroom/",
+          "https://www.hamptons.co.uk/build-to-rent/london/dandi-wembley"
+        ],
+        "searchUrls": {
+          "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/wembley-park/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2150&price_min=1600&q=Wembley%20Park%2C%20London&radius=0.5&search_source=to-rent",
+          "rightmove": "https://www.rightmove.co.uk/property-to-rent/Wembley-Park.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2150&keywords=Quintain&furnishTypes=furnished"
+        },
+        "expectedBand": "btr",
+        "flags": []
       }
     ],
     "moveTiming": {
@@ -375,10 +429,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/57edec001b3d252421818a6616f98d468f1d2c40.jpg"
     },
@@ -409,10 +463,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-08-24",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/a34b73bca/128666687/a34b73bca303a6328e022c9126659abd_max_656x437.jpeg"
     },
@@ -446,7 +500,7 @@
       "lastSeen": "2026-06-25",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-08-05",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/3a22c5740/89267967/3a22c5740270190f071a98c04022cb1a_max_656x437.jpeg"
     },
@@ -482,10 +536,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-08-15",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/edf6866934a7cfc1db0fbe59e8f095d6fe18b7f4.jpg"
     },
@@ -502,7 +556,7 @@
       "available": "Ask agent",
       "availableNow": false,
       "listedDate": "2026-06-22",
-      "epc": null,
+      "epc": "B",
       "sizeSqft": null,
       "sources": [
         {
@@ -521,10 +575,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/4a916a1cd/89969550/4a916a1cded1707c73547160f686b62a_max_656x437.jpeg"
     },
@@ -555,10 +609,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/82b5cddef/110032067/82b5cddefa445af533e36d2a9ba1fbc2_max_656x437.jpeg"
     },
@@ -592,7 +646,7 @@
       "lastSeen": "2026-06-26",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-07-23",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/2bd7075db/88520766/2bd7075db1d14b437d6f8d2ea322acd8_max_656x437.jpeg"
     },
@@ -604,7 +658,7 @@
       "phaseYear": 2020,
       "phaseLabel": "Colindale Gardens (Savills BTR) — newer",
       "price": 1880,
-      "budgetTier": "over",
+      "budgetTier": "btr",
       "furnished": true,
       "available": "10 Jul 2026",
       "availableNow": false,
@@ -616,6 +670,11 @@
           "platform": "rightmove",
           "url": "https://www.rightmove.co.uk/properties/89673288",
           "agent": "Savills Lettings"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90180525",
+          "agent": "Right Now Residential"
         }
       ],
       "scheme": "btr",
@@ -623,10 +682,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-07-10",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/176942713/89673288/176942713c55589e2a935f697c795cf7_max_656x437.jpeg"
     },
@@ -638,7 +697,7 @@
       "phaseYear": 2020,
       "phaseLabel": "Colindale Gardens (Savills BTR) — newer",
       "price": 1950,
-      "budgetTier": "over",
+      "budgetTier": "btr",
       "furnished": true,
       "available": "17 Jul 2026",
       "availableNow": false,
@@ -650,11 +709,6 @@
           "platform": "rightmove",
           "url": "https://www.rightmove.co.uk/properties/89673318",
           "agent": "Savills Lettings"
-        },
-        {
-          "platform": "rightmove",
-          "url": "https://www.rightmove.co.uk/properties/90094821",
-          "agent": "Right Now Residential"
         }
       ],
       "scheme": "btr",
@@ -662,10 +716,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-07-17",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/172212d65/89673318/172212d6586dbc288e76056a1c791e74_max_656x437.jpeg"
     },
@@ -701,10 +755,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/e83849ec082150f808a6985b90e6d9b3d1af547f.jpg"
     },
@@ -738,7 +792,7 @@
       "lastSeen": "2026-06-25",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/12726f3dd17e8625002cb895fbc37210d1ddf454.jpg"
     },
@@ -769,10 +823,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-25",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/f0a3338f7a5ab110e9e98a4a7a2e087e282ce8be.jpg"
     },
@@ -803,10 +857,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-08-09",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/f8f6161466a773643a77ef76e0979c97b54ca38b.jpg"
     },
@@ -837,10 +891,11 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-25",
-      "status": "active",
+      "lastSeen": "2026-06-26",
+      "status": "gone",
+      "goneReason": "let-agreed",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/b84886ee38191c557641875f3a2689f532f7fdc3.jpg"
     },
@@ -874,7 +929,7 @@
       "lastSeen": "2026-06-25",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/79fe728d05511419f7d69cad4ff3d931ee0785ec.jpg"
     },
@@ -905,10 +960,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/ce0559d0f26cab3c0fb0a31e550a8145e684e9b6.jpg"
     },
@@ -922,7 +977,7 @@
       "price": 1850,
       "budgetTier": "in",
       "furnished": true,
-      "available": "Ask agent",
+      "available": "1 Aug 2026",
       "availableNow": false,
       "listedDate": null,
       "epc": null,
@@ -942,9 +997,111 @@
       "lastSeen": "2026-06-25",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
-      "availableDate": null,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": "2026-08-01",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/163a68ad9678e396e693c03351e7a091a36d5ed5.jpg"
+    },
+    {
+      "id": "beaufort-colindale-golding-house-2000",
+      "area": "beaufort-colindale",
+      "building": "Golding House",
+      "street": "Beaufort Square",
+      "phaseYear": 2016,
+      "phaseLabel": "Launched 2015 — older",
+      "price": 2000,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-24",
+      "epc": "C",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73533177/",
+          "agent": "Evergreen"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "likely",
+      "schemeSource": "private-block",
+      "firstSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": null,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/e01d77ac62c5752ca012b472e9a9614a9ac460bd.jpg"
+    },
+    {
+      "id": "beaufort-colindale-reverence-house-1863",
+      "area": "beaufort-colindale",
+      "building": "Reverence House",
+      "street": "Lismore Boulevard, Colindale Gardens NW9",
+      "phaseYear": 2021,
+      "phaseLabel": "Colindale Gardens (Redrow) — newer",
+      "price": 1863,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-06-08",
+      "epc": null,
+      "sizeSqft": 600,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73406054/",
+          "agent": "JH City Property"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": null,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/5a0c7a505c3c14e8969cdab5ac6f13fd853dc194.webp"
+    },
+    {
+      "id": "beaufort-colindale-lismore-boulevard-1900",
+      "area": "beaufort-colindale",
+      "building": "Lismore Boulevard",
+      "street": "Colindale Gardens NW9",
+      "phaseYear": 2021,
+      "phaseLabel": "Colindale Gardens (Redrow) new build — newer",
+      "price": 1900,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "12 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-04-01",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/72819632/",
+          "agent": "Benham and Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": "2026-07-12",
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/cf2a678b2d35628d1f95a5cb91744c6d2c476b6f.jpg"
     },
     {
       "id": "ealing-broadway-dickens-yard-1700",
@@ -976,7 +1133,7 @@
       "lastSeen": "2026-06-25",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2027-08-05",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/e2148aa56/90008760/e2148aa565c9ac0083cbcb96d29cd9e3_max_656x437.jpeg"
     },
@@ -1007,10 +1164,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/0eda8e672/90047154/0eda8e6725b852d4c79f302d47440c60_max_656x437.jpeg"
     },
@@ -1027,12 +1184,17 @@
       "available": "29 Jul 2026",
       "availableNow": false,
       "listedDate": "2026-06-03",
-      "epc": null,
+      "epc": "B",
       "sizeSqft": null,
       "sources": [
         {
           "platform": "rightmove",
           "url": "https://www.rightmove.co.uk/properties/87902247",
+          "agent": "Lessel"
+        },
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73070240/",
           "agent": "Lessel"
         }
       ],
@@ -1041,10 +1203,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-07-29",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/b494c7dfc/87902247/b494c7dfc09d643175ba242bdc004a92_max_656x437.jpeg"
     },
@@ -1075,10 +1237,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-07-12",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/39e7b7551/160354484/39e7b7551171f63bdf62fd7fb4fb9ae2_max_656x437.jpeg"
     },
@@ -1109,10 +1271,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-08-08",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/e75322e1e/132240377/e75322e1e3147dcec0dbc78dd36a997e_max_656x437.jpeg"
     },
@@ -1143,10 +1305,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/c66eeabb9/174831818/c66eeabb913fc04de77a30fb1d212d46_max_656x437.jpeg"
     },
@@ -1160,8 +1322,8 @@
       "price": 1850,
       "budgetTier": "in",
       "furnished": true,
-      "available": "Ask agent",
-      "availableNow": false,
+      "available": "Now",
+      "availableNow": true,
       "listedDate": "2026-06-04",
       "epc": "B",
       "sizeSqft": null,
@@ -1182,10 +1344,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/3a81495c37d66303033751062b07dcfb182a08cb.jpg"
     },
@@ -1197,7 +1359,7 @@
       "phaseYear": 2018,
       "phaseLabel": "Rehearsal Rooms (BTR) — North Acton",
       "price": 1925,
-      "budgetTier": "over",
+      "budgetTier": "btr",
       "furnished": true,
       "available": "Now",
       "availableNow": true,
@@ -1212,7 +1374,7 @@
         },
         {
           "platform": "rightmove",
-          "url": "https://www.rightmove.co.uk/properties/90094581",
+          "url": "https://www.rightmove.co.uk/properties/90180456",
           "agent": "Right Now Residential"
         }
       ],
@@ -1221,10 +1383,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/e9e0b6705/90103284/e9e0b6705fa3fda87c49f85932151147_max_656x437.jpeg"
     },
@@ -1236,7 +1398,7 @@
       "phaseYear": 2018,
       "phaseLabel": "Rehearsal Rooms (BTR) — North Acton",
       "price": 1980,
-      "budgetTier": "over",
+      "budgetTier": "btr",
       "furnished": true,
       "available": "10 Jul 2026",
       "availableNow": false,
@@ -1255,10 +1417,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-07-10",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/f04d8963f/90103587/f04d8963f13da9342bebea89c48718c5_max_656x437.jpeg"
     },
@@ -1294,10 +1456,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/dafcd12aae89212c9c811d6fe9deeb54a2f5325d.jpg"
     },
@@ -1328,10 +1490,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-26",
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/caceb3793/88818318/caceb3793890ebe2347f37327baa23e7_max_656x437.jpeg"
     },
@@ -1361,45 +1523,13 @@
       "operator": null,
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
-      "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-26",
-      "status": "active",
-      "isNew": false,
-      "lastConfirmed": "2026-06-26",
-      "availableDate": null
-    },
-    {
-      "id": "beaufort-colindale-golding-house-2000",
-      "area": "beaufort-colindale",
-      "building": "Golding House",
-      "street": "Beaufort Square",
-      "phaseYear": 2016,
-      "phaseLabel": "Launched 2015 — older",
-      "price": 2000,
-      "budgetTier": "over",
-      "furnished": true,
-      "available": "Now",
-      "availableNow": true,
-      "listedDate": "2026-06-24",
-      "epc": "C",
-      "sizeSqft": null,
-      "sources": [
-        {
-          "platform": "zoopla",
-          "url": "https://www.zoopla.co.uk/to-rent/details/73533177/",
-          "agent": "Evergreen"
-        }
-      ],
-      "scheme": "private",
-      "operator": null,
-      "schemeConfidence": "likely",
-      "schemeSource": "private-block",
       "firstSeen": "2026-06-26",
       "lastSeen": "2026-06-26",
-      "status": "active",
-      "isNew": true,
-      "availableDate": null,
-      "imageUrl": "https://lid.zoocdn.com/u/480/360/e01d77ac62c5752ca012b472e9a9614a9ac460bd.jpg"
+      "status": "gone",
+      "goneReason": "removed",
+      "isNew": false,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": null
     },
     {
       "id": "hendon-waterside-hendon-waterside-1768",
@@ -1428,9 +1558,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-26",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
+      "lastConfirmed": "2026-06-27",
       "availableDate": "2026-08-05",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/34441cc6f/149570471/34441cc6f1b0f43c12cf95fba1021151_max_656x437.jpeg"
     },
@@ -1461,9 +1592,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-26",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/c0e99d0a6eb75ccb21ac2192446a70bb342581ac.jpg"
     },
@@ -1494,9 +1626,10 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-26",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
+      "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/ce0cc74007b231cd49c9a5307e4f6c6ccbf8a2d9.jpg"
     },
@@ -1510,8 +1643,8 @@
       "price": 1900,
       "budgetTier": "over",
       "furnished": true,
-      "available": "27 Jun 2026",
-      "availableNow": false,
+      "available": "Now",
+      "availableNow": true,
       "listedDate": "2026-06-18",
       "epc": null,
       "sizeSqft": null,
@@ -1527,11 +1660,290 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-26",
-      "lastSeen": "2026-06-26",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": false,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": null,
+      "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/d7438d427/89497728/d7438d427bdcd193bef2c9a91a21936d_max_656x437.png"
+    },
+    {
+      "id": "hendon-waterside-wryneck-apartments-1750",
+      "area": "hendon-waterside",
+      "building": "Wryneck Apartments",
+      "street": "Perryfield Way, London NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1750,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "30 Jun 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-26",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73564324/",
+          "agent": "Benham and Reeves"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90200370",
+          "agent": "Benham & Reeves"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
       "status": "active",
       "isNew": true,
-      "availableDate": "2026-06-27",
-      "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/d7438d427/89497728/d7438d427bdcd193bef2c9a91a21936d_max_656x437.png"
+      "lastConfirmed": "2026-06-27",
+      "availableDate": "2026-06-30",
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/adb5beea52afdd621f7f84f5ed462db383c33fa2.jpg"
+    },
+    {
+      "id": "hendon-waterside-hendon-waterside-1750-90182424",
+      "area": "hendon-waterside",
+      "building": "Hendon Waterside",
+      "street": "Hendon Waterside, London NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1750,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "listedDate": "2026-06-26",
+      "epc": null,
+      "sizeSqft": 922,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90182424",
+          "agent": "Right Now Residential"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": null,
+      "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/d93562084/90182424/d9356208496fb1afdec3e67328aa6976_max_656x437.jpeg"
+    },
+    {
+      "id": "hendon-waterside-hendon-waterside-1950",
+      "area": "hendon-waterside",
+      "building": "Hendon Waterside",
+      "street": "Shearwater Drive, London NW9",
+      "phaseYear": 2018,
+      "phaseLabel": "Hendon Waterside (Barratt) by Welsh Harp — newer",
+      "price": 1950,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "1 Jul 2026",
+      "availableNow": false,
+      "listedDate": "2026-06-16",
+      "epc": null,
+      "sizeSqft": 581,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73468125/",
+          "agent": "Frestons"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": "2026-07-01",
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/afa3a5ff4f5ffe98c4484c2e8b952493d81c5a11.jpg"
+    },
+    {
+      "id": "brent-cross-town-brent-cross-town-1850",
+      "area": "brent-cross-town",
+      "building": "Brent Cross Town",
+      "street": "Swannell Way, Brent Cross, NW2",
+      "phaseYear": 2025,
+      "phaseLabel": "Brent Cross Town (Related Argent) — brand new",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "listedDate": "2026-05-06",
+      "epc": "B",
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73116305/",
+          "agent": "Letio"
+        },
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/88114893",
+          "agent": "Letio"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Related Argent",
+      "schemeConfidence": "likely",
+      "schemeSource": "btr-block",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-27",
+      "availableDate": null,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/020a75a66fe39f0a2a42fde113e6506d73417d51.jpg"
+    },
+    {
+      "id": "wembley-park-canada-gardens-2053",
+      "area": "wembley-park",
+      "building": "Canada Gardens",
+      "street": "Wembley Park",
+      "phaseYear": 2020,
+      "phaseLabel": "Quintain Living, Wembley Park (~2020)",
+      "price": 2053,
+      "budgetTier": "btr",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-24",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73535020/",
+          "agent": "Flagstones Property Group"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Quintain Living",
+      "schemeConfidence": "likely",
+      "schemeSource": "building-map",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/8694f1eb24fc2581d63aa236659ee1d3abff62a9.jpg"
+    },
+    {
+      "id": "wembley-park-beton-house-1995",
+      "area": "wembley-park",
+      "building": "Beton House",
+      "street": "Wembley Park",
+      "phaseYear": 2023,
+      "phaseLabel": "Quintain Living, Wembley Park (~2023)",
+      "price": 1995,
+      "budgetTier": "btr",
+      "furnished": true,
+      "available": "Now",
+      "availableNow": true,
+      "availableDate": null,
+      "listedDate": "2026-06-25",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73539913/",
+          "agent": "Home Made"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Quintain Living",
+      "schemeConfidence": "likely",
+      "schemeSource": "building-map",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/1afa76434d796a87a6c899c06ca01435b953d7ea.png"
+    },
+    {
+      "id": "wembley-park-marathon-house-1900",
+      "area": "wembley-park",
+      "building": "Marathon House",
+      "street": "Olympic Way",
+      "phaseYear": 2022,
+      "phaseLabel": "Wembley Park managed block (~2022)",
+      "price": 1900,
+      "budgetTier": "btr",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-26",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73557325/",
+          "agent": "Flagstones Property Group"
+        }
+      ],
+      "scheme": "btr",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/95eacf229c06c61fe0cbce003184f43756c39644.jpg"
+    },
+    {
+      "id": "wembley-park-3-park-lane-1900",
+      "area": "wembley-park",
+      "building": "3 Park Lane",
+      "street": "Wembley Park",
+      "phaseYear": 2021,
+      "phaseLabel": "Wembley Park managed block (~2021)",
+      "price": 1900,
+      "budgetTier": "btr",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-26",
+      "epc": null,
+      "sizeSqft": 650,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73557301/",
+          "agent": "Flagstones Property Group"
+        }
+      ],
+      "scheme": "btr",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-27",
+      "lastSeen": "2026-06-27",
+      "status": "active",
+      "isNew": true,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/fe28ea3ebe13b8c311eed403daf8cf9e7d7fae98.jpg"
     }
   ]
 }

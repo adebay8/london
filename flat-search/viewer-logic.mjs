@@ -1,7 +1,9 @@
 // Pure view logic. Single source of truth — its function bodies are inlined verbatim into
 // flats.html (between the logic markers) so the tested logic and the rendered logic cannot drift.
-export function budgetTier(price, budget) {
-  return price > budget.inMax ? "over" : "in";
+export function budgetTier(price, budget, scheme) {
+  if (price <= budget.inMax) return "in";
+  if (scheme === "btr" && budget.btrMax && price <= budget.btrMax) return "btr"; // BTR allowed above the std cap
+  return "over";
 }
 export function daysOnMarket(listedDate, nowMs) {
   if (!listedDate) return null;

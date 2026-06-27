@@ -17,7 +17,7 @@ Background: `docs/flat-search/2026-06-25-area-expansion-research.md` (area dossi
 
 ## Criteria
 - **1 bed, 1 bath min, furnished.** Exclude retirement / shared / student.
-- **Budget (`meta.budget`):** search to £2,000; **in budget £1,600–1,850**; **over budget £1,851–2,000** (kept, collapsed in viewer); drop `<£1,600` or `>£2,000`.
+- **Budget (`meta.budget`):** **in budget £1,600–1,850**; **over budget (private) £1,851–2,000** (kept, collapsed); **BTR band £1,851–`btrMax` (2,150)** — BTR only, surfaced in the MAIN list (not collapsed), badged "BTR band". Drop `<£1,600`, private `>£2,000`, or BTR `>£2,150`. `budgetTier(price, budget, scheme)` returns `in`|`btr`|`over` (scheme-aware — pass the listing's `scheme`).
 - **Priority:** anchor first (baseline), then Tier 1, then Tier 2; within an area, BTR first, then newest block (`phaseYear` desc), then cheapest.
 - **Areas:** defined entirely in `meta.areas[]`. New areas must be Zone 3 (Zone 2 only if 1-beds land ≤£2,000). Each area carries its own roster, phase-years, BTR operators, operator portals, search URLs, and `flags`.
 
@@ -29,8 +29,11 @@ Read `flat-search/listings.json`. Iterate `meta.areas`. For each area run steps 
 ### 2. Fetch both platforms (WebFetch), per area
 - Fetch `area.searchUrls.zoopla` and `area.searchUrls.rightmove` (both already carry `price_max=2000`).
 - Ask each fetch to list every listing with: building, street, price, furnished, available date, EPC, listing URL, agent.
-- **Keep only buildings in `area.buildingRoster`** (match on normalised name; allow the area keyword in the Rightmove URL to pre-filter). Drop `<£1,600` or `>£2,000`, and anything outside the roster.
+- **Keep only buildings in `area.buildingRoster`** (match on normalised name; allow the area keyword in the Rightmove URL to pre-filter). Drop `<£1,600`; drop **private** `>£2,000` and **BTR** `>£2,150`; drop anything outside the roster.
 - Optionally WebFetch a few detail pages to fill EPC / sqft / availability.
+
+### 2a. Fetch operator portals for BTR (BTR hides from Zoopla/Rightmove)
+BTR is structurally under-listed on the aggregators — operators drive renters to their own sites — so portal fetches are the ONLY reliable way to surface BTR. For each area, also WebFetch `area.operatorPortals` (and BTR aggregators: `buildtorentdirectory.co.uk`, `rightnowresidential.co.uk`, `lovetorent.co.uk`). Extract building, 1-bed price, availability, furnished. Tag `scheme:"btr"`, `operator`, `schemeConfidence:"confirmed"` (operator site = primary source). Keep BTR up to `budget.btrMax` (£2,150), not just `searchMax`. Major operators: Quintain Living (quintainliving.com — Wembley Park), UNCLE (uncle.co.uk — Colindale/Wembley/Acton), Way of Life (The Draper), Savills (Curtiss House), Get Living, Greystar, Grainger, Vertus, Dandi, L&Q PRS. Expect BTR 1-beds to cluster **£1,900–2,150** — that band is why `btrMax` exists. Note availability: BTR lets you pick a future start date, so an "early"-timed BTR unit is reachable where a private immediate-let isn't.
 
 ### 3. Capture listing date + staleness signal (per listing)
 WebFetch each kept listing's detail page; extract the listed/added date:

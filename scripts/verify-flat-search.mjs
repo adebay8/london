@@ -7,9 +7,10 @@ const ROOT = new URL("../", import.meta.url);
 const store = JSON.parse(readFileSync(new URL("flat-search/listings.json", ROOT)));
 
 test("meta has areas, budget, staleThresholds, moveTiming", () => {
-  assert.ok(Array.isArray(store.meta.areas) && store.meta.areas.length === 8, "8 areas");
+  assert.ok(Array.isArray(store.meta.areas) && store.meta.areas.length === 9, "9 areas");
   const b = store.meta.budget;
   assert.deepEqual([b.min, b.inMax, b.searchMax], [1600, 1850, 2000], "budget bands");
+  assert.equal(b.btrMax, 2150, "btr band ceiling");
   assert.ok(store.meta.staleThresholdsDays, "stale thresholds kept");
   const mt = store.meta.moveTiming;
   assert.ok(mt, "moveTiming present");
@@ -37,8 +38,9 @@ test("every listing maps to a known area and is correctly keyed/classified", () 
     assert.ok(x.id.startsWith(x.area + "-"), `id ${x.id} is area-prefixed`);
     assert.ok(!seen.has(x.id), `id ${x.id} unique`);
     seen.add(x.id);
-    assert.ok(x.price <= store.meta.budget.searchMax, `${x.id} within £${store.meta.budget.searchMax}`);
-    const expected = x.price > store.meta.budget.inMax ? "over" : "in";
+    const cap = x.scheme === "btr" ? store.meta.budget.btrMax : store.meta.budget.searchMax;
+    assert.ok(x.price <= cap, `${x.id} within £${cap}`);
+    const expected = L.budgetTier(x.price, store.meta.budget, x.scheme);
     assert.equal(x.budgetTier, expected, `${x.id} budgetTier`);
     assert.ok(["active", "gone"].includes(x.status), `${x.id} status valid`);
     if ("goneReason" in x) assert.ok(["removed", "let-agreed"].includes(x.goneReason), `${x.id} goneReason enum`);
@@ -49,13 +51,17 @@ test("every listing maps to a known area and is correctly keyed/classified", () 
   }
 });
 
-const BUDGET = { min: 1600, inMax: 1850, searchMax: 2000 };
+const BUDGET = { min: 1600, inMax: 1850, searchMax: 2000, btrMax: 2150 };
 const TH = { slow: 45, stale: 90, problem: 150 };
 const NOW = Date.parse("2026-06-25T00:00:00Z");
 
-test("budgetTier splits at inMax", () => {
+test("budgetTier splits at inMax, with a BTR band above", () => {
   assert.equal(L.budgetTier(1850, BUDGET), "in");
   assert.equal(L.budgetTier(1851, BUDGET), "over");
+  assert.equal(L.budgetTier(1851, BUDGET, "private"), "over");
+  assert.equal(L.budgetTier(2000, BUDGET, "btr"), "btr");
+  assert.equal(L.budgetTier(2150, BUDGET, "btr"), "btr");
+  assert.equal(L.budgetTier(2151, BUDGET, "btr"), "over");
 });
 
 test("daysOnMarket and staleTier honour availableNow", () => {
@@ -139,7 +145,7 @@ test("flats.html embeds valid data and the logic block matches viewer-logic.mjs"
   const data = html.match(/\/\*DATA_START\*\/([\s\S]*?)\/\*DATA_END\*\//);
   assert.ok(data, "DATA markers present");
   const parsed = JSON.parse(data[1]);
-  assert.equal(parsed.meta.areas.length, 8, "embedded store has 8 areas");
+  assert.equal(parsed.meta.areas.length, 9, "embedded store has 9 areas");
   const logic = html.match(/\/\*LOGIC_START\*\/([\s\S]*?)\/\*LOGIC_END\*\//);
   assert.ok(logic, "LOGIC markers present");
   const mjs = readFileSync(new URL("flat-search/viewer-logic.mjs", ROOT), "utf8")
