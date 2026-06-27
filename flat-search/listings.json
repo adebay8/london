@@ -48,7 +48,18 @@
           "Lismore Boulevard",
           "Reverence House",
           "Charcot Road",
-          "Florence House"
+          "Florence House",
+          "Newington House",
+          "Genista House",
+          "Gladness House",
+          "Diascia House",
+          "Darmera House",
+          "Dahlia House",
+          "Greenwich House",
+          "Calanthe Court",
+          "Citrine House",
+          "Carmelia House",
+          "Camomile House"
         ],
         "phaseYears": {
           "Duxford Tower": 2025,
@@ -71,7 +82,13 @@
           "Reverence House": 2021,
           "Grevillea House": 2019,
           "Charcot Road": 2020,
-          "Florence House": 2020
+          "Florence House": 2020,
+          "Newington House": 2018,
+          "Genista House": 2022,
+          "Gladness House": 2022,
+          "Diascia House": 2025,
+          "Darmera House": 2025,
+          "Dahlia House": 2025
         },
         "btrOperators": [
           "Way of Life",

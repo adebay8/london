@@ -86,6 +86,7 @@ Aggregators MISS most BTR. Each run, also sweep:
 
 ### 6. Assign block age (newest-first ranking)
 Use `area.phaseYears[building]` where present (higher year = newer = ranks first). For the anchor, the full Beaufort/Colindale phase map lives there (Duxford Tower 2025 … Adrienne 2007). When a block isn't listed: EPC B ≈ newer (2018+), EPC C ≈ older; prefer documented launch dates over EPC. Refine new-area phase-years as live listings reveal completion dates.
+- **Pin the specific BLOCK, not the street.** Some streets host multiple blocks of very different ages — e.g. Lismore Boulevard / Colindale Gardens spans **Newington House (2018) → Reverence House (2021)**. Extract the actual building name from the listing title/detail page and use `phaseYears[building]`; only fall back to the street-keyed year (e.g. `Lismore Boulevard` 2021) when the block name is genuinely absent. Confirmed Colindale Gardens block years: Newington 2018, Grevillea 2019, Florence 2020, Reverence 2021, Genista & Gladness 2022, Dianthus (Dahlia/Diascia/Darmera) 2025. We only need exact years for blocks that actually appear as listings — don't chase years for blocks with no live listing.
 
 ### 7. Write the store, then regenerate the viewer
 - Write the full updated object back to `flat-search/listings.json`.
