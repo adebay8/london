@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastRun": "2026-06-27",
+    "lastRun": "2026-06-28",
     "budget": {
       "min": 1600,
       "inMax": 1850,
@@ -59,7 +59,9 @@
           "Calanthe Court",
           "Citrine House",
           "Carmelia House",
-          "Camomile House"
+          "Camomile House",
+          "UNCLE Colindale",
+          "Watsonia Court"
         ],
         "phaseYears": {
           "Duxford Tower": 2025,
@@ -88,7 +90,10 @@
           "Gladness House": 2022,
           "Diascia House": 2025,
           "Darmera House": 2025,
-          "Dahlia House": 2025
+          "Dahlia House": 2025,
+          "UNCLE Colindale": 2023,
+          "Watsonia Court": 2024,
+          "Carmelia House": 2022
         },
         "btrOperators": [
           "Way of Life",
@@ -106,6 +111,81 @@
           "rightmove": "https://www.rightmove.co.uk/property-to-rent/Colindale.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2000&keywords=Beaufort%20Park&furnishTypes=furnished"
         },
         "expectedBand": "in",
+        "flags": []
+      },
+      {
+        "id": "wembley-park",
+        "name": "Wembley Park (Quintain Living + Fulton & Fifth BTR)",
+        "borough": "Brent",
+        "zone": "3",
+        "tier": 1,
+        "buildingRoster": [
+          "Repton Gardens",
+          "Canada Gardens",
+          "The Robinson",
+          "Madison House",
+          "Beton House",
+          "Landsby",
+          "Montana House",
+          "Emerald Gardens",
+          "Alto",
+          "Ramsgate House",
+          "Mason Place",
+          "The Stage",
+          "Marathon House",
+          "3 Park Lane",
+          "Alameda",
+          "Ferrum",
+          "Wem Tower",
+          "Solar",
+          "Luna",
+          "Fulton & Fifth",
+          "Wembley Park Gardens",
+          "Wembley Park Gate",
+          "Forum House",
+          "Quadrant Court",
+          "Dandi Wembley",
+          "Vonder Wembley",
+          "UNCLE Wembley"
+        ],
+        "phaseYears": {
+          "Emerald Gardens": 2015,
+          "Alto": 2018,
+          "Landsby": 2018,
+          "Madison House": 2019,
+          "Canada Gardens": 2020,
+          "Repton Gardens": 2021,
+          "The Robinson": 2022,
+          "Beton House": 2023,
+          "Solar": 2025,
+          "Luna": 2025,
+          "Fulton & Fifth": 2025,
+          "Dandi Wembley": 2022,
+          "Vonder Wembley": 2021,
+          "UNCLE Wembley": 2021,
+          "Ferrum": 2023,
+          "Alameda": 2022,
+          "Wem Tower": 2020
+        },
+        "btrOperators": [
+          "Quintain Living",
+          "UNCLE",
+          "Dandi",
+          "Vonder",
+          "Regal London"
+        ],
+        "operatorPortals": [
+          "https://www.quintainliving.com/wembley/1-bedroom-flat-to-rent",
+          "https://uncle.co.uk/wembley/one-bedroom/",
+          "https://www.hamptons.co.uk/build-to-rent/london/dandi-wembley",
+          "https://www.quintainliving.com/solar",
+          "https://www.quintainliving.com/luna"
+        ],
+        "searchUrls": {
+          "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/wembley-park/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2150&price_min=1600&q=Wembley%20Park%2C%20London&radius=0.5&search_source=to-rent",
+          "rightmove": "https://www.rightmove.co.uk/property-to-rent/Wembley-Park.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2150&furnishTypes=furnished"
+        },
+        "expectedBand": "btr",
         "flags": []
       },
       {
@@ -351,58 +431,6 @@
           "mostlyOverBudget",
           "natRail"
         ]
-      },
-      {
-        "id": "wembley-park",
-        "name": "Wembley Park (Quintain Living BTR)",
-        "borough": "Brent",
-        "zone": "3",
-        "tier": 1,
-        "buildingRoster": [
-          "Repton Gardens",
-          "Canada Gardens",
-          "The Robinson",
-          "Madison House",
-          "Beton House",
-          "Landsby",
-          "Montana House",
-          "Emerald Gardens",
-          "Alto",
-          "Ramsgate House",
-          "Mason Place",
-          "The Stage",
-          "Marathon House",
-          "3 Park Lane",
-          "Alameda",
-          "Ferrum",
-          "Wem Tower"
-        ],
-        "phaseYears": {
-          "Emerald Gardens": 2015,
-          "Alto": 2018,
-          "Landsby": 2018,
-          "Madison House": 2019,
-          "Canada Gardens": 2020,
-          "Repton Gardens": 2021,
-          "The Robinson": 2022,
-          "Beton House": 2023
-        },
-        "btrOperators": [
-          "Quintain Living",
-          "UNCLE",
-          "Dandi"
-        ],
-        "operatorPortals": [
-          "https://www.quintainliving.com/wembley/1-bedroom-flat-to-rent",
-          "https://uncle.co.uk/wembley/one-bedroom/",
-          "https://www.hamptons.co.uk/build-to-rent/london/dandi-wembley"
-        ],
-        "searchUrls": {
-          "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/wembley-park/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2150&price_min=1600&q=Wembley%20Park%2C%20London&radius=0.5&search_source=to-rent",
-          "rightmove": "https://www.rightmove.co.uk/property-to-rent/Wembley-Park.html?minBedrooms=1&maxBedrooms=1&minPrice=1500&maxPrice=2150&keywords=Quintain&furnishTypes=furnished"
-        },
-        "expectedBand": "btr",
-        "flags": []
       }
     ],
     "moveTiming": {
@@ -446,10 +474,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/57edec001b3d252421818a6616f98d468f1d2c40.jpg"
     },
@@ -480,10 +508,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": "2026-08-24",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/a34b73bca/128666687/a34b73bca303a6328e022c9126659abd_max_656x437.jpeg"
     },
@@ -553,10 +581,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": "2026-08-15",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/edf6866934a7cfc1db0fbe59e8f095d6fe18b7f4.jpg"
     },
@@ -592,10 +620,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/4a916a1cd/89969550/4a916a1cded1707c73547160f686b62a_max_656x437.jpeg"
     },
@@ -626,10 +654,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/82b5cddef/110032067/82b5cddefa445af533e36d2a9ba1fbc2_max_656x437.jpeg"
     },
@@ -699,10 +727,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": "2026-07-10",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/176942713/89673288/176942713c55589e2a935f697c795cf7_max_656x437.jpeg"
     },
@@ -733,10 +761,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": "2026-07-17",
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/172212d65/89673318/172212d6586dbc288e76056a1c791e74_max_656x437.jpeg"
     },
@@ -772,10 +800,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/e83849ec082150f808a6985b90e6d9b3d1af547f.jpg"
     },
@@ -1011,10 +1039,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-25",
-      "lastSeen": "2026-06-25",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": false,
-      "lastConfirmed": "2026-06-27",
+      "lastConfirmed": "2026-06-28",
       "availableDate": "2026-08-01",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/163a68ad9678e396e693c03351e7a091a36d5ed5.jpg"
     },
@@ -1081,7 +1109,7 @@
       "firstSeen": "2026-06-27",
       "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
       "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/5a0c7a505c3c14e8969cdab5ac6f13fd853dc194.webp"
@@ -1113,10 +1141,10 @@
       "schemeConfidence": "confirmed",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-27",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
-      "isNew": true,
-      "lastConfirmed": "2026-06-27",
+      "isNew": false,
+      "lastConfirmed": "2026-06-28",
       "availableDate": "2026-07-12",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/cf2a678b2d35628d1f95a5cb91744c6d2c476b6f.jpg"
     },
@@ -1718,7 +1746,7 @@
       "firstSeen": "2026-06-27",
       "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
       "lastConfirmed": "2026-06-27",
       "availableDate": "2026-06-30",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/adb5beea52afdd621f7f84f5ed462db383c33fa2.jpg"
@@ -1752,7 +1780,7 @@
       "firstSeen": "2026-06-27",
       "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
       "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/d93562084/90182424/d9356208496fb1afdec3e67328aa6976_max_656x437.jpeg"
@@ -1786,7 +1814,7 @@
       "firstSeen": "2026-06-27",
       "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
       "lastConfirmed": "2026-06-27",
       "availableDate": "2026-07-01",
       "imageUrl": "https://lid.zoocdn.com/u/480/360/afa3a5ff4f5ffe98c4484c2e8b952493d81c5a11.jpg"
@@ -1825,7 +1853,7 @@
       "firstSeen": "2026-06-27",
       "lastSeen": "2026-06-27",
       "status": "active",
-      "isNew": true,
+      "isNew": false,
       "lastConfirmed": "2026-06-27",
       "availableDate": null,
       "imageUrl": "https://lid.zoocdn.com/u/480/360/020a75a66fe39f0a2a42fde113e6506d73417d51.jpg"
@@ -1858,10 +1886,11 @@
       "schemeConfidence": "likely",
       "schemeSource": "building-map",
       "firstSeen": "2026-06-27",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
-      "isNew": true,
-      "imageUrl": "https://lid.zoocdn.com/u/480/360/8694f1eb24fc2581d63aa236659ee1d3abff62a9.jpg"
+      "isNew": false,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/8694f1eb24fc2581d63aa236659ee1d3abff62a9.jpg",
+      "lastConfirmed": "2026-06-28"
     },
     {
       "id": "wembley-park-beton-house-1995",
@@ -1891,10 +1920,11 @@
       "schemeConfidence": "likely",
       "schemeSource": "building-map",
       "firstSeen": "2026-06-27",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
-      "isNew": true,
-      "imageUrl": "https://lid.zoocdn.com/u/480/360/1afa76434d796a87a6c899c06ca01435b953d7ea.png"
+      "isNew": false,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/1afa76434d796a87a6c899c06ca01435b953d7ea.png",
+      "lastConfirmed": "2026-06-28"
     },
     {
       "id": "wembley-park-marathon-house-1900",
@@ -1924,10 +1954,11 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-27",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
       "status": "active",
-      "isNew": true,
-      "imageUrl": "https://lid.zoocdn.com/u/480/360/95eacf229c06c61fe0cbce003184f43756c39644.jpg"
+      "isNew": false,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/95eacf229c06c61fe0cbce003184f43756c39644.jpg",
+      "lastConfirmed": "2026-06-28"
     },
     {
       "id": "wembley-park-3-park-lane-1900",
@@ -1957,10 +1988,317 @@
       "schemeConfidence": "unverified",
       "schemeSource": "live-listing",
       "firstSeen": "2026-06-27",
-      "lastSeen": "2026-06-27",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": false,
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/fe28ea3ebe13b8c311eed403daf8cf9e7d7fae98.jpg",
+      "lastConfirmed": "2026-06-28"
+    },
+    {
+      "id": "wembley-park-dandi-wembley-1755",
+      "area": "wembley-park",
+      "building": "Dandi Wembley",
+      "street": "2 Stadium Way, Wembley Park",
+      "phaseYear": 2022,
+      "phaseLabel": "Dandi Wembley BTR (~2022)",
+      "price": 1755,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "3 Jul 2026",
+      "availableNow": false,
+      "availableDate": "2026-07-03",
+      "listedDate": "2026-06-24",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90104994",
+          "agent": "Savills Lettings (Dandi Wembley)"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Dandi",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
       "status": "active",
       "isNew": true,
-      "imageUrl": "https://lid.zoocdn.com/u/480/360/fe28ea3ebe13b8c311eed403daf8cf9e7d7fae98.jpg"
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/01a91a01f/90104994/01a91a01fed38705172eb0820cae6cec_max_656x437.jpeg"
+    },
+    {
+      "id": "wembley-park-vonder-wembley-1850",
+      "area": "wembley-park",
+      "building": "Vonder Wembley",
+      "street": "Olympic Way, Wembley Park",
+      "phaseYear": 2021,
+      "phaseLabel": "Vonder Wembley BTR (~2021)",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "13 Jul 2026",
+      "availableNow": false,
+      "availableDate": "2026-07-13",
+      "listedDate": "2026-06-26",
+      "epc": null,
+      "sizeSqft": 522,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90165462",
+          "agent": "Vonder Wembley"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Vonder",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": "https://media.rightmove.co.uk/dir/property-photo/b618c8ad2/90165462/b618c8ad2d79118a70e3f0f8df7eadc2_max_656x437.jpeg"
+    },
+    {
+      "id": "wembley-park-uncle-wembley-1850",
+      "area": "wembley-park",
+      "building": "UNCLE Wembley",
+      "street": "Exhibition Way, Wembley Park",
+      "phaseYear": 2021,
+      "phaseLabel": "UNCLE Wembley BTR (~2021)",
+      "price": 1850,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-28",
+      "epc": null,
+      "sizeSqft": 549,
+      "sources": [
+        {
+          "platform": "operator",
+          "url": "https://uncle.co.uk/wembley/one-bedroom/",
+          "agent": "UNCLE"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "UNCLE",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "operator-portal",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": null
+    },
+    {
+      "id": "wembley-park-ferrum-2070",
+      "area": "wembley-park",
+      "building": "Ferrum",
+      "street": "Wembley Park",
+      "phaseYear": 2023,
+      "phaseLabel": "Ferrum (Quintain Living) ~2023",
+      "price": 2070,
+      "budgetTier": "btr",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-28",
+      "epc": null,
+      "sizeSqft": 550,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90173250",
+          "agent": "Flagstones Property Group"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "Quintain Living",
+      "schemeConfidence": "likely",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": null
+    },
+    {
+      "id": "wembley-park-alameda-1995",
+      "area": "wembley-park",
+      "building": "Alameda",
+      "street": "Olympic Way, Wembley Park",
+      "phaseYear": 2022,
+      "phaseLabel": "Alameda BTR (~2022)",
+      "price": 1995,
+      "budgetTier": "btr",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-28",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90214515",
+          "agent": "Home Made"
+        }
+      ],
+      "scheme": "btr",
+      "operator": null,
+      "schemeConfidence": "likely",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": null
+    },
+    {
+      "id": "wembley-park-wem-tower-1600",
+      "area": "wembley-park",
+      "building": "Wem Tower",
+      "street": "Wembley",
+      "phaseYear": 2020,
+      "phaseLabel": "Wem Tower (~2020)",
+      "price": 1600,
+      "budgetTier": "in",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-28",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73566456/",
+          "agent": "Home-Made"
+        }
+      ],
+      "scheme": "unknown",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": null
+    },
+    {
+      "id": "beaufort-colindale-uncle-colindale-1945",
+      "area": "beaufort-colindale",
+      "building": "UNCLE Colindale",
+      "street": "Aerial Square, Colindale",
+      "phaseYear": 2023,
+      "phaseLabel": "UNCLE Colindale BTR (~2023)",
+      "price": 1945,
+      "budgetTier": "btr",
+      "furnished": true,
+      "available": "September 2026",
+      "availableNow": false,
+      "availableDate": "2026-09-01",
+      "listedDate": "2026-06-24",
+      "epc": "B",
+      "sizeSqft": 549,
+      "sources": [
+        {
+          "platform": "zoopla",
+          "url": "https://www.zoopla.co.uk/to-rent/details/73534700/",
+          "agent": "CBRE"
+        }
+      ],
+      "scheme": "btr",
+      "operator": "UNCLE",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": "https://lid.zoocdn.com/u/480/360/d80d55972c52a2d6fc34f4d9a68e405acc5e60f0.jpg"
+    },
+    {
+      "id": "beaufort-colindale-watsonia-court-1950",
+      "area": "beaufort-colindale",
+      "building": "Watsonia Court",
+      "street": "Colindale Gardens",
+      "phaseYear": 2024,
+      "phaseLabel": "Colindale Gardens, Watsonia Court — newest (~2024)",
+      "price": 1950,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-28",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/89092842",
+          "agent": "Fraser & Co"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": null
+    },
+    {
+      "id": "beaufort-colindale-carmelia-house-1998",
+      "area": "beaufort-colindale",
+      "building": "Carmelia House",
+      "street": "Aerodrome Road, Colindale",
+      "phaseYear": 2022,
+      "phaseLabel": "Colindale Gardens, Carmelia House (~2022)",
+      "price": 1998,
+      "budgetTier": "over",
+      "furnished": true,
+      "available": "Ask agent",
+      "availableNow": false,
+      "availableDate": null,
+      "listedDate": "2026-06-28",
+      "epc": null,
+      "sizeSqft": null,
+      "sources": [
+        {
+          "platform": "rightmove",
+          "url": "https://www.rightmove.co.uk/properties/90174342",
+          "agent": "Lessel"
+        }
+      ],
+      "scheme": "private",
+      "operator": null,
+      "schemeConfidence": "unverified",
+      "schemeSource": "live-listing",
+      "firstSeen": "2026-06-28",
+      "lastSeen": "2026-06-28",
+      "status": "active",
+      "isNew": true,
+      "lastConfirmed": "2026-06-28",
+      "imageUrl": null
     }
   ]
 }
