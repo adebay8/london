@@ -146,7 +146,9 @@
           "Quadrant Court",
           "Dandi Wembley",
           "Vonder Wembley",
-          "UNCLE Wembley"
+          "UNCLE Wembley",
+          "Clay Wembley",
+          "Dakota"
         ],
         "phaseYears": {
           "Emerald Gardens": 2015,
@@ -165,21 +167,28 @@
           "UNCLE Wembley": 2019,
           "Ferrum": 2023,
           "Alameda": 2022,
-          "Wem Tower": 2020
+          "Wem Tower": 2020,
+          "Dakota": 2024,
+          "Clay Wembley": 2023,
+          "Montana House": 2023
         },
         "btrOperators": [
           "Quintain Living",
           "UNCLE",
           "Dandi",
           "Vonder",
-          "Regal London"
+          "Regal London",
+          "Clay Life",
+          "WEM London"
         ],
         "operatorPortals": [
           "https://www.quintainliving.com/wembley/1-bedroom-flat-to-rent",
           "https://uncle.co.uk/wembley/one-bedroom/",
           "https://www.hamptons.co.uk/build-to-rent/london/dandi-wembley",
           "https://www.quintainliving.com/solar",
-          "https://www.quintainliving.com/luna"
+          "https://www.quintainliving.com/luna",
+          "https://clay-life.com/wembley/",
+          "https://www.wemlondon.uk/"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/wembley-park/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2150&price_min=1600&q=Wembley%20Park%2C%20London&radius=0.5&search_source=to-rent",
@@ -2189,7 +2198,7 @@
       "building": "Wem Tower",
       "street": "Wembley",
       "phaseYear": 2020,
-      "phaseLabel": "Wem Tower (~2020)",
+      "phaseLabel": "Wem Tower (WEM London BTR, ~2022)",
       "price": 1600,
       "budgetTier": "in",
       "furnished": true,
@@ -2206,10 +2215,10 @@
           "agent": "Home-Made"
         }
       ],
-      "scheme": "unknown",
-      "operator": null,
-      "schemeConfidence": "unverified",
-      "schemeSource": "live-listing",
+      "scheme": "btr",
+      "operator": "WEM London",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "operator-site",
       "firstSeen": "2026-06-28",
       "lastSeen": "2026-06-29",
       "status": "active",
@@ -2650,7 +2659,7 @@
       "building": "Wem Tower",
       "street": "Wembley Park HA9",
       "phaseYear": 2020,
-      "phaseLabel": "Wem Tower (~2020)",
+      "phaseLabel": "Wem Tower (WEM London BTR, ~2022)",
       "price": 1800,
       "budgetTier": "in",
       "furnished": true,
@@ -2666,10 +2675,10 @@
           "agent": "Home-Made"
         }
       ],
-      "scheme": "unknown",
-      "operator": null,
-      "schemeConfidence": "unverified",
-      "schemeSource": "live-listing",
+      "scheme": "btr",
+      "operator": "WEM London",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "operator-site",
       "firstSeen": "2026-06-29",
       "lastSeen": "2026-06-29",
       "status": "active",
@@ -2684,7 +2693,7 @@
       "building": "Wem Tower",
       "street": "Wembley Park HA9",
       "phaseYear": 2020,
-      "phaseLabel": "Wem Tower (~2020)",
+      "phaseLabel": "Wem Tower (WEM London BTR, ~2022)",
       "price": 1700,
       "budgetTier": "in",
       "furnished": true,
@@ -2700,10 +2709,10 @@
           "agent": "Home-Made"
         }
       ],
-      "scheme": "unknown",
-      "operator": null,
-      "schemeConfidence": "unverified",
-      "schemeSource": "live-listing",
+      "scheme": "btr",
+      "operator": "WEM London",
+      "schemeConfidence": "confirmed",
+      "schemeSource": "operator-site",
       "firstSeen": "2026-06-29",
       "lastSeen": "2026-06-29",
       "status": "active",
