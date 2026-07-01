@@ -80,6 +80,7 @@
   .card.pref-reject { opacity:.5; }
   .card.pref-reject .title { text-decoration:line-through; }
   /* --- redesign: nav shell + Summary / Homes / Operators views --- */
+  .card.card-hl { box-shadow:0 0 0 2px var(--accent), 0 0 18px rgba(77,141,255,.55); }
   .topnav { display:flex; align-items:center; gap:16px; margin-bottom:12px; flex-wrap:wrap; }
   .brand { font-size:20px; font-weight:700; }
   .navlinks { display:flex; gap:6px; margin-left:auto; flex-wrap:wrap; }
@@ -3380,7 +3381,7 @@ function groupByArea(listings, areas) {
     const scheme = x.scheme === "btr"
       ? ' <span class="badge btr" title="' + (x.schemeConfidence || "") + (x.schemeSource ? " · " + x.schemeSource : "") + '">' + (unverified ? "BTR?" : "BTR") + (x.operator ? " · " + x.operator : "") + '</span>'
       : (x.scheme === "private" ? ' <span class="badge private">private landlord</span>' : "");
-    return '<div class="card ' + cls + (pf ? ' pref-' + pf : '') + '">' + img + '<div class="row1"><span class="title">' + x.building + '</span>' + badge + unconfB + timingChip(x) + scheme + overB + areaB + dupe +
+    return '<div class="card ' + cls + (pf ? ' pref-' + pf : '') + '" data-card="' + x.id + '">' + img + '<div class="row1"><span class="title">' + x.building + '</span>' + badge + unconfB + timingChip(x) + scheme + overB + areaB + dupe +
       '<span class="price">£' + x.price.toLocaleString() + '</span></div>' +
       '<div class="meta"><span>' + x.street + '</span>' + avail + epc + size + domBadge(x) + '<span>first seen ' + x.firstSeen + '</span></div>' +
       '<div class="phase">📅 ' + x.phaseLabel + '</div><div class="src">' + srcs + '</div>' + prefbar + '</div>';
@@ -3390,6 +3391,10 @@ function groupByArea(listings, areas) {
   function inBudgetActive() {
     return D.listings.filter(x => x.status !== "gone" && budgetTier(x.price, BUD, x.scheme) !== "over" && staleTier(x, TH, NOW) !== "problem");
   }
+  const TOP_PICK_N = 6;
+  // Curated shortlist: in-budget/active/non-stale, ranked by the standard order (wanted → well-timed → BTR → newest → cheapest).
+  function topPicksSorted() { return inBudgetActive().slice().sort((a, b) => comparePref(a, b, TCTX)); }
+  function topPickIdSet() { return new Set(topPicksSorted().slice(0, TOP_PICK_N).map(x => x.id)); }
   function renderSummary() {
     const inb = inBudgetActive();
     const btrInb = inb.filter(x => x.scheme === "btr").length;
@@ -3412,9 +3417,9 @@ function groupByArea(listings, areas) {
           (closest ? '<div style="margin-top:8px">Closest: <b>' + closest.building + '</b> · £' + closest.price.toLocaleString() + ' · ' + areaShort(closest.area) + timingChip(closest) + '</div>' : "") + '</div>';
       }
     }
-    const picks = sorted.slice(0, 6).map(x => {
+    const picks = sorted.slice(0, TOP_PICK_N).map(x => {
       const star = getPref(x.id) === "want" ? '<span style="color:var(--new)">★</span> ' : "";
-      return '<a class="pickrow" href="#/homes">' + star +
+      return '<a class="pickrow" href="#/homes?pick=' + encodeURIComponent(x.id) + '">' + star +
         '<span class="pnm">' + x.building + '</span> <span class="parea">' + areaShort(x.area) + (x.scheme === "btr" ? " · BTR" : "") + '</span>' +
         (MT ? timingChip(x) : "") + '<span class="pprice">£' + x.price.toLocaleString() + '</span></a>';
     }).join("");
@@ -3427,10 +3432,11 @@ function groupByArea(listings, areas) {
   }
 
   // ---------- Homes view ----------
-  let q = "", fScheme = "", fTiming = "", showOver = false, hideGone = true, wellTimedFirst = true, newOnly = false;
+  let q = "", fScheme = "", fTiming = "", showOver = false, hideGone = true, wellTimedFirst = true, newOnly = false, topOnly = false;
   let fAreas = new Set(M.areas.map(a => a.id));
   function homesFilter() {
     let list = D.listings.slice();
+    if (topOnly) { const tp = topPickIdSet(); list = list.filter(x => tp.has(x.id)); }
     list = list.filter(x => fAreas.has(x.area));
     if (fScheme) list = list.filter(x => x.scheme === fScheme);
     if (fTiming && MT) list = list.filter(x => timingFit(x, FLOOR, MT, NOW) === fTiming);
@@ -3458,6 +3464,7 @@ function groupByArea(listings, areas) {
     box.innerHTML =
       '<details class="railbox" open><summary>Filters ▾</summary><div class="railbody">' +
         '<div class="fgroup"><input type="text" id="q" placeholder="Search building / street / agent"></div>' +
+        '<div class="fgroup"><label><input type="checkbox" id="fp"' + (topOnly ? " checked" : "") + '> ⭐ Top picks only</label></div>' +
         '<div class="fgroup"><div class="h">Budget</div><label><input type="checkbox" id="fo"' + (showOver ? " checked" : "") + '> Include over-budget</label></div>' +
         '<div class="fgroup"><div class="h">Scheme</div><select id="fs"><option value="">BTR + private</option><option value="btr">BTR only</option><option value="private">Private only</option></select></div>' +
         timingSel +
@@ -3473,13 +3480,14 @@ function groupByArea(listings, areas) {
     if (MT) box.querySelector("#ft").value = fTiming;
     const redraw = () => drawHomes(box);
     box.querySelector("#q").oninput = e => { q = e.target.value; redraw(); };
+    box.querySelector("#fp").onchange = e => { topOnly = e.target.checked; redraw(); };
     box.querySelector("#fo").onchange = e => { showOver = e.target.checked; redraw(); };
     box.querySelector("#fs").onchange = e => { fScheme = e.target.value; redraw(); };
     if (MT) { box.querySelector("#fw").onchange = e => { wellTimedFirst = e.target.checked; redraw(); }; box.querySelector("#ft").onchange = e => { fTiming = e.target.value; redraw(); }; }
     box.querySelector("#fn").onchange = e => { newOnly = e.target.checked; redraw(); };
     box.querySelector("#fg").onchange = e => { hideGone = !e.target.checked; redraw(); };
     box.querySelectorAll(".fa").forEach(c => c.onchange = () => { if (c.checked) fAreas.add(c.value); else fAreas.delete(c.value); redraw(); });
-    box.querySelector("#clr").onclick = () => { q = ""; fScheme = ""; fTiming = ""; showOver = false; hideGone = true; wellTimedFirst = true; newOnly = false; fAreas = new Set(M.areas.map(a => a.id)); mount("homes"); };
+    box.querySelector("#clr").onclick = () => { q = ""; fScheme = ""; fTiming = ""; showOver = false; hideGone = true; wellTimedFirst = true; newOnly = false; topOnly = false; fAreas = new Set(M.areas.map(a => a.id)); mount("homes"); };
     drawHomes(box);
     return box;
   }
@@ -3544,23 +3552,43 @@ function groupByArea(listings, areas) {
   const view = document.getElementById("view"), navEl = document.getElementById("nav");
   const ROUTES = [["summary", "Summary"], ["homes", "Homes"], ["operators", "Operators"]];
   navEl.innerHTML = ROUTES.map(r => '<a href="#/' + r[0] + '" data-r="' + r[0] + '">' + r[1] + '</a>').join("");
-  function currentRoute() { const h = (location.hash || "").replace(/^#\//, ""); return ["summary", "homes", "operators"].includes(h) ? h : "summary"; }
-  function mount(name) {
+  function parseHash() {
+    const raw = (location.hash || "").replace(/^#\//, ""), parts = raw.split("?");
+    const name = ["summary", "homes", "operators"].includes(parts[0]) ? parts[0] : "summary";
+    const params = {};
+    (parts[1] || "").split("&").forEach(kv => { if (!kv) return; const i = kv.indexOf("="); const k = i < 0 ? kv : kv.slice(0, i); params[k] = i < 0 ? "" : decodeURIComponent(kv.slice(i + 1)); });
+    return { name, params };
+  }
+  function currentRoute() { return parseHash().name; }
+  // Deep-link from a Summary pick: scroll the matching Homes card into view and flash it.
+  function highlightCard(id) {
+    const sel = (window.CSS && window.CSS.escape) ? window.CSS.escape(id) : id;
+    const el = view.querySelector('[data-card="' + sel + '"]');
+    if (!el) { window.scrollTo(0, 0); return; }
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.add("card-hl");
+    setTimeout(() => el.classList.remove("card-hl"), 2400);
+  }
+  function mount(name, params) {
+    params = params || {};
     [...navEl.children].forEach(a => a.classList.toggle("active", a.dataset.r === name));
     view.innerHTML = "";
     if (name === "homes") view.appendChild(renderHomes());
     else if (name === "operators") view.appendChild(renderOperators());
     else view.innerHTML = renderSummary();
-    window.scrollTo(0, 0);
+    if (name === "homes" && params.pick) highlightCard(params.pick);
+    else window.scrollTo(0, 0);
   }
-  function route() { mount(currentRoute()); }
+  function route() { const h = parseHash(); mount(h.name, h.params); }
   window.addEventListener("hashchange", route);
-  // Delegated want/reject clicks: toggle the pref, then re-render the current view.
+  // Delegated want/reject clicks: toggle the pref, re-render the current view, keep scroll position.
   view.addEventListener("click", e => {
     const b = e.target.closest(".pbtn"); if (!b) return;
     const id = b.dataset.id, choice = b.dataset.pref;
     setPref(id, getPref(id) === choice ? null : choice);
-    mount(currentRoute());
+    const y = window.scrollY, h = parseHash();
+    mount(h.name, {});
+    window.scrollTo(0, y);
   });
   route();
 </script>

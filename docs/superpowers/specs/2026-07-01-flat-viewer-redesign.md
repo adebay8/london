@@ -48,6 +48,9 @@ visible, above the view).
   `card()` renderer (image, badges, timing chip, scheme, over/BTR-band, sources, ✓/✗).
 - Sort: `comparePref` with the timing context (wanted first, then well-timed, tier, scheme,
   phase, price).
+- **Top picks integration:** a “⭐ Top picks only” rail toggle narrows the grid to the curated
+  shortlist (`topPickIdSet()` — same set the Summary shows). Summary pick rows deep-link to
+  `#/homes?pick=<id>`, which scrolls the matching card into view and flashes it (`.card-hl`).
 
 ## View 3 — Operators (`#/operators`)
 - Operator registry derived at render time by merging: (a) every `area.btrOperators` entry with its
