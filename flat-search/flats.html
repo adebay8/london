@@ -79,16 +79,64 @@
   .card.pref-want .title::before { content:"★ "; color:var(--new); }
   .card.pref-reject { opacity:.5; }
   .card.pref-reject .title { text-decoration:line-through; }
+  /* --- redesign: nav shell + Summary / Homes / Operators views --- */
+  .topnav { display:flex; align-items:center; gap:16px; margin-bottom:12px; flex-wrap:wrap; }
+  .brand { font-size:20px; font-weight:700; }
+  .navlinks { display:flex; gap:6px; margin-left:auto; flex-wrap:wrap; }
+  .navlinks a { text-decoration:none; color:var(--muted); background:var(--card); border:1px solid var(--line);
+    border-radius:20px; padding:6px 14px; font-size:13px; font-weight:600; cursor:pointer; }
+  .navlinks a.active { color:var(--txt); border-color:var(--accent); background:#1b2436; }
+  .navlinks a:hover { color:var(--txt); }
+  /* summary */
+  .pick-best { background:linear-gradient(180deg,#15241d,#141a17); border:1px solid #1f6f54; border-radius:12px;
+    padding:14px 16px; margin:16px 0; }
+  .pick-best .lbl { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#7fe0bd; font-weight:700; }
+  .pick-best .none { color:var(--muted); font-size:13px; margin-top:6px; }
+  .picklist { display:flex; flex-direction:column; gap:8px; }
+  .pickrow { display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--line);
+    border-radius:10px; padding:10px 12px; text-decoration:none; color:var(--txt); }
+  .pickrow:hover { border-color:var(--accent); }
+  .pickrow .pnm { font-weight:600; } .pickrow .parea { color:var(--muted); font-size:12px; }
+  .pickrow .pprice { margin-left:auto; font-weight:700; color:var(--accent); }
+  .cta { display:flex; gap:10px; flex-wrap:wrap; margin:18px 0; }
+  .cta a { text-decoration:none; background:var(--accent); color:#07152e; font-weight:700; border-radius:10px; padding:10px 16px; font-size:14px; }
+  .cta a.ghost { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+  .newrow { font-size:13px; color:var(--muted); line-height:1.7; }
+  /* homes: responsive filter rail */
+  .homes { display:grid; grid-template-columns:240px 1fr; gap:20px; align-items:start; }
+  .railbox { position:sticky; top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:6px 14px 14px; }
+  .railbox > summary { display:none; }
+  .fgroup { margin-top:14px; }
+  .fgroup .h { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:7px; font-weight:700; }
+  .fgroup label { display:flex; align-items:center; gap:7px; font-size:13px; color:var(--txt); padding:3px 0; cursor:pointer; }
+  .railbox input[type=text], .railbox select { width:100%; background:var(--bg); border:1px solid var(--line);
+    color:var(--txt); border-radius:8px; padding:8px 10px; font-size:13px; }
+  .clearf { margin-top:16px; font-size:12px; color:var(--accent); cursor:pointer; background:none; border:none; padding:0; }
+  /* operators */
+  .opfilter { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+  .opchip { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 12px; font-size:12px; cursor:pointer; color:var(--muted); }
+  .opchip.active { color:var(--txt); border-color:var(--accent); }
+  .opgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+  .opcard { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .opcard .opname { font-size:16px; font-weight:700; }
+  .opcard .opareas { display:flex; gap:5px; flex-wrap:wrap; margin:8px 0; }
+  .opcard .opstat { color:var(--muted); font-size:13px; margin-top:6px; } .opcard .opstat b { color:var(--txt); }
+  .opcard .oplinks { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+  .opcard .oplinks a { font-size:12px; text-decoration:none; color:var(--accent); border:1px solid var(--line); border-radius:7px; padding:4px 9px; }
+  @media (max-width:820px) {
+    .homes { grid-template-columns:1fr; }
+    .railbox { position:static; }
+    .railbox > summary { display:block; cursor:pointer; font-weight:700; padding:8px 0; color:var(--txt); }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>🏢 London flat search</h1>
-  <div class="sub" id="sub"></div>
+  <header class="topnav"><div class="brand">🏢 London flat search</div><nav class="navlinks" id="nav"></nav></header>
   <div class="banner" id="banner"></div>
-  <div class="tabs" id="tabs"></div>
+  <div class="sub" id="sub"></div>
   <div id="view"></div>
-  <footer>Regenerate with <code>/beaufort-flats</code> · anchor (Beaufort) first, then Tier 1, then Tier 2 · days-on-market &amp; move-timing fit recomputed live · over-budget (&gt;£1,850) &amp; stale collapsed.</footer>
+  <footer>Regenerate with <code>/beaufort-flats</code> · Summary · Homes · Operators · days-on-market &amp; move-timing recomputed live · defaults to in-budget &amp; well-timed · ✓/✗ picks saved on this device.</footer>
 </div>
 
 <script id="data">
@@ -3245,39 +3293,34 @@ function groupByArea(listings, areas) {
   const D = window.FLAT_DATA, M = D.meta;
   const TH = M.staleThresholdsDays, BUD = M.budget, NOW = Date.now();
   const areaById = Object.fromEntries(M.areas.map(a => [a.id, a]));
+  const areaShort = id => (areaById[id] ? areaById[id].name : id).split(" — ")[0].split(" / ")[0].split(" (")[0];
 
   // --- Personal want/reject preferences: client-side only, localStorage keyed by listing id. ---
-  // Survives skill regen (ids are stable) and lives outside the store + pure logic. Per-device.
   const PREF_KEY = "flatPrefs.v1";
   let PREFS = {}; try { PREFS = JSON.parse(localStorage.getItem(PREF_KEY)) || {}; } catch (e) { PREFS = {}; }
-  const getPref = id => PREFS[id] || null;                 // "want" | "reject" | null
-  function setPref(id, v) {
-    if (v) PREFS[id] = v; else delete PREFS[id];
-    try { localStorage.setItem(PREF_KEY, JSON.stringify(PREFS)); } catch (e) {}
-  }
+  const getPref = id => PREFS[id] || null;
+  function setPref(id, v) { if (v) PREFS[id] = v; else delete PREFS[id]; try { localStorage.setItem(PREF_KEY, JSON.stringify(PREFS)); } catch (e) {} }
   const prefRank = x => { const p = getPref(x.id); return p === "want" ? 0 : (p === "reject" ? 2 : 1); };
-  // Preference is the OUTERMOST sort key — want floats to top, reject sinks; existing order applies within each.
   const comparePref = (a, b, tctx) => (prefRank(a) - prefRank(b)) || compareListings(a, b, areaById, tctx);
-  // All-tab filter state, hoisted so a want/reject re-render doesn't reset the user's search/filters.
-  let q = "", fArea = "", fScheme = "", fTiming = "", showOver = false, hideGone = true, wellTimedFirst = true;
-  const bigImg = u => u ? u.replace("/u/480/360/", "/u/720/540/") : u; // upscale Zoopla CDN thumbnails for crisp cards
-  document.getElementById("sub").textContent =
-    "Last run " + M.lastRun + " · " + M.areas.length + " areas · £" + BUD.min + "–" + BUD.inMax +
-    " in budget, to £" + BUD.searchMax + " shown (over collapsed) · days-on-market live · ✓/✗ on each card saves your picks (this device)";
+  const bigImg = u => u ? u.replace("/u/480/360/", "/u/720/540/") : u;
 
   // --- Move-timing (recomputed live each render against today) ---
   const MT = M.moveTiming || null;
-  const FLOOR = MT ? moveOutFloorMs(timingRefMs(NOW, MT), MT) : null; // served date pins it; else rolls from today
+  const FLOOR = MT ? moveOutFloorMs(timingRefMs(NOW, MT), MT) : null;
   const DEADLINE = MT ? noticeDeadlineMs(NOW, MT) : null;
   const TCTX = MT ? { floorMs: FLOOR, moveTiming: MT, nowMs: NOW } : null;
   const fmtDate = ms => new Date(ms).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
-  const stepFloor = MT ? moveOutFloorMs(DEADLINE + 86400000, MT) : null; // floor if the deadline passes
+  const stepFloor = MT ? moveOutFloorMs(DEADLINE + 86400000, MT) : null;
+
+  document.getElementById("sub").textContent =
+    "Last run " + M.lastRun + " · " + M.areas.length + " areas · £" + BUD.min + "–" + BUD.inMax +
+    " in budget (BTR to £" + BUD.btrMax + ") · days-on-market & timing recomputed live · ✓/✗ saves your picks (this device)";
+
   (function renderBanner() {
     const el = document.getElementById("banner"); if (!MT) { el.style.display = "none"; return; }
     if (MT.noticeServedDate) {
       el.innerHTML = "📌 Notice served <b>" + fmtDate(Date.parse(MT.noticeServedDate + "T00:00:00Z")) +
-        "</b> → move out by <b>" + fmtDate(FLOOR) + "</b> (fixed). Target a flat available within " +
-        MT.overlapMaxDays + " days of that.";
+        "</b> → move out by <b>" + fmtDate(FLOOR) + "</b> (fixed). Target a flat available within " + MT.overlapMaxDays + " days of that.";
       return;
     }
     const daysLeft = Math.ceil((DEADLINE - NOW) / 86400000);
@@ -3286,8 +3329,7 @@ function groupByArea(listings, areas) {
       : "<span class=\"warn\">notice window for that date has passed</span>";
     el.innerHTML = "🗓️ Earliest move-out if you give notice today: <b>" + fmtDate(FLOOR) + "</b>. " +
       deadlineMsg + " — after that it steps to <b>" + fmtDate(stepFloor) + "</b>. " +
-      "<span class=\"mut\">Ideal flat availability: within " + MT.overlapIdealDays + " days of move-out (≤" +
-      MT.overlapMaxDays + "d workable).</span>";
+      "<span class=\"mut\">Ideal availability: within " + MT.overlapIdealDays + " days of move-out (≤" + MT.overlapMaxDays + "d workable).</span>";
   })();
 
   const TIMING_LABEL = { ideal: "✅ timing ideal", workable: "🟡 timing workable", early: "⏳ too early", late: "⛔ after move-out", unknown: "❔ timing unknown" };
@@ -3303,13 +3345,10 @@ function groupByArea(listings, areas) {
       ? '<span class="flex" title="BTR operators usually let you pick a future start date">· start negotiable</span>' : "";
     return ' <span class="badge t' + fit + '" title="vs earliest move-out ' + fmtDate(FLOOR) + '">' + TIMING_LABEL[fit] + detail + '</span>' + flexNote;
   }
-
   function flagChips(area) {
     const names = { safetyCaution:"⚠ safety", zoneCaveat:"⚠ zone 3/4", natRail:"🚂 NatRail", brandNew:"🆕 new build", mostlyOverBudget:"£ mostly >budget" };
     return (area.flags || []).map(f => '<span class="chip warn">' + (names[f] || f) + '</span>').join("");
   }
-  function tierLabel(t) { return t === "anchor" ? "ANCHOR" : "TIER " + t; }
-
   function domBadge(x) {
     const d = daysOnMarket(x.listedDate, NOW); if (d == null) return "";
     const t = staleTier(x, TH, NOW), colour = t === "ok" ? "var(--muted)" : "var(--" + t + ")";
@@ -3331,7 +3370,7 @@ function groupByArea(listings, areas) {
     const unconfB = (x.unconfirmed && x.status !== "gone") ? ' <span class="badge unconfirmed" title="not in the latest search results; link re-check was inconclusive — kept active, not delisted">unconfirmed</span>' : "";
     const overB = over && x.status !== "gone" ? ' <span class="badge over">over £' + BUD.inMax + '</span>'
       : (bt === "btr" && x.status !== "gone" ? ' <span class="badge btrband" title="BTR above the £' + BUD.inMax + ' standard cap, within the BTR allowance (£' + BUD.btrMax + ')">BTR band</span>' : "");
-    const areaB = showArea ? ' <span class="badge area">' + areaById[x.area].name.split(" — ")[0].split(" / ")[0] + '</span>' : "";
+    const areaB = showArea ? ' <span class="badge area">' + areaShort(x.area) + '</span>' : "";
     const epc = x.epc ? '<span class="k">EPC <span class="epc ' + x.epc + '">' + x.epc + '</span></span>' : '<span>EPC —</span>';
     const size = x.sizeSqft ? '<span><span class="k">' + x.sizeSqft + '</span> sqft</span>' : "";
     const avail = x.available ? '<span>avail <span class="k">' + x.available + '</span></span>' : "";
@@ -3346,97 +3385,184 @@ function groupByArea(listings, areas) {
       '<div class="meta"><span>' + x.street + '</span>' + avail + epc + size + domBadge(x) + '<span>first seen ' + x.firstSeen + '</span></div>' +
       '<div class="phase">📅 ' + x.phaseLabel + '</div><div class="src">' + srcs + '</div>' + prefbar + '</div>';
   }
-  // Split a list into shown (in-budget, active, not stale) and hidden (over / problem / gone).
-  function partition(list) {
-    const shown = [], over = [], problems = [], gone = [];
-    for (const x of list) {
-      if (x.status === "gone") gone.push(x);
-      else if (staleTier(x, TH, NOW) === "problem") problems.push(x);
-      else if (budgetTier(x.price, BUD, x.scheme) === "over") over.push(x);
-      else shown.push(x);
+
+  // ---------- Summary view ----------
+  function inBudgetActive() {
+    return D.listings.filter(x => x.status !== "gone" && budgetTier(x.price, BUD, x.scheme) !== "over" && staleTier(x, TH, NOW) !== "problem");
+  }
+  function renderSummary() {
+    const inb = inBudgetActive();
+    const btrInb = inb.filter(x => x.scheme === "btr").length;
+    const wellTimed = MT ? inb.filter(x => ["ideal", "workable"].includes(timingFit(x, FLOOR, MT, NOW))) : [];
+    const newest = D.listings.filter(x => x.isNew && x.status !== "gone");
+    const sorted = inb.slice().sort((a, b) => comparePref(a, b, TCTX));
+    const stats = [["In budget", inb.length], ["BTR in budget", btrInb], ["Well-timed", wellTimed.length], ["New this run", newest.length]];
+    const strip = '<div class="stats">' + stats.map(s => '<div class="stat"><div class="n">' + s[1] + '</div><div class="l">' + s[0] + '</div></div>').join("") + '</div>';
+    let best = "";
+    if (MT) {
+      const bt = wellTimed.slice().sort((a, b) => comparePref(a, b, TCTX))[0];
+      if (bt) {
+        best = '<div class="pick-best"><div class="lbl">⭐ Best-timed pick</div>' +
+          '<div style="margin-top:6px"><b>' + bt.building + '</b> · £' + bt.price.toLocaleString() + ' · ' + areaShort(bt.area) + (bt.scheme === "btr" ? " · BTR" : "") + timingChip(bt) + '</div></div>';
+      } else {
+        const dated = sorted.filter(x => availableDateMs(x, NOW) != null);
+        const closest = dated.sort((a, b) => Math.abs(FLOOR - availableDateMs(a, NOW)) - Math.abs(FLOOR - availableDateMs(b, NOW)))[0] || sorted[0];
+        best = '<div class="pick-best"><div class="lbl">⭐ Best-timed pick</div>' +
+          '<div class="none">Nothing well-timed yet — live stock is all too early for your window; September-dated stock is expected from ~August, and BTR start dates are negotiable.</div>' +
+          (closest ? '<div style="margin-top:8px">Closest: <b>' + closest.building + '</b> · £' + closest.price.toLocaleString() + ' · ' + areaShort(closest.area) + timingChip(closest) + '</div>' : "") + '</div>';
+      }
     }
-    return { shown, over, problems, gone };
-  }
-  function collapsible(label, list, showArea) {
-    return list.length ? '<details><summary>' + label + ' (' + list.length + ')</summary><div class="cardgrid">' + list.map(x => card(x, showArea)).join("") + '</div></details>' : "";
-  }
-
-  function renderArea(area) {
-    const list = D.listings.filter(x => x.area === area.id).sort((a, b) => comparePref(a, b, TCTX));
-    const p = partition(list);
-    return '<div class="areahead"><b>' + area.name + '</b> · ' + area.borough + ' · Zone ' + area.zone +
-      '<span class="chip t-' + area.tier + '">' + tierLabel(area.tier) + '</span>' + flagChips(area) + '</div>' +
-      '<div class="sect">In budget — well-timed, then newest block</div>' + (p.shown.length ? '<div class="cardgrid">' + p.shown.map(x => card(x, false)).join("") + '</div>' : '<div class="sub">No in-budget listings this run.</div>') +
-      collapsible('💷 Over £' + BUD.inMax + ' — click to show', p.over, false) +
-      collapsible('🔴 Stale — available &gt;5 months', p.problems, false) +
-      collapsible('No longer listed — kept for history', p.gone, false);
+    const picks = sorted.slice(0, 6).map(x => {
+      const star = getPref(x.id) === "want" ? '<span style="color:var(--new)">★</span> ' : "";
+      return '<a class="pickrow" href="#/homes">' + star +
+        '<span class="pnm">' + x.building + '</span> <span class="parea">' + areaShort(x.area) + (x.scheme === "btr" ? " · BTR" : "") + '</span>' +
+        (MT ? timingChip(x) : "") + '<span class="pprice">£' + x.price.toLocaleString() + '</span></a>';
+    }).join("");
+    const picksBox = '<div class="sect">Top picks — in budget, best-timed then newest</div>' +
+      (picks ? '<div class="picklist">' + picks + '</div>' : '<div class="sub">No in-budget listings right now.</div>');
+    const newBox = newest.length ? '<div class="sect">🆕 New this run (' + newest.length + ')</div><div class="newrow">' +
+      newest.slice(0, 10).map(x => x.building + ' £' + x.price.toLocaleString() + ' (' + areaShort(x.area) + ')').join(' · ') + '</div>' : "";
+    const cta = '<div class="cta"><a href="#/homes">See all homes →</a><a class="ghost" href="#/operators">Browse operators →</a></div>';
+    return strip + best + picksBox + cta + newBox;
   }
 
-  function renderAll() {
+  // ---------- Homes view ----------
+  let q = "", fScheme = "", fTiming = "", showOver = false, hideGone = true, wellTimedFirst = true, newOnly = false;
+  let fAreas = new Set(M.areas.map(a => a.id));
+  function homesFilter() {
+    let list = D.listings.slice();
+    list = list.filter(x => fAreas.has(x.area));
+    if (fScheme) list = list.filter(x => x.scheme === fScheme);
+    if (fTiming && MT) list = list.filter(x => timingFit(x, FLOOR, MT, NOW) === fTiming);
+    if (!showOver) list = list.filter(x => budgetTier(x.price, BUD, x.scheme) !== "over");
+    if (hideGone) list = list.filter(x => x.status !== "gone");
+    if (newOnly) list = list.filter(x => x.isNew);
+    if (q) { const s = q.toLowerCase(); list = list.filter(x => (x.building + " " + x.street + " " + x.sources.map(z => z.agent).join(" ")).toLowerCase().includes(s)); }
+    list.sort((a, b) => comparePref(a, b, wellTimedFirst ? TCTX : null));
+    return list;
+  }
+  function drawHomes(root) {
+    const list = homesFilter();
+    const wellTimed = MT ? list.filter(x => ["ideal", "workable"].includes(timingFit(x, FLOOR, MT, NOW))).length : 0;
+    const stats = [["Showing", list.length], ["Well-timed", wellTimed], ["New", list.filter(x => x.isNew).length], ["BTR", list.filter(x => x.scheme === "btr").length]];
+    root.querySelector("#hStats").innerHTML = stats.map(s => '<div class="stat"><div class="n">' + s[1] + '</div><div class="l">' + s[0] + '</div></div>').join("");
+    root.querySelector("#hList").innerHTML = list.length ? '<div class="cardgrid">' + list.map(x => card(x, true)).join("") + '</div>' : '<div class="sub">Nothing matches these filters.</div>';
+  }
+  function renderHomes() {
     const box = document.createElement("div");
-    function draw() {
-      let list = D.listings.slice();
-      if (fArea) list = list.filter(x => x.area === fArea);
-      if (fScheme) list = list.filter(x => x.scheme === fScheme);
-      if (fTiming && MT) list = list.filter(x => timingFit(x, FLOOR, MT, NOW) === fTiming);
-      if (!showOver) list = list.filter(x => budgetTier(x.price, BUD, x.scheme) !== "over");
-      if (hideGone) list = list.filter(x => x.status !== "gone");
-      if (q) { const s = q.toLowerCase(); list = list.filter(x => (x.building + " " + x.street + " " + x.sources.map(z => z.agent).join(" ")).toLowerCase().includes(s)); }
-      list.sort((a, b) => comparePref(a, b, wellTimedFirst ? TCTX : null));
-      const wellTimed = MT ? list.filter(x => ["ideal", "workable"].includes(timingFit(x, FLOOR, MT, NOW))).length : 0;
-      const stats = [["Showing", list.length], ["Well-timed", wellTimed], ["New", list.filter(x => x.isNew).length], ["BTR", list.filter(x => x.scheme === "btr").length]];
-      box.querySelector("#allStats").innerHTML = stats.map(s => '<div class="stat"><div class="n">' + s[1] + '</div><div class="l">' + s[0] + '</div></div>').join("");
-      box.querySelector("#allList").innerHTML = list.length ? '<div class="cardgrid">' + list.map(x => card(x, true)).join("") + '</div>' : '<div class="sub">Nothing matches.</div>';
-    }
-    const areaOpts = '<option value="">All areas</option>' + M.areas.map(a => '<option value="' + a.id + '">' + a.name.split(" — ")[0] + '</option>').join("");
-    const timingSel = MT ? '<select id="ft"><option value="">Any timing</option><option value="ideal">Timing: ideal</option><option value="workable">Timing: workable</option><option value="early">Timing: too early</option><option value="late">Timing: after move-out</option><option value="unknown">Timing: unknown</option></select>' : "";
-    const timingToggle = MT ? '<label style="color:var(--muted);font-size:13px"><input type="checkbox" id="fw" checked /> well-timed first</label>' : "";
+    box.className = "homes";
+    const areaChecks = M.areas.map(a => '<label><input type="checkbox" class="fa" value="' + a.id + '"' + (fAreas.has(a.id) ? " checked" : "") + '> ' + areaShort(a.id) + '</label>').join("");
+    const timingSel = MT ? '<div class="fgroup"><div class="h">Timing</div>' +
+      '<label><input type="checkbox" id="fw"' + (wellTimedFirst ? " checked" : "") + '> Well-timed first</label>' +
+      '<select id="ft"><option value="">Any timing</option><option value="ideal">Ideal</option><option value="workable">Workable</option><option value="early">Too early</option><option value="late">After move-out</option><option value="unknown">Unknown</option></select></div>' : "";
     box.innerHTML =
-      '<div class="filters"><input id="q" placeholder="Search building / street / agent" size="26" />' +
-      '<select id="fa">' + areaOpts + '</select>' +
-      '<select id="fs"><option value="">BTR + private</option><option value="btr">BTR only</option><option value="private">Private only</option></select>' +
-      timingSel +
-      '<label style="color:var(--muted);font-size:13px"><input type="checkbox" id="fo" /> include over-budget</label>' +
-      '<label style="color:var(--muted);font-size:13px"><input type="checkbox" id="fg" /> show gone</label>' +
-      timingToggle + '</div>' +
-      '<div class="stats" id="allStats"></div><div id="allList"></div>';
+      '<details class="railbox" open><summary>Filters ▾</summary><div class="railbody">' +
+        '<div class="fgroup"><input type="text" id="q" placeholder="Search building / street / agent"></div>' +
+        '<div class="fgroup"><div class="h">Budget</div><label><input type="checkbox" id="fo"' + (showOver ? " checked" : "") + '> Include over-budget</label></div>' +
+        '<div class="fgroup"><div class="h">Scheme</div><select id="fs"><option value="">BTR + private</option><option value="btr">BTR only</option><option value="private">Private only</option></select></div>' +
+        timingSel +
+        '<div class="fgroup"><div class="h">Show</div>' +
+          '<label><input type="checkbox" id="fn"' + (newOnly ? " checked" : "") + '> New this run only</label>' +
+          '<label><input type="checkbox" id="fg"' + (!hideGone ? " checked" : "") + '> Include gone / let</label></div>' +
+        '<div class="fgroup"><div class="h">Area</div>' + areaChecks + '</div>' +
+        '<button class="clearf" id="clr">Reset filters</button>' +
+      '</div></details>' +
+      '<div><div class="stats" id="hStats"></div><div id="hList"></div></div>';
     box.querySelector("#q").value = q;
-    box.querySelector("#fa").value = fArea;
     box.querySelector("#fs").value = fScheme;
     if (MT) box.querySelector("#ft").value = fTiming;
-    box.querySelector("#fo").checked = showOver;
-    box.querySelector("#fg").checked = !hideGone;
-    if (MT) box.querySelector("#fw").checked = wellTimedFirst;
-    box.querySelector("#q").oninput = e => { q = e.target.value; draw(); };
-    box.querySelector("#fa").onchange = e => { fArea = e.target.value; draw(); };
-    box.querySelector("#fs").onchange = e => { fScheme = e.target.value; draw(); };
-    if (MT) box.querySelector("#ft").onchange = e => { fTiming = e.target.value; draw(); };
-    box.querySelector("#fo").onchange = e => { showOver = e.target.checked; draw(); };
-    box.querySelector("#fg").onchange = e => { hideGone = !e.target.checked; draw(); };
-    if (MT) box.querySelector("#fw").onchange = e => { wellTimedFirst = e.target.checked; draw(); };
+    const redraw = () => drawHomes(box);
+    box.querySelector("#q").oninput = e => { q = e.target.value; redraw(); };
+    box.querySelector("#fo").onchange = e => { showOver = e.target.checked; redraw(); };
+    box.querySelector("#fs").onchange = e => { fScheme = e.target.value; redraw(); };
+    if (MT) { box.querySelector("#fw").onchange = e => { wellTimedFirst = e.target.checked; redraw(); }; box.querySelector("#ft").onchange = e => { fTiming = e.target.value; redraw(); }; }
+    box.querySelector("#fn").onchange = e => { newOnly = e.target.checked; redraw(); };
+    box.querySelector("#fg").onchange = e => { hideGone = !e.target.checked; redraw(); };
+    box.querySelectorAll(".fa").forEach(c => c.onchange = () => { if (c.checked) fAreas.add(c.value); else fAreas.delete(c.value); redraw(); });
+    box.querySelector("#clr").onclick = () => { q = ""; fScheme = ""; fTiming = ""; showOver = false; hideGone = true; wellTimedFirst = true; newOnly = false; fAreas = new Set(M.areas.map(a => a.id)); mount("homes"); };
+    drawHomes(box);
+    return box;
+  }
+
+  // ---------- Operators view ----------
+  const OPERATOR_SITES = {
+    "Quintain Living":"https://www.quintainliving.com/","UNCLE":"https://www.uncle.co.uk/","Vonder":"https://vonder.com/",
+    "Dandi":"https://www.dandi.io/","Savills":"https://www.savills.co.uk/","Way of Life":"https://www.wayoflife.co.uk/",
+    "L&Q":"https://www.lqhomes.com/renting/","Berkeley Living":"https://www.berkeleyliving.co.uk/","Berkeley/St George":"https://www.berkeleygroup.co.uk/",
+    "ila":"https://www.ilivearound.com/","Simple Life London":"https://www.simplelifelondon.co.uk/","Folio London":"https://foliolondon.co.uk/",
+    "Clay Life":"https://clay-life.com/","WEM London":"https://www.wemlondon.uk/","Metra Living":"https://www.metra.co.uk/",
+    "Related Argent":"https://relatedargent.co.uk/","Regal London":"https://www.regal.london/","Barratt London":"https://www.barrattlondon.com/",
+    "Rehearsal Rooms":"https://www.rehearsalrooms.co.uk/","AWOL":"https://www.onewestpoint.com/","Akelius":"https://www.akelius.co.uk/",
+    "Countryside/Vistry":"https://www.countrysidehomes.com/"
+  };
+  let opAreaFilter = "";
+  function buildOperators() {
+    const reg = new Map();
+    const ensure = n => { if (!reg.has(n)) reg.set(n, { name:n, areas:new Set(), buildings:new Set(), count:0, inBudget:0, min:null, max:null, portals:new Set(), btr:false }); return reg.get(n); };
+    M.areas.forEach(a => (a.btrOperators || []).forEach(op => { const o = ensure(op); o.areas.add(a.id); o.btr = true; }));
+    D.listings.forEach(x => {
+      if (!x.operator) return;
+      const o = ensure(x.operator); o.areas.add(x.area); if (x.building) o.buildings.add(x.area + "|" + x.building); o.count++;
+      if (x.scheme === "btr") o.btr = true;
+      if (x.status !== "gone" && budgetTier(x.price, BUD, x.scheme) !== "over") o.inBudget++;
+      o.min = o.min == null ? x.price : Math.min(o.min, x.price); o.max = o.max == null ? x.price : Math.max(o.max, x.price);
+      x.sources.forEach(s => { if (s.platform === "operator") o.portals.add(s.url); });
+    });
+    return [...reg.values()];
+  }
+  const opWebsite = o => OPERATOR_SITES[o.name] || [...o.portals][0] || null;
+  function renderOperators() {
+    const box = document.createElement("div");
+    const ops = buildOperators();
+    const chips = '<div class="opfilter">' +
+      ['<span class="opchip' + (opAreaFilter === "" ? " active" : "") + '" data-a="">All areas</span>']
+        .concat(M.areas.map(a => '<span class="opchip' + (opAreaFilter === a.id ? " active" : "") + '" data-a="' + a.id + '">' + areaShort(a.id) + '</span>')).join("") + '</div>';
+    box.innerHTML = chips + '<div id="opGrid"></div>';
+    function draw() {
+      let list = ops.filter(o => opAreaFilter ? o.areas.has(opAreaFilter) : true);
+      list.sort((a, b) => (b.inBudget - a.inBudget) || (b.count - a.count) || a.name.localeCompare(b.name));
+      box.querySelector("#opGrid").innerHTML = '<div class="opgrid">' + list.map(o => {
+        const site = opWebsite(o);
+        const areas = '<div class="opareas">' + [...o.areas].map(id => '<span class="badge area">' + areaShort(id) + '</span>').join("") + '</div>';
+        const band = o.min != null ? ('£' + o.min.toLocaleString() + (o.max !== o.min ? '–£' + o.max.toLocaleString() : '')) : '—';
+        const extraPortals = [...o.portals].filter(p => p !== site).slice(0, 2);
+        const links = '<div class="oplinks">' + (site ? '<a href="' + site + '" target="_blank" rel="noopener">Website ↗</a>' : '') +
+          extraPortals.map(p => '<a href="' + p + '" target="_blank" rel="noopener">Portal ↗</a>').join("") + '</div>';
+        return '<div class="opcard"><div class="opname">' + o.name + (o.btr ? ' <span class="badge btr">BTR</span>' : '') + '</div>' +
+          areas +
+          '<div class="opstat"><b>' + o.buildings.size + '</b> building' + (o.buildings.size === 1 ? '' : 's') + ' tracked · <b>' + o.inBudget + '</b> in budget · 1-bed <b>' + band + '</b></div>' +
+          (o.btr ? '<div class="opstat">🗓️ start dates usually negotiable</div>' : '') +
+          links + '</div>';
+      }).join("") + '</div>';
+    }
+    box.querySelectorAll(".opchip").forEach(c => c.onclick = () => { opAreaFilter = c.dataset.a; box.querySelectorAll(".opchip").forEach(k => k.classList.toggle("active", k.dataset.a === opAreaFilter)); draw(); });
     draw();
     return box;
   }
 
-  const view = document.getElementById("view"), tabsEl = document.getElementById("tabs");
-  const tabs = [{ id: "__all", label: "All", z: "" }].concat(M.areas.map(a => ({ id: a.id, label: a.name.split(" — ")[0].split(" / ")[0], z: "Z" + a.zone })));
-  function select(id) {
-    [...tabsEl.children].forEach(c => c.classList.toggle("active", c.dataset.id === id));
+  // ---------- Router ----------
+  const view = document.getElementById("view"), navEl = document.getElementById("nav");
+  const ROUTES = [["summary", "Summary"], ["homes", "Homes"], ["operators", "Operators"]];
+  navEl.innerHTML = ROUTES.map(r => '<a href="#/' + r[0] + '" data-r="' + r[0] + '">' + r[1] + '</a>').join("");
+  function currentRoute() { const h = (location.hash || "").replace(/^#\//, ""); return ["summary", "homes", "operators"].includes(h) ? h : "summary"; }
+  function mount(name) {
+    [...navEl.children].forEach(a => a.classList.toggle("active", a.dataset.r === name));
     view.innerHTML = "";
-    if (id === "__all") view.appendChild(renderAll());
-    else view.innerHTML = renderArea(areaById[id]);
+    if (name === "homes") view.appendChild(renderHomes());
+    else if (name === "operators") view.appendChild(renderOperators());
+    else view.innerHTML = renderSummary();
+    window.scrollTo(0, 0);
   }
-  tabsEl.innerHTML = tabs.map(t => '<div class="tab" data-id="' + t.id + '">' + t.label + (t.z ? '<span class="z">' + t.z + '</span>' : "") + '</div>').join("");
-  [...tabsEl.children].forEach(c => c.onclick = () => select(c.dataset.id));
-  // Delegated want/reject clicks: toggle the pref (click the active choice again to clear), then re-render.
-  const currentTabId = () => { const a = [...tabsEl.children].find(c => c.classList.contains("active")); return a ? a.dataset.id : "beaufort-colindale"; };
+  function route() { mount(currentRoute()); }
+  window.addEventListener("hashchange", route);
+  // Delegated want/reject clicks: toggle the pref, then re-render the current view.
   view.addEventListener("click", e => {
     const b = e.target.closest(".pbtn"); if (!b) return;
     const id = b.dataset.id, choice = b.dataset.pref;
     setPref(id, getPref(id) === choice ? null : choice);
-    select(currentTabId());
+    mount(currentRoute());
   });
-  select("beaufort-colindale");
+  route();
 </script>
 </body>
 </html>
