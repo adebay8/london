@@ -386,16 +386,23 @@
           "Reflection House",
           "Compass House",
           "Schooner House",
-          "York House"
+          "York House",
+          "The Watermint",
+          "Silkstream"
         ],
         "phaseYears": {
-          "Hendon Waterside": 2018
+          "Hendon Waterside": 2018,
+          "The Watermint": 2026,
+          "Silkstream": 2026
         },
         "btrOperators": [
-          "Barratt London"
+          "Barratt London",
+          "Berkeley Living"
         ],
         "operatorPortals": [
-          "https://www.barratthomes.co.uk/new-homes/greater-london/H600901-Hendon-Waterside/"
+          "https://www.barratthomes.co.uk/new-homes/greater-london/H600901-Hendon-Waterside/",
+          "https://www.berkeleyliving.co.uk/",
+          "https://www.berkeleygroup.co.uk/developments/london/hendon/silkstream"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/west-hendon/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1500&q=West%20Hendon%2C%20London&radius=0.5&search_source=to-rent",
