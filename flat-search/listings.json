@@ -61,7 +61,8 @@
           "Carmelia House",
           "Camomile House",
           "UNCLE Colindale",
-          "Watsonia Court"
+          "Watsonia Court",
+          "L&Q at Colindale Gardens"
         ],
         "phaseYears": {
           "Duxford Tower": 2025,
@@ -93,7 +94,8 @@
           "Dahlia House": 2025,
           "UNCLE Colindale": 2023,
           "Watsonia Court": 2024,
-          "Carmelia House": 2022
+          "Carmelia House": 2022,
+          "L&Q at Colindale Gardens": 2022
         },
         "btrOperators": [
           "Way of Life",
@@ -104,7 +106,8 @@
         "operatorPortals": [
           "https://www.wayoflife.co.uk/",
           "https://www.uncle.co.uk/colindale/",
-          "https://www.lqpricedin.co.uk/"
+          "https://www.lqpricedin.co.uk/",
+          "https://www.lqhomes.com/renting/"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/colindale/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Colindale%2C%20London&radius=0.5&search_source=to-rent",
@@ -240,20 +243,24 @@
           "The Square",
           "Vista Apartments",
           "Watercolour Apartments",
-          "Sidon Apartments"
+          "Sidon Apartments",
+          "Ark Soane"
         ],
         "phaseYears": {
           "Acton Gardens": 2019,
-          "Sidon Apartments": 2022
+          "Sidon Apartments": 2022,
+          "Ark Soane": 2021
         },
         "btrOperators": [
           "L&Q",
           "Countryside/Vistry",
-          "Metra Living"
+          "Metra Living",
+          "Simple Life London"
         ],
         "operatorPortals": [
           "https://www.youractongardens.co.uk/homes-rent",
-          "https://www.metra.co.uk/"
+          "https://www.metra.co.uk/",
+          "https://www.simplelifelondon.co.uk/development/ark-soane/"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/london/w3/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=South%20Acton%2C%20London&radius=0.5&search_source=to-rent",
@@ -277,20 +284,25 @@
           "Vista House",
           "Lavey House",
           "Celeste House",
-          "Allium House"
+          "Allium House",
+          "Alperton Depot"
         ],
         "phaseYears": {
           "Grand Union": 2021,
           "Lavey House": 2021,
           "Celeste House": 2021,
-          "Allium House": 2021
+          "Allium House": 2021,
+          "Alperton Depot": 2026
         },
         "btrOperators": [
-          "Berkeley/St George"
+          "Berkeley/St George",
+          "ila"
         ],
         "operatorPortals": [
           "https://www.berkeleygroup.co.uk/developments/london/alperton/grand-union",
-          "https://www.johnsand.co/development/grand-union"
+          "https://www.johnsand.co/development/grand-union",
+          "https://www.ilivearound.com/london/alperton-depot/",
+          "https://www.alpertondepot.co.uk/"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/alperton/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Alperton%2C%20London&radius=0.5&search_source=to-rent",
@@ -316,7 +328,8 @@
           "Legacy Point",
           "Residence Building",
           "Portal Way",
-          "Victoria Road"
+          "Victoria Road",
+          "Aviator Place"
         ],
         "phaseYears": {
           "One West Point": 2022,
@@ -325,15 +338,18 @@
           "Rehearsal Rooms": 2018,
           "The Verdean": 2023,
           "Portal Way": 2022,
-          "Victoria Road": 2021
+          "Victoria Road": 2021,
+          "Aviator Place": 2020
         },
         "btrOperators": [
           "AWOL",
-          "UNCLE"
+          "UNCLE",
+          "Folio London"
         ],
         "operatorPortals": [
           "https://www.uncle.co.uk/acton/",
-          "https://www.onewestpoint.com/"
+          "https://www.onewestpoint.com/",
+          "https://foliolondon.co.uk/development/aviator-place/"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/north-acton/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=North%20Acton%2C%20London&radius=0.5&search_source=to-rent",
