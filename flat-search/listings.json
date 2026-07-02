@@ -104,9 +104,9 @@
           "L&Q"
         ],
         "operatorPortals": [
-          "https://www.wayoflife.co.uk/",
+          "https://www.wayoflife.com/",
           "https://www.uncle.co.uk/colindale/",
-          "https://www.lqpricedin.co.uk/",
+          "https://properties.lqhomes.com/properties-to-rent",
           "https://www.lqhomes.com/renting/"
         ],
         "searchUrls": {
@@ -220,8 +220,8 @@
           "Landsec"
         ],
         "operatorPortals": [
-          "https://www.dickensyard.co.uk/",
-          "https://www.filmworksealing.com/"
+          "https://www.benhams.com/new-developments/dickens-yard-london/",
+          "https://www.benhams.com/new-developments/filmworks-london/"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/london/w5/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Ealing%20Broadway%2C%20London&radius=0.5&search_source=to-rent",
@@ -258,8 +258,8 @@
           "Simple Life London"
         ],
         "operatorPortals": [
-          "https://www.youractongardens.co.uk/homes-rent",
-          "https://www.metra.co.uk/",
+          "https://www.youractongardens.co.uk/homes-for-rent/",
+          "https://metraliving.co.uk/",
           "https://www.simplelifelondon.co.uk/development/ark-soane/"
         ],
         "searchUrls": {
@@ -349,7 +349,7 @@
         "operatorPortals": [
           "https://www.uncle.co.uk/acton/",
           "https://www.onewestpoint.com/",
-          "https://foliolondon.co.uk/development/aviator-place/"
+          "https://foliolondon.co.uk/developments/"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/north-acton/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=North%20Acton%2C%20London&radius=0.5&search_source=to-rent",
@@ -379,7 +379,7 @@
           "Akelius"
         ],
         "operatorPortals": [
-          "https://www.akelius.co.uk/en/search?city=London"
+          "https://rent.akelius.com/en_UK/city/London"
         ],
         "searchUrls": {
           "zoopla": "https://www.zoopla.co.uk/to-rent/flats/1-bedroom/cricklewood/?baths_min=1&furnished_state=furnished&is_retirement_home=false&is_shared_accommodation=false&is_student_accommodation=false&price_frequency=per_month&price_max=2000&price_min=1600&q=Cricklewood%2C%20London&radius=0.5&search_source=to-rent",
@@ -416,7 +416,7 @@
           "Berkeley Living"
         ],
         "operatorPortals": [
-          "https://www.barratthomes.co.uk/new-homes/greater-london/H600901-Hendon-Waterside/",
+          "https://www.barratthomes.co.uk/new-homes/dev000147-hendon-waterside/",
           "https://www.berkeleyliving.co.uk/",
           "https://www.berkeleygroup.co.uk/developments/london/hendon/silkstream"
         ],
