@@ -130,3 +130,92 @@ model Setting {
 
   @@map("settings")
 }
+
+// ---------------------------------------------------------------------------
+// Flat-search (beaufort-flats skill). Standalone; sole source of truth for the
+// multi-area rental search. Dates are ISO strings ("YYYY-MM-DD") so view-logic
+// semantics match the former JSON store. Global config lives in `settings`
+// under keys flat.budget / flat.staleThresholds / flat.moveTiming / flat.lastRun.
+// ---------------------------------------------------------------------------
+
+model FlatArea {
+  id              String @id // e.g. "wembley-park"
+  name            String
+  borough         String
+  zone            String
+  tier            String // "anchor" | "1" | "2"
+  expectedBand    String?
+  sortOrder       Int    @default(0)
+  buildingRoster  String @default("[]") // JSON string[]
+  phaseYears      String @default("{}") // JSON { building: year }
+  btrOperators    String @default("[]") // JSON string[]
+  operatorPortals String @default("[]") // JSON string[]
+  searchUrls      String @default("{}") // JSON { zoopla, rightmove }
+  flags           String @default("[]") // JSON string[]
+
+  listings FlatListing[]
+
+  @@map("flat_areas")
+}
+
+model FlatListing {
+  id               String  @id // stable kebab id: area-building-price
+  areaId           String
+  building         String
+  street           String?
+  phaseYear        Int?
+  phaseLabel       String?
+  price            Int
+  budgetTier       String // "in" | "btr" | "over"
+  furnished        Boolean @default(true)
+  available        String?
+  availableNow     Boolean @default(false)
+  availableDate    String? // ISO date or null
+  listedDate       String? // ISO date or null
+  epc              String?
+  sizeSqft         Int?
+  scheme           String // "btr" | "private" | "unknown"
+  operator         String?
+  schemeConfidence String  @default("unverified")
+  schemeSource     String?
+  firstSeen        String // ISO date
+  lastSeen         String // ISO date
+  lastConfirmed    String? // ISO date
+  status           String  @default("active") // "active" | "gone"
+  goneReason       String? // "removed" | "let-agreed"
+  unconfirmed      Boolean @default(false)
+  isNew            Boolean @default(false)
+  imageUrl         String?
+  note             String?
+
+  area    FlatArea            @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  sources FlatListingSource[]
+  pref    FlatPref?
+
+  @@index([areaId])
+  @@map("flat_listings")
+}
+
+model FlatListingSource {
+  id        String  @id @default(cuid())
+  listingId String
+  platform  String
+  url       String
+  agent     String?
+
+  listing FlatListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, url])
+  @@index([listingId])
+  @@map("flat_listing_sources")
+}
+
+model FlatPref {
+  listingId String   @id
+  pref      String // "want" | "reject"
+  updatedAt DateTime @default(now()) @updatedAt
+
+  listing FlatListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@map("flat_prefs")
+}

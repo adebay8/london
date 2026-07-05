@@ -1,19 +1,24 @@
 ---
 name: beaufort-flats
-description: Run the user's repeatable London 1-bed flat search across multiple areas (Beaufort Park/Colindale anchor + Zone-3 NW/W developments) on Zoopla + Rightmove, dedupe against the saved store, mark genuinely new listings, and regenerate the standalone tabbed HTML viewer. Use when the user says "run my flat search", "check flats", "beaufort flats", or invokes /beaufort-flats.
+description: Run the user's repeatable London 1-bed flat search across multiple areas (Beaufort Park/Colindale anchor + Zone-3 NW/W developments) on Zoopla + Rightmove, dedupe against the saved store, mark genuinely new listings, and reconcile the results into the app database (rendered at the /flats page). Use when the user says "run my flat search", "check flats", "beaufort flats", or invokes /beaufort-flats.
 ---
 
 # London multi-area flat search
 
-Repeatable rental search across several areas. Re-runs the same criteria per area, **accumulates** results into a persistent store (only adds genuinely new flats), marks what's new, flags what disappeared, and regenerates a standalone tabbed HTML viewer. Areas are **tiered**: `anchor` (Beaufort Park/Colindale, the baseline) → Tier 1 (established Zone-3 master-planned) → Tier 2 (newer/compromise Zone-3 developments).
+Repeatable rental search across several areas. Re-runs the same criteria per area, **accumulates** results into a persistent store (only adds genuinely new flats), marks what's new, flags what disappeared, and reconciles into the app's SQLite DB. Areas are **tiered**: `anchor` (Beaufort Park/Colindale, the baseline) → Tier 1 (established Zone-3 master-planned) → Tier 2 (newer/compromise Zone-3 developments).
 
-## Files (all under `flat-search/`)
-- `flat-search/listings.json` — canonical store. **Read first, write last.** `meta.areas[]` is the area roster; `meta.budget` is the global budget.
-- `flat-search/viewer-logic.mjs` — pure view logic (budget/sort/group/staleness). Source of truth for the viewer's logic.
-- `flat-search/flats.html` — self-contained tabbed viewer. Embeds the store between `/*DATA_START*/…/*DATA_END*/` and an exact copy of `viewer-logic.mjs` (minus `export `) between `/*LOGIC_START*/…/*LOGIC_END*/`. It also carries a **client-side want/reject layer** (✓/✗ buttons per card, saved in `localStorage` key `flatPrefs.v1`, keyed by listing id; want pins to top, reject strikes out & sinks). This is plain HTML/CSS/JS outside both marker blocks — regen only swaps DATA (and LOGIC if changed), so it is preserved. Keep listing `id`s stable so saved prefs survive.
-- `scripts/verify-flat-search.mjs` — run `node --test scripts/verify-flat-search.mjs` after any edit.
+## Store — the app database (`london.db`, Prisma)
+The store is the DB, **not** a JSON file. Tables (Prisma models, see `prisma/schema.prisma`): `FlatArea` (area roster/config), `FlatListing` (one row per flat, stable kebab `id`), `FlatListingSource` (`{platform,url,agent}` per listing), `FlatPref` (the ✓/✗ want/reject layer). Global config (budget, staleThresholds, moveTiming, lastRun) lives in the existing `settings` table under keys `flat.budget` / `flat.staleThresholds` / `flat.moveTiming` / `flat.lastRun`. Dates are ISO strings; **timing + staleness are never stored** — recomputed live at render.
 
-Background: `docs/flat-search/2026-06-25-area-expansion-research.md` (area dossier + sources); `docs/superpowers/specs/2026-06-25-multi-area-flat-search-design.md` (design).
+## Scripts & modules
+- **`npx tsx scripts/flat-search-dump.ts`** — read-only. Prints `{ config, areas, active }` JSON: the roster/config plus every active listing (id, area, building, price, scheme, source URLs). **Run this FIRST** to drive the per-area fetches and re-confirms (replaces "read listings.json").
+- **`npx tsx scripts/flat-search-sync.ts <results.json> [--today YYYY-MM-DD]`** — reconciles a run into the DB and stamps `flat.lastRun`. `results.json` is the array of `{area, reconfirm[], candidates[]}` you assemble (schemas below). This is the **only** write step (replaces writing JSON + regenerating HTML).
+- `lib/flat-search/` — `view-logic.ts` (budget/sort/staleness/timing, pure), `reconcile.ts` (the dedupe/isNew/gone/revival core the sync script runs), `store.ts` (DB↔object), `view-model.ts` (page derivation), `types.ts`.
+- **Rendering:** the `/flats` page (`app/flats/page.tsx` + `components/flats/*`, served by the Next app) reads `GET /api/flats` and renders Summary / Homes / Operators tabs with the design system. Want/reject persist via `POST /api/flats/pref` → `FlatPref` (cross-device; no more localStorage). Keep listing `id`s stable so prefs survive.
+- **Verify:** `npx jest flat-search` (view-logic + reconcile suites) — must pass after any logic change. The old `flat-search/` files and `scripts/verify-flat-search.mjs` are retired.
+- **Fresh DB / rebuild:** `london.db` is gitignored (local-only, like the app's other data). `npx tsx scripts/flat-search-seed.ts` bootstraps the flat store from the committed baseline `data/flat-search-seed.json` (skips if listings already exist; `--force` to overwrite). Running the search then advances the live DB from there.
+
+Background: `docs/flat-search/2026-06-25-area-expansion-research.md` (area dossier + sources); `docs/superpowers/specs/2026-06-26-multi-area-flat-search-design.md` and `docs/superpowers/specs/2026-07-06-flat-search-db-migration-design.md` (designs).
 
 ## Criteria
 - **1 bed, 1 bath min, furnished.** Exclude retirement / shared / student.
@@ -24,7 +29,7 @@ Background: `docs/flat-search/2026-06-25-area-expansion-research.md` (area dossi
 ## Procedure
 
 ### 1. Load the store
-Read `flat-search/listings.json`. Iterate `meta.areas`. For each area run steps 2–4 using that area's `searchUrls`, `buildingRoster`, `btrOperators`, `operatorPortals`.
+Run `npx tsx scripts/flat-search-dump.ts` and parse its JSON. Iterate `areas`. For each area run steps 2–4 using that area's `searchUrls`, `buildingRoster`, `btrOperators`, `operatorPortals`. Use the `active` list (id, area, building, price, sources) to build the per-area re-confirm sets (step 5). `config` carries the budget, staleThresholds, and moveTiming.
 
 ### 2. Fetch both platforms (WebFetch), per area
 - Fetch `area.searchUrls.zoopla` and `area.searchUrls.rightmove` (both already carry `price_max=2000`).
@@ -47,7 +52,7 @@ WebFetch each kept listing's detail page; extract the listed/added date:
 - Watch evergreen/placeholder listings (on-site dev agents keep standing listings live for months → availableNow + very high dom → buried in the problem tier).
 
 ### 3b. Move-timing fit (the user's notice window)
-The user is on a periodic tenancy that needs **two whole rent periods of notice**, so their earliest move-out is a step function (see `docs/superpowers/specs/2026-06-26-move-timing-window-design.md`). Config lives in `meta.moveTiming` (`rentPeriodAnchorDay` 14, `noticePeriodsRequired` 2, `overlapIdealDays` 7, `overlapMaxDays` 14, `noticeServedDate` null=rolling). You **store only `availableDate`** (step 3) — the viewer recomputes the move-out floor, notice deadline, and per-listing `timingFit` (`ideal`/`workable`/`early`/`late`/`unknown`) live each render via `viewer-logic.mjs`. **Nothing is dropped or re-tiered on timing** — it's a chip + sort only (over-budget pattern). Because the listing horizon (~4–6 wk) sits behind the user's lead time (~2.5–3.5 mo), expect almost everything to read `early` for now; well-timed (Sep-dated) stock surfaces from ~August. BTR is the bridge — operators let you pick a future start date, so an `early` BTR unit is reachable where a private immediate-let isn't.
+The user is on a periodic tenancy that needs **two whole rent periods of notice**, so their earliest move-out is a step function (see `docs/superpowers/specs/2026-06-26-move-timing-window-design.md`). Config lives in `config.moveTiming` (`settings` key `flat.moveTiming`: `rentPeriodAnchorDay` 14, `noticePeriodsRequired` 2, `overlapIdealDays` 7, `overlapMaxDays` 14, `noticeServedDate` null=rolling). You **store only `availableDate`** (step 3) — the `/flats` page recomputes the move-out floor, notice deadline, and per-listing `timingFit` (`ideal`/`workable`/`early`/`late`/`unknown`) live each render via `lib/flat-search/view-logic.ts`. **Nothing is dropped or re-tiered on timing** — it's a chip + sort only (over-budget pattern). Because the listing horizon (~4–6 wk) sits behind the user's lead time (~2.5–3.5 mo), expect almost everything to read `early` for now; well-timed (Sep-dated) stock surfaces from ~August. BTR is the bridge — operators let you pick a future start date, so an `early` BTR unit is reachable where a private immediate-let isn't.
 
 ### 3c. Capture the listing image → `imageUrl` (card thumbnail)
 From the **same** detail-page fetch as step 3 (no extra request), grab one photo URL into `imageUrl`. The viewer shows it at the top of each card; a missing/absent `imageUrl` just renders a graceful no-image card, and a broken link hides itself via `onerror`.
@@ -88,17 +93,29 @@ Aggregators MISS most BTR. Each run, also sweep:
 Use `area.phaseYears[building]` where present (higher year = newer = ranks first). For the anchor, the full Beaufort/Colindale phase map lives there (Duxford Tower 2025 … Adrienne 2007). When a block isn't listed: EPC B ≈ newer (2018+), EPC C ≈ older; prefer documented launch dates over EPC. Refine new-area phase-years as live listings reveal completion dates.
 - **Pin the specific BLOCK, not the street.** Some streets host multiple blocks of very different ages — e.g. Lismore Boulevard / Colindale Gardens spans **Newington House (2018) → Reverence House (2021)**. Extract the actual building name from the listing title/detail page and use `phaseYears[building]`; only fall back to the street-keyed year (e.g. `Lismore Boulevard` 2021) when the block name is genuinely absent. Confirmed Colindale Gardens block years: Newington 2018, Grevillea 2019, Florence 2020, Reverence 2021, Genista & Gladness 2022, Dianthus (Dahlia/Diascia/Darmera) 2025. We only need exact years for blocks that actually appear as listings — don't chase years for blocks with no live listing.
 
-### 7. Write the store, then regenerate the viewer
-- Write the full updated object back to `flat-search/listings.json`.
-- In `flat-search/flats.html`, replace everything between `/*DATA_START*/` and `/*DATA_END*/` with the new store (a trimmed copy; agent names may be shortened). Single Edit; do not touch the rest of the HTML/CSS/JS.
-- If `flat-search/viewer-logic.mjs` changed, re-inline its body (minus `export `) between `/*LOGIC_START*/…/*LOGIC_END*/`.
-- Run `node --test scripts/verify-flat-search.mjs` — must pass before reporting.
+### 7. Reconcile into the DB (the only write step)
+Assemble a `results.json` array — one entry per area — then run the sync script. **Don't hand-edit the DB;** the reconcile core (dedupe, isNew, gone removed/let-agreed, blocked→unconfirmed, revival + source-merge, price-change re-tier) runs inside the script. Shape:
+```jsonc
+[ { "area": "<area id>",
+    "reconfirm": [ { "id": "<listing id>", "verdict": "live|removed|let-agreed|blocked",
+                     "newPrice": 1800, "note": "..." } ],   // newPrice/note optional
+    "candidates": [ { "building": "", "street": "", "price": 0, "furnished": true,
+                      "scheme": "btr|private|unknown", "operator": null,
+                      "schemeConfidence": "confirmed|likely|unverified", "schemeSource": "",
+                      "available": "", "availableNow": false, "availableDate": null,
+                      "listedDate": null, "epc": null, "sizeSqft": null,
+                      "sources": [ { "platform": "", "url": "", "agent": "" } ],
+                      "imageUrl": null, "note": "" } ] } ]
+```
+Candidate `id` is derived (`area-kebab(building)-price`); a candidate whose id already exists updates/​revives it and merges sources (not "new"). Then:
+- `npx tsx scripts/flat-search-sync.ts results.json` (add `--today YYYY-MM-DD` only if the environment date must be overridden). It writes all changes and stamps `flat.lastRun`.
+- `npx jest flat-search` — must pass before reporting.
 
 ### 8. Report
-Summarise per area: active count, **how many NEW this run** (name them), how many newly **delisted** (split removed vs let-agreed) and how many kept active but **unconfirmed**, and the top newest-in-budget pick **per tier** (anchor / Tier 1 / Tier 2). Tell the user to open `flat-search/flats.html`.
+Summarise per area: active count, **how many NEW this run** (name them), how many newly **delisted** (split removed vs let-agreed) and how many kept active but **unconfirmed**, and the top newest-in-budget pick **per tier** (anchor / Tier 1 / Tier 2). Tell the user to open the **/flats** page in the app (Flats tab in the sidebar).
 - **Timing line:** state the current move-out floor + notice deadline (days left), and the best **well-timed** (`ideal`/`workable`) pick per tier — *separately* from the newest-in-budget pick. If nothing is well-timed yet, say so plainly ("all live stock is too early; Sep-dated stock expected from ~August — hold or negotiate a BTR start date") rather than implying no options.
 
 ## Maintaining areas
-- **Add an area:** append an object to `meta.areas[]` (id, name, borough, zone, tier, buildingRoster, phaseYears, btrOperators, operatorPortals, searchUrls with `price_max=2000`, expectedBand, flags) and run. No code change needed.
+- **Add an area:** insert a `FlatArea` row (id, name, borough, zone, tier, buildingRoster, phaseYears, btrOperators, operatorPortals, searchUrls with `price_max=2000`, expectedBand, flags, sortOrder) — e.g. a one-off `tsx` script calling `upsertAreas` from `lib/flat-search/store.ts`, then run. No app-code change needed.
 - **Flags** drive viewer chips: `safetyCaution`, `zoneCaveat`, `natRail`, `brandNew`, `mostlyOverBudget`.
 - New areas must be Zone 3 (Zone 2 only if 1-beds ≤£2,000). Keep the anchor (`beaufort-colindale`, Zone 4) unchanged.
