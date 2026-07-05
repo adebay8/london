@@ -44,6 +44,11 @@ export default function FlatsPage() {
     [],
   );
 
+  const operators = useMemo(() => {
+    if (!store) return [];
+    return [...new Set(store.listings.filter((l) => l.scheme === "btr" && l.operator).map((l) => l.operator!))].sort();
+  }, [store]);
+
   const topPickIds = useMemo(() => {
     if (!view) return new Set<string>();
     const ids = new Set<string>();
@@ -67,6 +72,10 @@ export default function FlatsPage() {
       }
       if (f.schemes.length && !f.schemes.includes(l.scheme)) return false;
       if (f.bands.length && !f.bands.includes(l.budgetTier)) return false;
+      if (f.operators.length) {
+        const has = !!l.operator && f.operators.includes(l.operator);
+        if (f.operatorMode === "include" ? !has : has) return false;
+      }
       if (f.newOnly && !l.isNew) return false;
       if (f.wellTimedOnly && l.timingFit !== "ideal" && l.timingFit !== "workable") return false;
       if (f.topPicksOnly && !topPickIds.has(l.id)) return false;
@@ -131,8 +140,8 @@ export default function FlatsPage() {
 
         {tab === "homes" && (
           <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-start">
-            <aside className="shrink-0 rounded-xl border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-3 lg:sticky lg:top-4 lg:w-56">
-              <FilterRail areas={view.areas} filters={filters} onChange={setFilters} />
+            <aside className="shrink-0 rounded-xl border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-3 lg:sticky lg:top-4 lg:max-h-[calc(100vh-6.5rem)] lg:w-56 lg:overflow-y-auto">
+              <FilterRail areas={view.areas} operators={operators} filters={filters} onChange={setFilters} />
             </aside>
 
             <div className="flex-1">

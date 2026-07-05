@@ -7,6 +7,8 @@ export interface FilterState {
   tiers: string[]; // "anchor" | "1" | "2"; empty = all
   schemes: string[]; // "btr" | "private"; empty = all
   bands: string[]; // "in" | "btr" | "over"
+  operators: string[]; // BTR operator names; empty = no operator filter
+  operatorMode: "include" | "exclude"; // include = only these; exclude = everything but these
   wellTimedOnly: boolean;
   newOnly: boolean;
   topPicksOnly: boolean;
@@ -19,6 +21,8 @@ export const DEFAULT_FILTERS: FilterState = {
   tiers: [],
   schemes: [],
   bands: ["in", "btr"],
+  operators: [],
+  operatorMode: "include",
   wellTimedOnly: false,
   newOnly: false,
   topPicksOnly: false,
@@ -58,10 +62,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function FilterRail({
   areas,
+  operators,
   filters,
   onChange,
 }: {
   areas: Area[];
+  operators: string[];
   filters: FilterState;
   onChange: (f: FilterState) => void;
 }) {
@@ -128,6 +134,34 @@ export default function FilterRail({
           />
         ))}
       </Section>
+
+      {operators.length > 0 && (
+        <Section title="BTR operator">
+          <div className="mb-1.5 flex overflow-hidden rounded-md border border-[var(--border-primary)] text-xs">
+            {(["include", "exclude"] as const).map((m) => (
+              <button
+                key={m}
+                onClick={() => set({ operatorMode: m })}
+                className={`flex-1 px-2 py-1 capitalize transition-colors ${
+                  filters.operatorMode === m
+                    ? "bg-[var(--accent)] text-white"
+                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                }`}
+              >
+                {m}
+              </button>
+            ))}
+          </div>
+          {operators.map((op) => (
+            <Check
+              key={op}
+              checked={filters.operators.includes(op)}
+              onChange={() => set({ operators: toggle(filters.operators, op) })}
+              label={op}
+            />
+          ))}
+        </Section>
+      )}
 
       <Section title="Area">
         {areas.map((a) => (
