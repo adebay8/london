@@ -85,9 +85,9 @@ export function buildView(store: FlatStore, nowMs: number): FlatView {
     const newest =
       [...pool].sort(
         (a, b) =>
-          (b.scheme === "btr" ? 0 : 1) - (a.scheme === "btr" ? 0 : 1) ||
-          (b.phaseYear ?? 0) - (a.phaseYear ?? 0) ||
-          a.price - b.price,
+          (a.scheme === "btr" ? 0 : 1) - (b.scheme === "btr" ? 0 : 1) || // BTR first
+          (b.phaseYear ?? 0) - (a.phaseYear ?? 0) || // then newest block
+          a.price - b.price, // then cheapest
       )[0] ?? null;
     const wellTimed =
       pool
