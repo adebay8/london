@@ -263,7 +263,7 @@ export default function FlatsPage() {
       <div className="flex-1 overflow-auto">
         {tab === "summary" && (
           <div className="p-6">
-            <SummaryPanel view={view} onOpenListing={openListing} />
+            <SummaryPanel view={view} onOpenListing={openListing} onBrowse={() => setTab("homes")} />
           </div>
         )}
 
