@@ -1,16 +1,11 @@
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@/app/generated/prisma/client";
 
-function createPrismaClient() {
-  const databaseUrl = process.env.DATABASE_URL ?? "file:./london.db";
-  const adapter = new PrismaBetterSqlite3({ url: databaseUrl });
-  return new PrismaClient({ adapter });
-}
-
+// MongoDB (Atlas) — the connection string is read from MONGO_URI via the schema
+// datasource; the MongoDB connector connects natively (no driver adapter).
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

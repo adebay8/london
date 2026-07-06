@@ -4,15 +4,12 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 config({ path: ".env" });
 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../app/generated/prisma/client";
 import districts from "../data/districts.json";
 import districtZones from "../data/districts_zones.json";
 import neighbourhoodZones from "../data/neighbourhood_zones.json";
 
-const databaseUrl = process.env.DATABASE_URL ?? "file:./london.db";
-const adapter = new PrismaBetterSqlite3({ url: databaseUrl });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
   const boroughZoneMap: Record<string, number> = {};

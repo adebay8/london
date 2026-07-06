@@ -5,12 +5,10 @@ import { config as loadEnv } from "dotenv";
 loadEnv({ path: ".env.local" });
 loadEnv({ path: ".env" });
 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../app/generated/prisma/client";
 import { loadAreas, loadConfig, loadListings } from "../lib/flat-search/store";
 
-const databaseUrl = process.env.DATABASE_URL ?? "file:./london.db";
-const prisma = new PrismaClient({ adapter: new PrismaBetterSqlite3({ url: databaseUrl }) });
+const prisma = new PrismaClient();
 
 async function main() {
   const [areas, config, listings] = await Promise.all([

@@ -4,11 +4,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
+  url      = env("MONGO_URI")
 }
 
 model Neighbourhood {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   name      String
   borough   String
   zone      Int
@@ -27,7 +28,7 @@ model Neighbourhood {
 }
 
 model ResearchProfile {
-  id              String   @id @default(cuid())
+  id              String   @id @default(cuid()) @map("_id")
   neighbourhoodId String   @unique
   overview        String
   safety          String   // JSON string
@@ -49,7 +50,7 @@ model ResearchProfile {
 }
 
 model ResearchJob {
-  id              String    @id @default(cuid())
+  id              String    @id @default(cuid()) @map("_id")
   neighbourhoodId String
   status          String    @default("pending")
   startedAt       DateTime?
@@ -62,7 +63,7 @@ model ResearchJob {
 }
 
 model JournalEntry {
-  id               String   @id @default(cuid())
+  id               String   @id @default(cuid()) @map("_id")
   neighbourhoodId  String?
   content          String
   decision         String?
@@ -75,7 +76,7 @@ model JournalEntry {
 }
 
 model ApartmentBuilding {
-  id              String   @id @default(cuid())
+  id              String   @id @default(cuid()) @map("_id")
   neighbourhoodId String
   placeId         String   @unique
   name            String
@@ -86,7 +87,7 @@ model ApartmentBuilding {
   types           String   // JSON string[]
   fetchedAt       DateTime @default(now())
 
-  neighbourhood Neighbourhood @relation(fields: [neighbourhoodId], references: [id])
+  neighbourhood Neighbourhood     @relation(fields: [neighbourhoodId], references: [id])
   amenities     BuildingAmenity[]
 
   @@index([neighbourhoodId])
@@ -94,7 +95,7 @@ model ApartmentBuilding {
 }
 
 model BuildingAmenity {
-  id            String   @id @default(cuid())
+  id            String   @id @default(cuid()) @map("_id")
   buildingId    String
   category      String
   name          String
@@ -115,7 +116,7 @@ model BuildingAmenity {
 }
 
 model Ranking {
-  id              String @id @default(cuid())
+  id              String @id @default(cuid()) @map("_id")
   neighbourhoodId String @unique
   position        Int
 
@@ -125,21 +126,20 @@ model Ranking {
 }
 
 model Setting {
-  key   String @id
+  key   String @id @map("_id")
   value String
 
   @@map("settings")
 }
 
 // ---------------------------------------------------------------------------
-// Flat-search (beaufort-flats skill). Standalone; sole source of truth for the
-// multi-area rental search. Dates are ISO strings ("YYYY-MM-DD") so view-logic
-// semantics match the former JSON store. Global config lives in `settings`
-// under keys flat.budget / flat.staleThresholds / flat.moveTiming / flat.lastRun.
+// Flat-search (beaufort-flats skill). Sole source of truth for the multi-area
+// rental search. Dates are ISO strings ("YYYY-MM-DD") so view-logic semantics
+// match. Global config lives in `settings` under keys flat.*.
 // ---------------------------------------------------------------------------
 
 model FlatArea {
-  id              String @id // e.g. "wembley-park"
+  id              String @id @map("_id") // e.g. "wembley-park"
   name            String
   borough         String
   zone            String
@@ -159,7 +159,7 @@ model FlatArea {
 }
 
 model FlatListing {
-  id               String  @id // stable kebab id: area-building-price
+  id               String  @id @map("_id") // stable kebab id: area-building-price
   areaId           String
   building         String
   street           String?
@@ -197,7 +197,7 @@ model FlatListing {
 }
 
 model FlatListingSource {
-  id        String  @id @default(cuid())
+  id        String  @id @default(cuid()) @map("_id")
   listingId String
   platform  String
   url       String
@@ -211,7 +211,8 @@ model FlatListingSource {
 }
 
 model FlatPref {
-  listingId String   @id
+  id        String   @id @default(cuid()) @map("_id")
+  listingId String   @unique
   pref      String // "want" | "reject"
   updatedAt DateTime @default(now()) @updatedAt
 

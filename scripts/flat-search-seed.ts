@@ -7,13 +7,11 @@ loadEnv({ path: ".env.local" });
 loadEnv({ path: ".env" });
 
 import fs from "node:fs";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../app/generated/prisma/client";
 import { upsertAreas, saveConfig, saveListing } from "../lib/flat-search/store";
 import type { Area, Budget, Listing, MoveTiming, StaleThresholds } from "../lib/flat-search/types";
 
-const databaseUrl = process.env.DATABASE_URL ?? "file:./london.db";
-const prisma = new PrismaClient({ adapter: new PrismaBetterSqlite3({ url: databaseUrl }) });
+const prisma = new PrismaClient();
 
 interface LegacyStore {
   meta: {

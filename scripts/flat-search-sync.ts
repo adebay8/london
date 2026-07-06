@@ -7,13 +7,11 @@ loadEnv({ path: ".env.local" });
 loadEnv({ path: ".env" });
 
 import fs from "node:fs";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../app/generated/prisma/client";
 import { loadAreas, loadConfig, loadListings, saveListings, setLastRun } from "../lib/flat-search/store";
 import { reconcile, type AreaResult } from "../lib/flat-search/reconcile";
 
-const databaseUrl = process.env.DATABASE_URL ?? "file:./london.db";
-const prisma = new PrismaClient({ adapter: new PrismaBetterSqlite3({ url: databaseUrl }) });
+const prisma = new PrismaClient();
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(name);

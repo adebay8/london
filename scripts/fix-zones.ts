@@ -2,14 +2,11 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 config({ path: ".env" });
 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../app/generated/prisma/client";
 import districts from "../data/districts.json";
 import * as fs from "fs";
 
-const databaseUrl = process.env.DATABASE_URL ?? "file:./london.db";
-const adapter = new PrismaBetterSqlite3({ url: databaseUrl });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 // --- OS Grid Reference to Lat/Lng conversion ---
 
