@@ -54,7 +54,7 @@ function Check({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-b border-[var(--border-secondary)] py-3">
-      <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-muted)]">{title}</div>
+      <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">{title}</div>
       <div className="space-y-1.5">{children}</div>
     </div>
   );
@@ -77,7 +77,10 @@ export default function FilterRail({
     <div className="text-[var(--text-primary)]">
       <div className="flex items-center justify-between pb-2">
         <span className="text-sm font-bold">Filters</span>
-        <button onClick={() => onChange(DEFAULT_FILTERS)} className="text-xs text-[var(--accent)] hover:underline">
+        <button
+          onClick={() => onChange(DEFAULT_FILTERS)}
+          className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        >
           reset
         </button>
       </div>
@@ -142,7 +145,8 @@ export default function FilterRail({
               <button
                 key={m}
                 onClick={() => set({ operatorMode: m })}
-                className={`flex-1 px-2 py-1 capitalize transition-colors ${
+                aria-pressed={filters.operatorMode === m}
+                className={`flex-1 px-2 py-1 capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--accent)] ${
                   filters.operatorMode === m
                     ? "bg-[var(--accent)] text-white"
                     : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"

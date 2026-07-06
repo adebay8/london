@@ -14,7 +14,7 @@ export default function OperatorsPanel({ view }: { view: FlatView }) {
           <div key={a.id} className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-4">
             <div className="mb-1 flex items-baseline justify-between">
               <h3 className="text-sm font-bold text-[var(--text-primary)]">{a.name}</h3>
-              <span className="text-xs text-[var(--text-muted)]">
+              <span className="text-xs text-[var(--text-secondary)]">
                 {a.borough} · Zone {a.zone} · {a.tier === "anchor" ? "Anchor" : `Tier ${a.tier}`}
               </span>
             </div>
@@ -43,7 +43,7 @@ export default function OperatorsPanel({ view }: { view: FlatView }) {
                 </a>
               ))}
             </div>
-            <div className="mt-2 text-xs text-[var(--text-muted)]">
+            <div className="mt-2 text-xs text-[var(--text-secondary)]">
               {btr.length} active BTR listing{btr.length === 1 ? "" : "s"} tracked
             </div>
           </div>

@@ -31,7 +31,7 @@ function Chip({ label, cls }: { label: string; cls: string }) {
     no: "bg-[var(--status-no-bg)] text-[var(--status-no)]",
     maybe: "bg-[var(--status-maybe-bg)] text-[var(--status-maybe)]",
     info: "bg-[var(--status-info-bg)] text-[var(--status-info)]",
-    muted: "bg-[var(--bg-tertiary)] text-[var(--text-muted)]",
+    muted: "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]",
   };
   return <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${styles[cls] ?? styles.muted}`}>{label}</span>;
 }
@@ -40,10 +40,14 @@ export default function FlatCard({
   listing,
   areaName,
   onPref,
+  highlighted = false,
+  cardRef,
 }: {
   listing: EnrichedListing;
   areaName: string;
   onPref: (id: string, pref: Pref | null) => void;
+  highlighted?: boolean;
+  cardRef?: (el: HTMLDivElement | null) => void;
 }) {
   const [imgOk, setImgOk] = useState(true);
   const l = listing;
@@ -57,9 +61,14 @@ export default function FlatCard({
 
   return (
     <div
-      className={`flex flex-col overflow-hidden rounded-xl border bg-[var(--bg-primary)] transition-opacity ${
-        wanted ? "border-[var(--accent)] ring-1 ring-[var(--accent)]" : "border-[var(--border-primary)]"
-      } ${rejected ? "opacity-50" : ""}`}
+      ref={cardRef}
+      className={`flex flex-col overflow-hidden rounded-xl border bg-[var(--bg-primary)] transition-all ${
+        highlighted
+          ? "border-[var(--accent)] ring-2 ring-[var(--accent)]"
+          : wanted
+            ? "border-[var(--accent)] ring-1 ring-[var(--accent)]"
+            : "border-[var(--border-primary)]"
+      } ${rejected ? "opacity-60" : ""}`}
     >
       {img && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -81,7 +90,7 @@ export default function FlatCard({
             <div className={`text-sm font-medium text-[var(--text-primary)] ${rejected ? "line-through" : ""}`}>
               {l.building}
             </div>
-            <div className="text-xs text-[var(--text-muted)]">
+            <div className="text-xs text-[var(--text-secondary)]">
               {areaName}
               {l.street ? ` · ${l.street}` : ""}
             </div>
@@ -89,8 +98,10 @@ export default function FlatCard({
           <div className="flex shrink-0 flex-col gap-1">
             <button
               onClick={() => onPref(l.id, wanted ? null : "want")}
+              aria-label={wanted ? `Remove want on ${l.building}` : `Mark ${l.building} as wanted`}
+              aria-pressed={wanted}
               title="Want"
-              className={`rounded px-2 py-0.5 text-sm ${
+              className={`rounded px-2 py-0.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                 wanted
                   ? "bg-[var(--status-yes)] text-white"
                   : "text-[var(--status-yes)] hover:bg-[var(--status-yes-bg)]"
@@ -100,8 +111,10 @@ export default function FlatCard({
             </button>
             <button
               onClick={() => onPref(l.id, rejected ? null : "reject")}
+              aria-label={rejected ? `Remove reject on ${l.building}` : `Reject ${l.building}`}
+              aria-pressed={rejected}
               title="Reject"
-              className={`rounded px-2 py-0.5 text-sm ${
+              className={`rounded px-2 py-0.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                 rejected ? "bg-[var(--status-no)] text-white" : "text-[var(--status-no)] hover:bg-[var(--status-no-bg)]"
               }`}
             >

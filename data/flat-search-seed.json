@@ -62,7 +62,10 @@
           "Camomile House",
           "UNCLE Colindale",
           "Watsonia Court",
-          "L&Q at Colindale Gardens"
+          "L&Q at Colindale Gardens",
+          "Weigela Court",
+          "Wreath Court",
+          "Windflower Court"
         ],
         "phaseYears": {
           "Duxford Tower": 2025,
@@ -95,7 +98,10 @@
           "UNCLE Colindale": 2023,
           "Watsonia Court": 2024,
           "Carmelia House": 2022,
-          "L&Q at Colindale Gardens": 2022
+          "L&Q at Colindale Gardens": 2022,
+          "Weigela Court": 2025,
+          "Wreath Court": 2025,
+          "Windflower Court": 2025
         },
         "btrOperators": [
           "Way of Life",
