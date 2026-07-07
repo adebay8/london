@@ -5,7 +5,7 @@ description: Run the user's repeatable London 1-bed flat search across multiple 
 
 # London multi-area flat search
 
-Repeatable rental search across several areas. Re-runs the same criteria per area, **accumulates** results into a persistent store (only adds genuinely new flats), marks what's new, flags what disappeared, and reconciles into the app's SQLite DB. Areas are **tiered**: `anchor` (Beaufort Park/Colindale, the baseline) → Tier 1 (established Zone-3 master-planned) → Tier 2 (newer/compromise Zone-3 developments).
+Repeatable rental search across several areas. Re-runs the same criteria per area, **accumulates** results into a persistent store (only adds genuinely new flats), marks what's new, flags what disappeared, and reconciles into the app's MongoDB database. Areas are **tiered**: `anchor` (Beaufort Park/Colindale, the baseline) → Tier 1 (established Zone-3 master-planned) → Tier 2 (newer/compromise Zone-3 developments).
 
 ## Store — the app database (MongoDB Atlas, Prisma v6)
 The store is the app's **MongoDB** database (`london` on Atlas, connection via `MONGO_URI`), accessed through Prisma v6 (`prisma.*`). It is **not** a JSON file. Collections (Prisma models, see `prisma/schema.prisma`): `flat_areas` (area roster/config), `flat_listings` (one doc per flat, stable kebab `id` = `_id`), `flat_listing_sources` (`{platform,url,agent}` per listing), `flat_prefs` (the ✓/✗ want/reject layer). Global config (budget, staleThresholds, moveTiming, lastRun) lives in the existing `settings` collection under keys `flat.budget` / `flat.staleThresholds` / `flat.moveTiming` / `flat.lastRun`. Dates are ISO strings; **timing + staleness are never stored** — recomputed live at render. (Prisma is pinned to v6 because v7 dropped MongoDB support.)
