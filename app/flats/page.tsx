@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FlatCard from "@/components/flats/FlatCard";
+import CompactRow from "@/components/flats/CompactRow";
 import FilterRail, { DEFAULT_FILTERS, type FilterState } from "@/components/flats/FilterRail";
 import SummaryPanel from "@/components/flats/SummaryPanel";
 import OperatorsPanel from "@/components/flats/OperatorsPanel";
@@ -11,6 +12,7 @@ import type { FlatConfig, Listing, Pref, Area } from "@/lib/flat-search/types";
 
 type Tab = "summary" | "homes" | "operators";
 type SortKey = "recommended" | "cheapest" | "newest" | "timed" | "listed";
+type ViewMode = "gallery" | "compact";
 
 const SORT_LABELS: Record<SortKey, string> = {
   recommended: "Recommended",
@@ -28,6 +30,8 @@ interface StoreResponse {
 
 interface UIState {
   tab: Tab;
+  view: ViewMode;
+  savedOnly: boolean;
   search: string;
   sort: SortKey;
   filters: FilterState;
@@ -35,13 +39,22 @@ interface UIState {
 
 // --- URL <-> state (so a refresh / shared link restores the exact view) ---
 function readUI(): UIState {
-  const base: UIState = { tab: "summary", search: "", sort: "recommended", filters: { ...DEFAULT_FILTERS } };
+  const base: UIState = {
+    tab: "summary",
+    view: "gallery",
+    savedOnly: false,
+    search: "",
+    sort: "recommended",
+    filters: { ...DEFAULT_FILTERS },
+  };
   if (typeof window === "undefined") return base;
   const p = new URLSearchParams(window.location.search);
   const list = (k: string, fallback: string[]) => (p.has(k) ? (p.get(k) ? p.get(k)!.split(",") : []) : fallback);
   const bool = (k: string, fallback: boolean) => (p.has(k) ? p.get(k) === "1" : fallback);
   return {
     tab: (["summary", "homes", "operators"].includes(p.get("tab") || "") ? p.get("tab") : "summary") as Tab,
+    view: (p.get("view") === "compact" ? "compact" : "gallery") as ViewMode,
+    savedOnly: bool("saved", false),
     search: p.get("q") ?? "",
     sort: (Object.keys(SORT_LABELS).includes(p.get("sort") || "") ? p.get("sort") : "recommended") as SortKey,
     filters: {
@@ -65,6 +78,8 @@ function writeUI(s: UIState) {
   const p = new URLSearchParams();
   const f = s.filters;
   if (s.tab !== "summary") p.set("tab", s.tab);
+  if (s.view !== "gallery") p.set("view", s.view);
+  if (s.savedOnly) p.set("saved", "1");
   if (s.search) p.set("q", s.search);
   if (s.sort !== "recommended") p.set("sort", s.sort);
   if (f.areas.length) p.set("areas", f.areas.join(","));
@@ -91,8 +106,10 @@ export default function FlatsPage() {
   const [focusId, setFocusId] = useState<string | null>(null);
   const cardRefs = useRef(new Map<string, HTMLDivElement>());
 
-  const { tab, search, sort, filters } = ui;
+  const { tab, view: viewMode, savedOnly, search, sort, filters } = ui;
   const setTab = (t: Tab) => setUi((s) => ({ ...s, tab: t }));
+  const setViewMode = (v: ViewMode) => setUi((s) => ({ ...s, view: v }));
+  const setSavedOnly = (v: boolean) => setUi((s) => ({ ...s, savedOnly: v }));
   const setSearch = (v: string) => setUi((s) => ({ ...s, search: v }));
   const setSort = (v: SortKey) => setUi((s) => ({ ...s, sort: v }));
   const setFilters = (f: FilterState) => setUi((s) => ({ ...s, filters: f }));
@@ -125,6 +142,7 @@ export default function FlatsPage() {
         ...s,
         tab: "homes",
         search: "",
+        savedOnly: false,
         filters: {
           ...DEFAULT_FILTERS,
           bands: DEFAULT_FILTERS.bands.includes(l.budgetTier) ? DEFAULT_FILTERS.bands : [...DEFAULT_FILTERS.bands, l.budgetTier],
@@ -156,6 +174,7 @@ export default function FlatsPage() {
     const f = filters;
     const q = search.trim().toLowerCase();
     const kept = view.listings.filter((l) => {
+      if (savedOnly && l.pref !== "want") return false;
       if (f.hideGone && l.status === "gone") return false;
       if (f.hideRejected && l.pref === "reject") return false;
       if (f.areas.length && !f.areas.includes(l.areaId)) return false;
@@ -201,7 +220,7 @@ export default function FlatsPage() {
     return view.areas
       .map((area) => ({ area, listings: kept.filter((l) => l.areaId === area.id) }))
       .filter((g) => g.listings.length > 0);
-  }, [view, filters, search, sort, topPickIds, nowMs]);
+  }, [view, filters, search, sort, savedOnly, topPickIds, nowMs]);
 
   // Scroll to + highlight a listing opened from the Summary picks.
   useEffect(() => {
@@ -221,15 +240,38 @@ export default function FlatsPage() {
   }
 
   const shownCount = grouped.reduce((n, g) => n + g.listings.length, 0);
-  const activeFilterCount =
-    filters.areas.length +
-    filters.tiers.length +
-    filters.schemes.length +
-    filters.operators.length +
-    (filters.bands.join(",") !== DEFAULT_FILTERS.bands.join(",") ? 1 : 0) +
-    [filters.wellTimedOnly, filters.newOnly, filters.topPicksOnly, !filters.hideGone, filters.hideRejected].filter(Boolean)
-      .length +
-    (search.trim() ? 1 : 0);
+  const savedCount = view.listings.filter((l) => l.pref === "want").length;
+
+  // Active filters as individually-removable chips (clearer than a "3 filters" counter).
+  const tierName = (t: string) => (t === "anchor" ? "Anchor" : `Tier ${t}`);
+  const chips: { key: string; label: string; onRemove: () => void }[] = [];
+  if (search.trim()) chips.push({ key: "q", label: `“${search.trim()}”`, onRemove: () => setSearch("") });
+  for (const a of filters.areas)
+    chips.push({ key: `area-${a}`, label: view.areaById[a]?.name ?? a, onRemove: () => setFilters({ ...filters, areas: filters.areas.filter((x) => x !== a) }) });
+  for (const t of filters.tiers)
+    chips.push({ key: `tier-${t}`, label: tierName(t), onRemove: () => setFilters({ ...filters, tiers: filters.tiers.filter((x) => x !== t) }) });
+  for (const sc of filters.schemes)
+    chips.push({ key: `scheme-${sc}`, label: sc === "btr" ? "BTR" : "Private", onRemove: () => setFilters({ ...filters, schemes: filters.schemes.filter((x) => x !== sc) }) });
+  if (filters.bands.join(",") !== DEFAULT_FILTERS.bands.join(","))
+    chips.push({
+      key: "bands",
+      label: `Budget: ${filters.bands.map((b) => (b === "in" ? "In" : b === "btr" ? "BTR" : "Over")).join(", ") || "none"}`,
+      onRemove: () => setFilters({ ...filters, bands: [...DEFAULT_FILTERS.bands] }),
+    });
+  for (const op of filters.operators)
+    chips.push({ key: `op-${op}`, label: `${filters.operatorMode === "exclude" ? "≠ " : ""}${op}`, onRemove: () => setFilters({ ...filters, operators: filters.operators.filter((x) => x !== op) }) });
+  if (filters.wellTimedOnly) chips.push({ key: "wt", label: "Well-timed", onRemove: () => setFilters({ ...filters, wellTimedOnly: false }) });
+  if (filters.newOnly) chips.push({ key: "new", label: "New this run", onRemove: () => setFilters({ ...filters, newOnly: false }) });
+  if (filters.topPicksOnly) chips.push({ key: "picks", label: "Top picks", onRemove: () => setFilters({ ...filters, topPicksOnly: false }) });
+  if (!filters.hideGone) chips.push({ key: "gone", label: "Incl. delisted", onRemove: () => setFilters({ ...filters, hideGone: true }) });
+  if (filters.hideRejected) chips.push({ key: "hr", label: "Hiding rejected", onRemove: () => setFilters({ ...filters, hideRejected: false }) });
+  if (savedOnly) chips.push({ key: "saved", label: "Saved only", onRemove: () => setSavedOnly(false) });
+
+  const clearAll = () => {
+    setSearch("");
+    setSavedOnly(false);
+    setFilters({ ...DEFAULT_FILTERS });
+  };
 
   return (
     <div className="flex h-full flex-col">
@@ -301,6 +343,33 @@ export default function FlatsPage() {
                     </button>
                   )}
                 </div>
+                <button
+                  onClick={() => setSavedOnly(!savedOnly)}
+                  aria-pressed={savedOnly}
+                  className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                    savedOnly
+                      ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+                      : "border-[var(--border-primary)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                  }`}
+                >
+                  {savedOnly ? "♥" : "♡"} Saved{savedCount ? ` ${savedCount}` : ""}
+                </button>
+
+                <div className="flex rounded-lg border border-[var(--border-primary)] p-0.5" role="group" aria-label="View mode">
+                  {(["gallery", "compact"] as const).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setViewMode(m)}
+                      aria-pressed={viewMode === m}
+                      className={`rounded-md px-2.5 py-1.5 text-sm font-medium capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                        viewMode === m ? "bg-[var(--accent)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+
                 <label className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)]">
                   <span className="sr-only sm:not-sr-only">Sort</span>
                   <select
@@ -318,58 +387,86 @@ export default function FlatsPage() {
                 </label>
               </div>
 
-              <div className="mb-3 flex items-center gap-2 text-sm text-[var(--text-secondary)]">
-                <span>
+              <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-[var(--text-secondary)]">
+                <span className="shrink-0">
                   <strong className="text-[var(--text-primary)]">{shownCount}</strong> shown
                 </span>
-                {activeFilterCount > 0 && (
-                  <>
-                    <span aria-hidden>·</span>
-                    <span>{activeFilterCount} filter{activeFilterCount === 1 ? "" : "s"} active</span>
-                    <button
-                      onClick={() => {
-                        setSearch("");
-                        setFilters({ ...DEFAULT_FILTERS });
-                      }}
-                      className="rounded px-1.5 py-0.5 text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                    >
-                      Clear all
-                    </button>
-                  </>
+                {chips.map((c) => (
+                  <button
+                    key={c.key}
+                    onClick={c.onRemove}
+                    aria-label={`Remove filter ${c.label}`}
+                    className="group inline-flex items-center gap-1 rounded-full bg-[var(--bg-tertiary)] py-1 pl-2.5 pr-1.5 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  >
+                    {c.label}
+                    <span className="text-[var(--text-muted)] group-hover:text-[var(--status-no)]">✕</span>
+                  </button>
+                ))}
+                {chips.length > 0 && (
+                  <button
+                    onClick={clearAll}
+                    className="rounded px-1.5 py-0.5 text-xs font-medium text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  >
+                    Clear all
+                  </button>
                 )}
               </div>
 
               {grouped.length === 0 ? (
                 <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-8 text-center text-[var(--text-secondary)]">
-                  No flats match these filters.
+                  {savedOnly ? "No saved homes yet — tap ♡ on a listing to save it." : "No flats match these filters."}
                 </div>
               ) : (
-                <div className="space-y-6">
-                  {grouped.map((g) => (
-                    <section key={g.area.id} aria-label={g.area.name}>
-                      <div className="mb-2 flex items-baseline gap-2">
-                        <h2 className="text-sm font-bold text-[var(--text-primary)]">{g.area.name}</h2>
-                        <span className="text-xs text-[var(--text-secondary)]">
-                          {g.area.tier === "anchor" ? "Anchor" : `Tier ${g.area.tier}`} · {g.listings.length}
-                        </span>
-                      </div>
-                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                        {g.listings.map((l) => (
-                          <FlatCard
-                            key={l.id}
-                            listing={l}
-                            areaName={g.area.name}
-                            onPref={setPref}
-                            highlighted={l.id === focusId}
-                            cardRef={(el) => {
-                              if (el) cardRefs.current.set(l.id, el);
-                              else cardRefs.current.delete(l.id);
-                            }}
+                <div className="space-y-7">
+                  {grouped.map((g) => {
+                    const tierDot =
+                      g.area.tier === "anchor" ? "var(--accent)" : g.area.tier === "1" ? "var(--status-info)" : "var(--text-muted)";
+                    const setCardRef = (id: string) => (el: HTMLDivElement | null) => {
+                      if (el) cardRefs.current.set(id, el);
+                      else cardRefs.current.delete(id);
+                    };
+                    return (
+                      <section key={g.area.id} aria-label={g.area.name}>
+                        <div className="mb-2.5 flex items-baseline gap-2">
+                          <span
+                            className="inline-block h-2 w-2 shrink-0 self-center rounded-full"
+                            style={{ backgroundColor: tierDot }}
+                            aria-hidden
                           />
-                        ))}
-                      </div>
-                    </section>
-                  ))}
+                          <h2 className="text-base font-semibold text-[var(--text-primary)]">{g.area.name}</h2>
+                          <span className="text-xs text-[var(--text-secondary)]">
+                            {g.area.tier === "anchor" ? "Anchor" : `Tier ${g.area.tier}`} · {g.listings.length}
+                          </span>
+                        </div>
+                        {viewMode === "gallery" ? (
+                          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                            {g.listings.map((l) => (
+                              <FlatCard
+                                key={l.id}
+                                listing={l}
+                                areaName={g.area.name}
+                                onPref={setPref}
+                                highlighted={l.id === focusId}
+                                cardRef={setCardRef(l.id)}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-1.5">
+                            {g.listings.map((l) => (
+                              <CompactRow
+                                key={l.id}
+                                listing={l}
+                                onPref={setPref}
+                                highlighted={l.id === focusId}
+                                cardRef={setCardRef(l.id)}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </section>
+                    );
+                  })}
                 </div>
               )}
             </div>
