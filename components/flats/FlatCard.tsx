@@ -19,6 +19,12 @@ const TIMING_CHIP: Record<string, { label: string; cls: string } | null> = {
   unknown: null,
 };
 
+const FURNISHING_LABEL: Record<string, string> = {
+  furnished: "Furnished",
+  unfurnished: "Unfurnished",
+  either: "Furn. or unfurn.",
+};
+
 const STALE_CHIP: Record<string, { label: string; cls: string } | null> = {
   ok: null,
   slow: { label: "slow to let", cls: "maybe" },
@@ -62,6 +68,7 @@ export default function FlatCard({
   const img = imgOk && l.imageUrl ? l.imageUrl.replace("/u/480/360/", "/u/720/540/") : null;
 
   const meta = [
+    FURNISHING_LABEL[l.furnishing] ?? null,
     l.available && l.available !== "Ask agent" ? `Avail. ${l.available}` : null,
     l.sizeSqft ? `${l.sizeSqft} sqft` : null,
     l.epc ? `EPC ${l.epc}` : null,

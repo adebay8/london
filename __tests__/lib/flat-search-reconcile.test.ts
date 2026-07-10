@@ -17,7 +17,7 @@ function base(overrides: Partial<Listing> = {}): Listing {
     phaseLabel: null,
     price: 1995,
     budgetTier: "btr",
-    furnished: true,
+    furnishing: "furnished",
     available: "Now",
     availableNow: true,
     availableDate: null,
@@ -122,6 +122,40 @@ describe("reconcile — candidates", () => {
     expect(out.goneReason).toBeNull();
     expect(out.isNew).toBe(false); // existing id → not "new"
     expect(out.sources.map((s) => s.url).sort()).toEqual(["https://r/2", "https://z/1"]);
+  });
+
+  it("defaults a candidate with no furnishing to 'furnished', and keeps an explicit value", () => {
+    const { listings } = run(
+      [],
+      [
+        {
+          area: "wembley-park",
+          candidates: [
+            { building: "Beton House", price: 1700, scheme: "btr", sources: [] },
+            { building: "Beton House", price: 1750, scheme: "btr", furnishing: "unfurnished", sources: [] },
+            { building: "Beton House", price: 1800, scheme: "btr", furnishing: "either", sources: [] },
+          ],
+        },
+      ],
+    );
+    const byId = new Map(listings.map((l) => [l.id, l]));
+    expect(byId.get(listingId("wembley-park", "Beton House", 1700))!.furnishing).toBe("furnished");
+    expect(byId.get(listingId("wembley-park", "Beton House", 1750))!.furnishing).toBe("unfurnished");
+    expect(byId.get(listingId("wembley-park", "Beton House", 1800))!.furnishing).toBe("either");
+  });
+
+  it("updates furnishing on an existing listing when a candidate provides it", () => {
+    const l = base({ furnishing: "furnished" });
+    const { listings } = run(
+      [l],
+      [
+        {
+          area: "wembley-park",
+          candidates: [{ building: "Beton House", price: 1995, scheme: "btr", furnishing: "either", sources: [] }],
+        },
+      ],
+    );
+    expect(listings.find((x) => x.id === l.id)!.furnishing).toBe("either");
   });
 
   it("does not duplicate a source already present", () => {

@@ -51,6 +51,7 @@ export default function CompactRow({
   const rejected = l.pref === "reject";
   const img = imgOk && l.imageUrl ? l.imageUrl : null;
   const avail = l.available && l.available !== "Ask agent" ? l.available : l.availableNow ? "Now" : "—";
+  const furn = l.furnishing === "furnished" ? "Furnished" : l.furnishing === "unfurnished" ? "Unfurnished" : "Furn./unfurn.";
 
   return (
     <div
@@ -94,6 +95,7 @@ export default function CompactRow({
         </div>
         <div className="truncate text-xs text-[var(--text-secondary)]">
           {l.scheme === "btr" ? (l.operator ? `BTR · ${l.operator}` : "BTR") : "Private"}
+          {` · ${furn}`}
           {l.street ? ` · ${l.street}` : ""}
         </div>
       </div>

@@ -5,6 +5,7 @@ import type {
   Area,
   Budget,
   BudgetTier,
+  Furnishing,
   Listing,
   MoveTiming,
   StaleThresholds,
@@ -17,6 +18,15 @@ export function budgetTier(price: number, budget: Budget, scheme: Scheme): Budge
   if (price <= budget.inMax) return "in";
   if (scheme === "btr" && budget.btrMax && price <= budget.btrMax) return "btr"; // BTR allowed above the std cap
   return "over";
+}
+
+// Furnishing filter match. `selected` is the set of ticked options (empty = no filter → all pass).
+// An "either" (furnished-or-unfurnished) flat satisfies both buckets, so it matches whenever the
+// user has ticked furnished OR unfurnished — never hidden by a furnished/unfurnished-only filter.
+export function furnishingMatches(furnishing: Furnishing, selected: string[]): boolean {
+  if (!selected.length) return true;
+  const satisfies: string[] = furnishing === "either" ? ["furnished", "unfurnished", "either"] : [furnishing];
+  return selected.some((v) => satisfies.includes(v));
 }
 
 export function daysOnMarket(listedDate: string | null, nowMs: number): number | null {

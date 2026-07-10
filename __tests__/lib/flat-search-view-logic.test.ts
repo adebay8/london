@@ -2,6 +2,7 @@ import {
   budgetTier,
   compareListings,
   daysOnMarket,
+  furnishingMatches,
   groupByArea,
   moveOutFloorMs,
   noticeDeadlineMs,
@@ -24,6 +25,32 @@ const NOW = Date.parse("2026-06-25T00:00:00Z");
 const iso = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 const L = (p: Partial<Listing>): Listing => ({ scheme: "private", price: 0, ...p } as Listing);
 const area = (id: string, tier: string): Area => ({ id, tier } as Area);
+
+describe("furnishingMatches", () => {
+  it("empty selection matches everything (no filter)", () => {
+    expect(furnishingMatches("furnished", [])).toBe(true);
+    expect(furnishingMatches("unfurnished", [])).toBe(true);
+    expect(furnishingMatches("either", [])).toBe(true);
+  });
+
+  it("matches an exact furnishing selection", () => {
+    expect(furnishingMatches("furnished", ["furnished"])).toBe(true);
+    expect(furnishingMatches("unfurnished", ["furnished"])).toBe(false);
+    expect(furnishingMatches("unfurnished", ["unfurnished"])).toBe(true);
+  });
+
+  it("an 'either' flat surfaces under a furnished OR unfurnished filter, never hidden", () => {
+    expect(furnishingMatches("either", ["furnished"])).toBe(true);
+    expect(furnishingMatches("either", ["unfurnished"])).toBe(true);
+    expect(furnishingMatches("either", ["either"])).toBe(true);
+  });
+
+  it("ticking only 'either' shows just the explicitly-flexible flats", () => {
+    expect(furnishingMatches("furnished", ["either"])).toBe(false);
+    expect(furnishingMatches("unfurnished", ["either"])).toBe(false);
+    expect(furnishingMatches("either", ["either"])).toBe(true);
+  });
+});
 
 describe("budgetTier", () => {
   it("splits at inMax with a BTR band above the standard cap", () => {

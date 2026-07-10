@@ -72,7 +72,8 @@ async function main() {
       phaseLabel: (g(l, "phaseLabel") as string) ?? null,
       price: l.price,
       budgetTier: ((g(l, "budgetTier") as string) ?? "over") as Listing["budgetTier"],
-      furnished: (g(l, "furnished") as boolean) ?? true,
+      furnishing:
+        ((g(l, "furnishing") as Listing["furnishing"]) ?? (g(l, "furnished") === false ? "unfurnished" : "furnished")),
       available: (g(l, "available") as string) ?? null,
       availableNow: (g(l, "availableNow") as boolean) ?? false,
       availableDate: (g(l, "availableDate") as string) ?? null,

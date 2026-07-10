@@ -6,6 +6,7 @@ export interface FilterState {
   areas: string[]; // empty = all
   tiers: string[]; // "anchor" | "1" | "2"; empty = all
   schemes: string[]; // "btr" | "private"; empty = all
+  furnishing: string[]; // "furnished" | "unfurnished" | "either"; empty = all
   bands: string[]; // "in" | "btr" | "over"
   operators: string[]; // BTR operator names; empty = no operator filter
   operatorMode: "include" | "exclude"; // include = only these; exclude = everything but these
@@ -20,6 +21,7 @@ export const DEFAULT_FILTERS: FilterState = {
   areas: [],
   tiers: [],
   schemes: [],
+  furnishing: [],
   bands: ["in", "btr"],
   operators: [],
   operatorMode: "include",
@@ -123,6 +125,17 @@ export default function FilterRail({
             checked={filters.schemes.includes(s)}
             onChange={() => set({ schemes: toggle(filters.schemes, s) })}
             label={s === "btr" ? "Build-to-rent" : "Private"}
+          />
+        ))}
+      </Section>
+
+      <Section title="Furnishing">
+        {(["furnished", "unfurnished", "either"] as const).map((f) => (
+          <Check
+            key={f}
+            checked={filters.furnishing.includes(f)}
+            onChange={() => set({ furnishing: toggle(filters.furnishing, f) })}
+            label={f === "furnished" ? "Furnished" : f === "unfurnished" ? "Unfurnished" : "Either / flexible"}
           />
         ))}
       </Section>

@@ -3,7 +3,7 @@
 // listing set plus a change log. No DB access — the sync script loads/saves; tests
 // exercise this directly. Mirrors the skill's step-5 reconcile rules.
 import { budgetTier } from "./view-logic";
-import type { Area, Budget, Listing, Scheme, Source } from "./types";
+import type { Area, Budget, Furnishing, Listing, Scheme, Source } from "./types";
 
 export interface ReconfirmResult {
   id: string;
@@ -16,7 +16,7 @@ export interface CandidateResult {
   building: string;
   street?: string | null;
   price: number;
-  furnished?: boolean;
+  furnishing?: Furnishing;
   scheme?: Scheme;
   operator?: string | null;
   schemeConfidence?: string;
@@ -144,6 +144,7 @@ export function reconcile({ listings, areas, budget, today, results }: Reconcile
             seen.add(s.url);
           }
         }
+        if (c.furnishing) existing.furnishing = c.furnishing;
         if (c.availableDate !== undefined) existing.availableDate = c.availableDate;
         if (c.availableNow !== undefined) existing.availableNow = !!c.availableNow;
         if (c.available !== undefined) existing.available = c.available;
@@ -163,7 +164,7 @@ export function reconcile({ listings, areas, budget, today, results }: Reconcile
         phaseLabel: phaseYear ? `Completed ~${phaseYear}` : null,
         price: c.price,
         budgetTier: budgetTier(c.price, budget, scheme),
-        furnished: c.furnished !== false,
+        furnishing: c.furnishing ?? "furnished",
         available: c.available ?? null,
         availableNow: !!c.availableNow,
         availableDate: c.availableDate ?? null,

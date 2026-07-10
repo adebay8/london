@@ -2,6 +2,7 @@
 // these are the plain-object shapes the view-logic and reconcile core operate on.
 
 export type Scheme = "btr" | "private" | "unknown";
+export type Furnishing = "furnished" | "unfurnished" | "either";
 export type BudgetTier = "in" | "btr" | "over";
 export type ListingStatus = "active" | "gone";
 export type GoneReason = "removed" | "let-agreed";
@@ -68,7 +69,7 @@ export interface Listing {
   phaseLabel: string | null;
   price: number;
   budgetTier: BudgetTier;
-  furnished: boolean;
+  furnishing: Furnishing;
   available: string | null;
   availableNow: boolean;
   availableDate: string | null;

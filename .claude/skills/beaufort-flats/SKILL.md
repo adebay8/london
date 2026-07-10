@@ -21,7 +21,7 @@ The store is the app's **MongoDB** database (`london` on Atlas, connection via `
 Background: `docs/flat-search/2026-06-25-area-expansion-research.md` (area dossier + sources); `docs/superpowers/specs/2026-06-26-multi-area-flat-search-design.md` and `docs/superpowers/specs/2026-07-06-flat-search-db-migration-design.md` (designs).
 
 ## Criteria
-- **1 bed, 1 bath min, furnished.** Exclude retirement / shared / student.
+- **1 bed, 1 bath min. Furnished OR unfurnished** — both are in scope; capture which via `furnishing` (`"furnished"|"unfurnished"|"either"`, where `either` = a listing offering "furnished or unfurnished available"). Exclude retirement / shared / student.
 - **Budget (`meta.budget`):** **in budget £1,600–1,850**; **over budget (private) £1,851–2,000** (kept, collapsed); **BTR band £1,851–`btrMax` (2,150)** — BTR only, surfaced in the MAIN list (not collapsed), badged "BTR band". Drop `<£1,600`, private `>£2,000`, or BTR `>£2,150`. `budgetTier(price, budget, scheme)` returns `in`|`btr`|`over` (scheme-aware — pass the listing's `scheme`).
 - **Priority:** anchor first (baseline), then Tier 1, then Tier 2; within an area, BTR first, then newest block (`phaseYear` desc), then cheapest.
 - **Areas:** defined entirely in `meta.areas[]`. New areas must be Zone 3 (Zone 2 only if 1-beds land ≤£2,000). Each area carries its own roster, phase-years, BTR operators, operator portals, search URLs, and `flags`.
@@ -32,8 +32,8 @@ Background: `docs/flat-search/2026-06-25-area-expansion-research.md` (area dossi
 Run `npx tsx scripts/flat-search-dump.ts` and parse its JSON. Iterate `areas`. For each area run steps 2–4 using that area's `searchUrls`, `buildingRoster`, `btrOperators`, `operatorPortals`. Use the `active` list (id, area, building, price, sources) to build the per-area re-confirm sets (step 5). `config` carries the budget, staleThresholds, and moveTiming.
 
 ### 2. Fetch both platforms (WebFetch), per area
-- Fetch `area.searchUrls.zoopla` and `area.searchUrls.rightmove` (both already carry `price_max=2000`).
-- Ask each fetch to list every listing with: building, street, price, furnished, available date, EPC, listing URL, agent.
+- Fetch `area.searchUrls.zoopla` and `area.searchUrls.rightmove` (both already carry `price_max=2000`; neither constrains furnishing, so results include furnished AND unfurnished).
+- Ask each fetch to list every listing with: building, street, price, **furnishing (furnished / unfurnished / furnished-or-unfurnished)**, available date, EPC, listing URL, agent. Set `furnishing` = `"furnished"`, `"unfurnished"`, or `"either"` (a listing that says "furnished or unfurnished available"). When a listing doesn't say, default `"furnished"`.
 - **Keep only buildings in `area.buildingRoster`** (match on normalised name; allow the area keyword in the Rightmove URL to pre-filter). Drop `<£1,600`; drop **private** `>£2,000` and **BTR** `>£2,150`; drop anything outside the roster.
 - Optionally WebFetch a few detail pages to fill EPC / sqft / availability.
 
@@ -99,7 +99,7 @@ Assemble a `results.json` array — one entry per area — then run the sync scr
 [ { "area": "<area id>",
     "reconfirm": [ { "id": "<listing id>", "verdict": "live|removed|let-agreed|blocked",
                      "newPrice": 1800, "note": "..." } ],   // newPrice/note optional
-    "candidates": [ { "building": "", "street": "", "price": 0, "furnished": true,
+    "candidates": [ { "building": "", "street": "", "price": 0, "furnishing": "furnished|unfurnished|either",
                       "scheme": "btr|private|unknown", "operator": null,
                       "schemeConfidence": "confirmed|likely|unverified", "schemeSource": "",
                       "available": "", "availableNow": false, "availableDate": null,

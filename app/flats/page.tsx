@@ -6,7 +6,7 @@ import CompactRow from "@/components/flats/CompactRow";
 import FilterRail, { DEFAULT_FILTERS, type FilterState } from "@/components/flats/FilterRail";
 import SummaryPanel from "@/components/flats/SummaryPanel";
 import OperatorsPanel from "@/components/flats/OperatorsPanel";
-import { compareListings, timingRank } from "@/lib/flat-search/view-logic";
+import { compareListings, furnishingMatches, timingRank } from "@/lib/flat-search/view-logic";
 import { buildView, type EnrichedListing } from "@/lib/flat-search/view-model";
 import type { FlatConfig, Listing, Pref, Area } from "@/lib/flat-search/types";
 
@@ -61,6 +61,7 @@ function readUI(): UIState {
       areas: list("areas", DEFAULT_FILTERS.areas),
       tiers: list("tiers", DEFAULT_FILTERS.tiers),
       schemes: list("schemes", DEFAULT_FILTERS.schemes),
+      furnishing: list("furn", DEFAULT_FILTERS.furnishing),
       bands: list("bands", DEFAULT_FILTERS.bands),
       operators: list("ops", DEFAULT_FILTERS.operators),
       operatorMode: (p.get("opmode") === "exclude" ? "exclude" : "include") as FilterState["operatorMode"],
@@ -85,6 +86,7 @@ function writeUI(s: UIState) {
   if (f.areas.length) p.set("areas", f.areas.join(","));
   if (f.tiers.length) p.set("tiers", f.tiers.join(","));
   if (f.schemes.length) p.set("schemes", f.schemes.join(","));
+  if (f.furnishing.length) p.set("furn", f.furnishing.join(","));
   if (f.bands.join(",") !== DEFAULT_FILTERS.bands.join(",")) p.set("bands", f.bands.join(",") || "none");
   if (f.operators.length) {
     p.set("ops", f.operators.join(","));
@@ -183,6 +185,7 @@ export default function FlatsPage() {
         if (!f.tiers.includes(t === "anchor" ? "anchor" : t)) return false;
       }
       if (f.schemes.length && !f.schemes.includes(l.scheme)) return false;
+      if (!furnishingMatches(l.furnishing, f.furnishing)) return false;
       if (f.bands.length && !f.bands.includes(l.budgetTier)) return false;
       if (f.operators.length) {
         const has = !!l.operator && f.operators.includes(l.operator);
@@ -252,6 +255,8 @@ export default function FlatsPage() {
     chips.push({ key: `tier-${t}`, label: tierName(t), onRemove: () => setFilters({ ...filters, tiers: filters.tiers.filter((x) => x !== t) }) });
   for (const sc of filters.schemes)
     chips.push({ key: `scheme-${sc}`, label: sc === "btr" ? "BTR" : "Private", onRemove: () => setFilters({ ...filters, schemes: filters.schemes.filter((x) => x !== sc) }) });
+  for (const fn of filters.furnishing)
+    chips.push({ key: `furn-${fn}`, label: fn === "furnished" ? "Furnished" : fn === "unfurnished" ? "Unfurnished" : "Either", onRemove: () => setFilters({ ...filters, furnishing: filters.furnishing.filter((x) => x !== fn) }) });
   if (filters.bands.join(",") !== DEFAULT_FILTERS.bands.join(","))
     chips.push({
       key: "bands",

@@ -167,7 +167,7 @@ model FlatListing {
   phaseLabel       String?
   price            Int
   budgetTier       String // "in" | "btr" | "over"
-  furnished        Boolean @default(true)
+  furnishing       String  @default("furnished") // "furnished" | "unfurnished" | "either"
   available        String?
   availableNow     Boolean @default(false)
   availableDate    String? // ISO date or null
