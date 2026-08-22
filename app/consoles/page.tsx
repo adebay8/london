@@ -92,6 +92,13 @@ function writeUI(s: UIState) {
 
 const DEPTH_MIN: Record<ConsoleFilterState["topDepth"], number> = { any: 0, "37": 37, "40": 40 };
 
+/** pass > unknown > fail. The score deliberately does not penalise an
+ *  unpublished measurement, which is right for measuring quality — but the
+ *  default view should still lead with units we have actually confirmed will
+ *  take the kit, since that is the entire point of the search. So fit ranks
+ *  the list and the score orders within each rank. */
+const FIT_RANK: Record<string, number> = { pass: 0, unknown: 1, fail: 2 };
+
 const bayVolume = (c: ScoredConsole): number => {
   const b = largestOpenBay(c.bays);
   if (!b) return -1;
@@ -175,7 +182,8 @@ export default function ConsolesPage() {
     });
 
     const by: Record<SortKey, (a: ScoredConsole, b: ScoredConsole) => number> = {
-      recommended: (a, b) => b.score - a.score || a.landedCostGbp - b.landedCostGbp,
+      recommended: (a, b) =>
+        FIT_RANK[a.fit.overall] - FIT_RANK[b.fit.overall] || b.score - a.score || a.landedCostGbp - b.landedCostGbp,
       // Raw quality on what we actually measured, ignoring how much is
       // missing. Read it with the confidence bar — the shrinkage in
       // "Recommended" is what accounts for thin evidence.

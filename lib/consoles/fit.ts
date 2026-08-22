@@ -68,13 +68,28 @@ export function closedStorageLitres(bays: Bay[]): number | null {
   return Math.round(cm3 / 100) / 10; // cm³ → litres, one decimal
 }
 
-/** Does a specific bay take a PS5 lying flat? */
-function bayTakesPs5(b: Bay): boolean {
-  return (
-    (b.widthCm ?? 0) >= PS5_BAY_WIDTH_CM &&
-    (b.depthCm ?? 0) >= PS5_BAY_DEPTH_CM &&
-    (b.heightCm ?? 0) >= PS5_BAY_HEIGHT_CM
-  );
+/** Requirement per axis, so partial evidence can be judged axis by axis. */
+const AXES = [
+  { key: "widthCm", need: PS5_BAY_WIDTH_CM, short: "too narrow" },
+  { key: "depthCm", need: PS5_BAY_DEPTH_CM, short: "too shallow" },
+  { key: "heightCm", need: PS5_BAY_HEIGHT_CM, short: "too low" },
+] as const;
+
+/** Every axis measured, and every one of them clears its requirement. */
+function bayDefinitelyFits(b: Bay): boolean {
+  return AXES.every((a) => b[a.key] != null && (b[a.key] as number) >= a.need);
+}
+
+/** At least one MEASURED axis is below requirement.
+ *
+ *  A single known-failing dimension settles the question — a 10cm-high shelf
+ *  cannot take a 9.6cm console with airflow no matter what its unpublished
+ *  depth turns out to be. Treating that as "unknown" because some other axis
+ *  is missing would let a definitively-too-small bay survive the default
+ *  filter, which is the opposite of the tri-state design's purpose: unknown is
+ *  for absent evidence, not for evidence we have and don't like. */
+function bayDefinitelyFails(b: Bay): boolean {
+  return AXES.some((a) => b[a.key] != null && (b[a.key] as number) < a.need);
 }
 
 function ps5Verdict(bays: Bay[], notes: string[]): Verdict {
@@ -87,29 +102,36 @@ function ps5Verdict(bays: Bay[], notes: string[]): Verdict {
     return "fail";
   }
 
-  const measured = capable.filter(isMeasured);
-
-  // Any measured bay that fits settles it.
-  const winner = measured.find(bayTakesPs5);
+  // A fully-measured bay that fits settles it.
+  const winner = capable.find(bayDefinitelyFits);
   if (winner) {
     notes.push(
-      `PS5 bay: ${winner.widthCm}×${winner.depthCm}×${winner.heightCm}cm — takes a Slim lying flat with room to breathe`,
+      `PS5 bay: ${winner.widthCm}\u00d7${winner.depthCm}\u00d7${winner.heightCm}cm \u2014 takes a Slim lying flat with room to breathe`,
     );
     return "pass";
   }
 
-  // Nothing measured fits, but an unmeasured bay might. Ordering matters here:
-  // resolving to `fail` while an unmeasured bay is outstanding would be a false
-  // negative, and resolving to `pass` would be a false positive.
-  if (measured.length < capable.length) return "unknown";
+  // Anything not ruled out on a measured axis could still fit once the
+  // missing dimensions are known.
+  const open = capable.filter((b) => !bayDefinitelyFails(b));
+  if (open.length) {
+    const partial = open.find((b) => AXES.some((a) => b[a.key] != null));
+    if (partial) {
+      const known = AXES.filter((a) => partial[a.key] != null)
+        .map((a) => `${a.key.replace("Cm", "")} ${partial[a.key]}cm`)
+        .join(", ");
+      notes.push(`Open bay ${known} — the rest of its internal size isn't published`);
+    }
+    return "unknown";
+  }
 
-  const best = largestOpenBay(bays);
-  if (best) {
-    const short: string[] = [];
-    if ((best.widthCm ?? 0) < PS5_BAY_WIDTH_CM) short.push(`${PS5_BAY_WIDTH_CM - (best.widthCm ?? 0)}cm too narrow`);
-    if ((best.depthCm ?? 0) < PS5_BAY_DEPTH_CM) short.push(`${PS5_BAY_DEPTH_CM - (best.depthCm ?? 0)}cm too shallow`);
-    if ((best.heightCm ?? 0) < PS5_BAY_HEIGHT_CM) short.push(`${PS5_BAY_HEIGHT_CM - (best.heightCm ?? 0)}cm too low`);
-    notes.push(`Biggest open bay is ${short.join(", ")} for a flat PS5`);
+  // Every capable bay has a measured axis below requirement.
+  const worst = capable.find(bayDefinitelyFails);
+  if (worst) {
+    const failed = AXES.filter((a) => worst[a.key] != null && (worst[a.key] as number) < a.need).map(
+      (a) => `${a.need - (worst[a.key] as number)}cm ${a.short}`,
+    );
+    notes.push(`Biggest open bay is ${failed.join(", ")} for a flat PS5`);
   }
   return "fail";
 }
