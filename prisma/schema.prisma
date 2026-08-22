@@ -220,3 +220,97 @@ model FlatPref {
 
   @@map("flat_prefs")
 }
+
+// ---------------------------------------------------------------------------
+// Bed search. One row per MODEL (not per colourway) of 4FT6 double ottoman bed
+// frame. Raw data only — the recommendation score, landed-cost banding and
+// "clears a hard-shell suitcase" test are all recomputed live in lib/beds/score.ts
+// so the ranking can be retuned without re-importing. Populated by
+// scripts/beds-import.ts from the research CSV.
+// ---------------------------------------------------------------------------
+
+model Bed {
+  id                  String  @id @map("_id") // kebab: retailer-model
+  retailer            String
+  brand               String
+  model               String
+  productUrl          String
+  colourwayShown      String?
+  colourwaysAvailable String?
+
+  // Money. landedCost = item + delivery + assembly, and is the only comparable
+  // figure across retailers (Costco bundles white-glove assembly; most don't).
+  doublePriceGbp      Float
+  deliveryCostGbp     Float? // null when bundled into the item price
+  deliveryIncluded    Boolean @default(false)
+  assemblyCostGbp     Float?
+  assemblyIncluded    Boolean @default(false)
+  landedCostGbp       Float
+  extraMembershipCost String? // Costco: membership is a hard gate, not a surcharge
+  overBudget          Boolean @default(false)
+
+  // "included" = built in your room at the landed price | "paid" = a real priced
+  // service exists | "self" = flat-pack, you build it
+  arrivesAssembled String @default("self")
+
+  // The ranked buying criteria (see docs/beds-criteria.md)
+  openingDirection    String? // "end" | "side" | "either"
+  liftMechanism       String?
+  gasStrutRating      String? // free text, e.g. "4 x 800N"
+  strutCount          Int?
+  frameMaterial       String?
+  fixingType          String?
+  storageDepthCm      Float?
+  ottomanType         String  @default("full") // "full" | "half" | "side-only"
+  maxMattressWeightKg Float?
+  minMattressWeightKg Float?
+  baseType            String?
+  slatGapCm           Float?
+
+  // Footprint — overhang is width beyond the 135cm mattress, which is what
+  // actually costs floor space in a small bedroom.
+  overallWidthCm  Float?
+  overallLengthCm Float?
+  overallHeightCm Float?
+  overhangCm      Float?
+  longestBoxCm    Float? // the London-staircase filter
+
+  upholsteryMaterial String?
+  headboardStyle     String?
+
+  warranty                String?
+  warrantyCoversMechanism String?
+  sparePartsAvailable     String?
+  returnsWindow           String?
+  deliveryLeadTime        String?
+  reviewScore             Float?
+  reviewCount             Int?
+
+  // Consumer finance — a RETAILER-level policy applied to every one of that
+  // retailer's rows at import, and deliberately excluded from the
+  // recommendation score (it changes how you pay, not how good the bed is).
+  // Stored as ONE JSON column rather than ~10 scalars because Prisma compiles
+  // MongoDB writes into an aggregation pipeline of roughly one stage per
+  // field, and Atlas rejects pipelines over 50 stages. Same reason `extra`
+  // is a JSON string. Shape: lib/beds/types.ts FinancePolicy.
+  finance String @default("{}")
+
+  notes String?
+  extra String @default("{}") // JSON: the long-tail columns, shown in the detail drawer
+
+  pref BedPref?
+
+  @@index([retailer])
+  @@map("beds")
+}
+
+model BedPref {
+  id        String   @id @default(cuid()) @map("_id")
+  bedId     String   @unique
+  pref      String // "want" | "reject"
+  updatedAt DateTime @default(now()) @updatedAt
+
+  bed Bed @relation(fields: [bedId], references: [id], onDelete: Cascade)
+
+  @@map("bed_prefs")
+}
