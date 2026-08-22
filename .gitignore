@@ -51,3 +51,6 @@ london.db-journal
 
 # worktrees
 .worktrees/
+
+# local credential scratch copy — contains live API keys
+copy.local
