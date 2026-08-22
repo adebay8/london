@@ -314,3 +314,98 @@ model BedPref {
 
   @@map("bed_prefs")
 }
+
+// ---------------------------------------------------------------------------
+// TV console search. One row per MODEL of floor-standing TV unit sized to take
+// a 55" LG OLED55B56LA on its stand, an LG S80TR soundbar in front of it, and
+// a PS5 Slim lying flat. Raw data only — the fit verdict, the recommendation
+// score and the landed-cost banding are all recomputed live in
+// lib/consoles/{fit,score}.ts so the ranking can be retuned without
+// re-importing. Populated by scripts/consoles-import.ts from the research CSV.
+//
+// Named TvConsole rather than Console to match the TS interface, which avoids
+// shadowing the global DOM `Console` type.
+// ---------------------------------------------------------------------------
+
+model TvConsole {
+  id                  String  @id @map("_id") // kebab: retailer-model
+  retailer            String
+  brand               String
+  model               String
+  productUrl          String
+  colourwayShown      String?
+  colourwaysAvailable String?
+
+  // Money. landedCost = item + delivery + assembly, and is the only comparable
+  // figure across retailers.
+  priceGbp         Float
+  deliveryCostGbp  Float? // null when bundled into the item price
+  deliveryIncluded Boolean @default(false)
+  assemblyCostGbp  Float?
+  assemblyIncluded Boolean @default(false)
+  landedCostGbp    Float
+  overBudget       Boolean @default(false)
+
+  // "included" = built in your room at the landed price | "paid" = a real
+  // priced service exists | "self" = flat-pack, you build it
+  arrivesAssembled String @default("self")
+
+  // Always floor-standing in this corpus, but recorded so a stray wall-mounted
+  // row is filtered rather than silently scored.
+  mounting String?
+
+  // The top surface — where the TV and soundbar have to coexist. Depth is the
+  // binding constraint: 23.5cm of TV base plus 13.5cm of soundbar, in line.
+  topWidthCm Float?
+  topDepthCm Float?
+  topLoadKg  Float?
+
+  overallWidthCm  Float?
+  overallDepthCm  Float?
+  overallHeightCm Float?
+
+  // Compartments, as ONE JSON column rather than ~15 scalars. Two reasons:
+  // a console has N bays of differing sizes where a bed had none, and Prisma
+  // compiles MongoDB writes into an aggregation pipeline of roughly one stage
+  // per field which Atlas rejects past 50 stages. Shape: lib/consoles/types.ts
+  // Bay[]. A null dimension means UNPUBLISHED, never zero.
+  bays String @default("[]")
+
+  backPanel       String? // "open" | "ported" | "solid"
+  cableManagement String?
+
+  frameMaterial  String?
+  finishMaterial String?
+  legStyle       String?
+
+  warranty            String?
+  sparePartsAvailable String?
+  returnsWindow       String?
+  deliveryLeadTime    String?
+  reviewScore         Float?
+  reviewCount         Int?
+
+  // Retailer-level finance policy, stamped onto every one of that retailer's
+  // rows at import and deliberately excluded from the recommendation score.
+  // Shape: lib/retail/finance.ts FinancePolicy.
+  finance String @default("{}")
+
+  notes String?
+  extra String @default("{}") // JSON: the long-tail columns, shown in the drawer
+
+  pref ConsolePref?
+
+  @@index([retailer])
+  @@map("tv_consoles")
+}
+
+model ConsolePref {
+  id        String   @id @default(cuid()) @map("_id")
+  consoleId String   @unique
+  pref      String // "want" | "reject"
+  updatedAt DateTime @default(now()) @updatedAt
+
+  console TvConsole @relation(fields: [consoleId], references: [id], onDelete: Cascade)
+
+  @@map("console_prefs")
+}

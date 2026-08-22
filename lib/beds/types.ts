@@ -2,6 +2,8 @@
 // derived shape the /beds page works with. Nothing derived is persisted — see
 // lib/beds/score.ts.
 
+import type { FinancePolicy } from "@/lib/retail/finance";
+
 export type Pref = "want" | "reject";
 
 /** "included" = built in your room at the landed price, "paid" = a real priced
@@ -70,51 +72,11 @@ export interface Bed {
   pref: Pref | null;
 }
 
-/** Retailer-level finance policy. Persisted as a single JSON column — see the
- *  note on `Bed.finance` in schema.prisma for why it is not ten scalars. */
-export interface FinancePolicy {
-  available: boolean;
-  type: FinanceType | null;
-  provider: string | null;
-  apr: number | null;
-  maxMonths: number | null;
-  minSpend: number | null;
-  tiers: FinanceTier[];
-  deposit: string | null;
-  notes: string | null;
-  url: string | null;
-}
-
-export const NO_FINANCE: FinancePolicy = {
-  available: false,
-  type: null,
-  provider: null,
-  apr: null,
-  maxMonths: null,
-  minSpend: null,
-  tiers: [],
-  deposit: null,
-  notes: null,
-  url: null,
-};
-
-/** One rung of a retailer's interest-free ladder: spend at least `minSpend` and
- *  you qualify for `months` at `apr`. Wayfair (via Klarna) runs 6m/12m/18m at
- *  £250/£500/£1,200. */
-export interface FinanceTier {
-  minSpend: number;
-  months: number;
-  apr: number;
-}
-
-/** BNPL (Klarna/Clearpay pay-in-3) is deliberately a separate kind from real
- *  fixed-term interest-free credit — six weeks is not twelve months. */
-export type FinanceType =
-  | "interest-free credit"
-  | "interest-bearing credit"
-  | "BNPL"
-  | "store card"
-  | "none";
+// Retailer finance policy is shared with the other product searches and now
+// lives in lib/retail/finance.ts. Re-exported here so existing /beds imports
+// keep working unchanged.
+export type { FinancePolicy, FinanceTier, FinanceType } from "@/lib/retail/finance";
+export { NO_FINANCE } from "@/lib/retail/finance";
 
 /** Depth at which a hard-shell check-in suitcase (~30cm thick) still lets the
  *  lid close. Below this you are limited to soft bags and bedding. */

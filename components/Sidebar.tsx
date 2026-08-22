@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/apartments", label: "Apartments", icon: "🏢" },
   { href: "/flats", label: "Flats", icon: "🔑" },
   { href: "/beds", label: "Beds", icon: "🛏️" },
+  { href: "/consoles", label: "TV unit", icon: "📺" },
   { href: "/compare", label: "Compare", icon: "⚖️" },
   { href: "/rankings", label: "Rankings", icon: "🏆" },
   { href: "/journal", label: "Journal", icon: "📓" },
