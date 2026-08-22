@@ -62,6 +62,20 @@ export const PS5_WIDTH_CM = 35.8;
 export const PS5_DEPTH_CM = 21.6;
 export const PS5_HEIGHT_CM = 9.6;
 
+// Standing upright beside the TV — the same box on a different axis.
+export const PS5_VERTICAL_WIDTH_CM = 9.6;
+export const PS5_VERTICAL_DEPTH_CM = 21.6;
+export const PS5_VERTICAL_HEIGHT_CM = 35.8;
+
+/** Width to reserve beside the TV for an upright PS5: the 9.6cm console, the
+ *  official vertical stand's base, which is wider than the console, and enough
+ *  room to get a hand in and air around it. An allowance, not a measurement —
+ *  Sony does not publish the stand's base dimensions.
+ *
+ *  NOTE: the PS5 Slim does NOT ship with a vertical stand. Sony sells it
+ *  separately at around GBP 25, so standing it up is a real added cost. */
+export const PS5_TOP_CLEARANCE_CM = 20;
+
 // --- Derived requirements (spec §3) ---------------------------------------
 /** R1 hard: below this the TV stand overhangs the surface. */
 export const MIN_TOP_WIDTH_CM = 106;
@@ -71,10 +85,19 @@ export const PREFERRED_TOP_WIDTH_CM = TV_WIDTH_CM;
 export const MIN_TOP_DEPTH_CM = TV_STAND_DEPTH_CM + SOUNDBAR_DEPTH_CM;
 /** R2 comfortable: leaves a cable gap behind the TV. */
 export const COMFORT_TOP_DEPTH_CM = 40;
-/** R3: PS5 footprint plus airflow, rear cable run and the horizontal feet. */
+/** R3a: PS5 lying flat in an open bay — footprint plus airflow, rear cable
+ *  run and the horizontal feet. */
 export const PS5_BAY_WIDTH_CM = 40;
 export const PS5_BAY_DEPTH_CM = 25;
 export const PS5_BAY_HEIGHT_CM = 11;
+
+/** R3b: PS5 standing upright on the top surface, beside the TV.
+ *
+ *  Measured against the TV's full 122.8cm PANEL width, not its 105.7cm stand
+ *  span. An upright PS5 is 35.8cm tall and the bottom of the screen sits only
+ *  ~6.4cm above the surface, so the console has to clear the panel's overhang
+ *  entirely — it cannot tuck under it the way something short could. */
+export const MIN_TOP_WIDTH_FOR_UPRIGHT_PS5_CM = TV_WIDTH_CM + PS5_TOP_CLEARANCE_CM;
 /** R4: ~19kg of real load (TV 14.5 + bar 3.5) plus headroom. */
 export const MIN_TOP_LOAD_KG = 25;
 /** R7: the wall allowance. */

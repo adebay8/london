@@ -15,24 +15,39 @@
 import {
   MIN_TOP_DEPTH_CM,
   MIN_TOP_WIDTH_CM,
+  MIN_TOP_WIDTH_FOR_UPRIGHT_PS5_CM,
   PS5_BAY_DEPTH_CM,
   PS5_BAY_HEIGHT_CM,
   PS5_BAY_WIDTH_CM,
   SOUNDBAR_WIDTH_CM,
   TV_STAND_DEPTH_CM,
+  TV_WIDTH_CM,
   type Bay,
   type TvConsole,
 } from "./types";
 
 export type Verdict = "pass" | "fail" | "unknown";
 
+/** How a PS5 actually gets housed.
+ *  "bay"  — lying flat in an open compartment. Preferred: hidden, and it does
+ *           not eat top surface.
+ *  "top"  — standing upright on the top surface beside the TV. Needs a wide
+ *           enough top, and needs the vertical stand Sony sells separately. */
+export type Ps5Route = "bay" | "top" | null;
+
 export interface Fit {
   /** R1: the stand lands on the surface. */
   tv: Verdict;
   /** R2: the bar sits in front of the TV, one behind the other. */
   soundbar: Verdict;
-  /** R3: a PS5 lies flat in an open bay. */
+  /** R3: a PS5 is housed, by either route. */
   ps5: Verdict;
+  /** Which route delivers the pass. Null when it does not pass. */
+  ps5Route: Ps5Route;
+  /** R3a on its own — lying flat in an open bay. */
+  ps5Bay: Verdict;
+  /** R3b on its own — standing upright on the top, beside the TV. */
+  ps5Top: Verdict;
   /** fail if anything fails; else unknown if anything is unknown; else pass. */
   overall: Verdict;
   /** Human-readable shortfalls and confirmations, for the card and drawer. */
@@ -92,7 +107,7 @@ function bayDefinitelyFails(b: Bay): boolean {
   return AXES.some((a) => b[a.key] != null && (b[a.key] as number) < a.need);
 }
 
-function ps5Verdict(bays: Bay[], notes: string[]): Verdict {
+function ps5BayVerdict(bays: Bay[], notes: string[]): Verdict {
   const capable = bays.filter((b) => PS5_CAPABLE.includes(b.kind));
 
   // No compartments recorded at all — we know nothing, not that it fails.
@@ -174,18 +189,53 @@ export function fitFor(c: TvConsole): Fit {
     }
   }
 
-  // --- R3: a PS5 lies flat ---
-  const ps5 = ps5Verdict(c.bays, notes);
+  // --- R3a: a PS5 lies flat in an open bay ---
+  const ps5Bay = ps5BayVerdict(c.bays, notes);
+
+  // --- R3b: a PS5 stands upright on the top, beside the TV ---
+  // Measured against the TV's full panel width, not its stand span: an upright
+  // PS5 is 35.8cm tall and the screen bottom sits ~6.4cm off the surface, so it
+  // cannot tuck under the panel's overhang.
+  let ps5Top: Verdict;
+  if (w == null) {
+    ps5Top = "unknown";
+  } else if (w >= MIN_TOP_WIDTH_FOR_UPRIGHT_PS5_CM) {
+    ps5Top = "pass";
+  } else {
+    ps5Top = "fail";
+  }
+
+  // A bay is preferred where one exists — it hides the console and leaves the
+  // top clear. Standing it upright is the fallback, not the equal.
+  let ps5: Verdict;
+  let ps5Route: Ps5Route = null;
+  if (ps5Bay === "pass") {
+    ps5 = "pass";
+    ps5Route = "bay";
+  } else if (ps5Top === "pass") {
+    ps5 = "pass";
+    ps5Route = "top";
+    notes.push(
+      `${w}cm top — room to stand the PS5 upright beside the ${TV_WIDTH_CM}cm TV (needs Sony's separate vertical stand)`,
+    );
+  } else if (ps5Bay === "unknown" || ps5Top === "unknown") {
+    ps5 = "unknown";
+  } else {
+    ps5 = "fail";
+    notes.push(`${w}cm top — too narrow to stand the PS5 beside the TV, and no bay takes it lying down`);
+  }
 
   const all = [tv, soundbar, ps5];
   const overall: Verdict = all.includes("fail") ? "fail" : all.includes("unknown") ? "unknown" : "pass";
 
-  return { tv, soundbar, ps5, overall, notes };
+  return { tv, soundbar, ps5, ps5Route, ps5Bay, ps5Top, overall, notes };
 }
 
 /** Short label for the card chip. */
 export function fitLabel(f: Fit): string {
-  if (f.overall === "pass") return "Fits TV, bar & PS5";
+  if (f.overall === "pass") {
+    return f.ps5Route === "top" ? "Fits — PS5 upright on top" : "Fits TV, bar & PS5";
+  }
   if (f.overall === "unknown") return "Fit unconfirmed";
   const failed = [f.tv === "fail" && "TV", f.soundbar === "fail" && "soundbar", f.ps5 === "fail" && "PS5"].filter(
     Boolean,

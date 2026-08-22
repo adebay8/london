@@ -79,16 +79,22 @@ interface Criterion {
 const CRITERIA: Criterion[] = [
   {
     key: "ps5",
-    label: "PS5 bay",
+    label: "PS5 housing",
     weight: 18,
-    // Graduated rather than binary: a bay that clears the requirement by a
-    // wide margin is genuinely better than one that scrapes it, because the
-    // slack is what the PS5 actually uses for airflow.
+    // Graduated, and route-aware. A bay that clears the requirement by a wide
+    // margin is genuinely better than one that scrapes it, because the slack is
+    // what the console uses for airflow. Standing it upright on the top passes,
+    // but scores below any bay: it is on show, it eats top surface next to the
+    // TV, and it needs the vertical stand Sony sells separately.
     evaluate: (c, fit, out) => {
       if (fit.ps5 === "unknown") return null;
       if (fit.ps5 === "fail") {
-        out.push({ label: "No bay takes a PS5 lying flat", tone: "bad" });
+        out.push({ label: "Nowhere to put the PS5", tone: "bad" });
         return 0;
+      }
+      if (fit.ps5Route === "top") {
+        out.push({ label: "PS5 stands upright beside the TV — no bay for it", tone: "unknown" });
+        return 0.55;
       }
       const b = largestOpenBay(c.bays);
       if (!b) return 0.8;
@@ -102,7 +108,7 @@ const CRITERIA: Criterion[] = [
         return 1;
       }
       out.push({ label: "Open bay takes a PS5, but only just", tone: "unknown" });
-      return 0.75;
+      return 0.78;
     },
   },
   {

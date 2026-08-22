@@ -1,7 +1,7 @@
 # TV console search — design
 
 **Date:** 2026-08-22
-**Status:** approved, ready for planning
+**Status:** implemented; amended 2026-08-22 (see §13)
 **Precedent:** the ottoman-bed search (`lib/beds/*`, `app/beds`, `scripts/beds-import.ts`)
 
 ## 1. Goal
@@ -223,3 +223,74 @@ spec row is not. Renders partial state when dimensions are unknown.
 - Default view shows only consoles that take the TV, the bar in front, and a
   horizontal PS5 — with unknowns visible and labelled rather than hidden.
 - `/beds` is unchanged in behaviour after the finance move.
+
+## 13. Amendment — 2026-08-22
+
+Two changes after the first corpus proved the original criteria too narrow.
+The first corpus held 13 units and only one cleared every gate, which is not
+enough to choose from.
+
+### 13.1 The PS5 gets a second route
+
+R3 required an open bay taking a PS5 lying flat. That is now **R3a**, and it is
+joined by **R3b: the PS5 stands upright on the top surface, beside the TV.**
+`fitFor` passes if either route works, and records which one in `fit.ps5Route`.
+
+**R3b requirement: top width ≥ 142.8 cm** — the TV's full **122.8 cm panel**
+width plus a 20 cm allowance. Measured against the panel, not the 105.7 cm
+stand span, because an upright PS5 is 35.8 cm tall while the bottom of the
+screen sits only ~6.4 cm above the surface: it cannot tuck under the overhang
+the way something short could.
+
+The 20 cm allowance covers the 9.6 cm console, the vertical stand's wider base
+and room for a hand and some air. It is an allowance, not a measurement — Sony
+does not publish the stand's base dimensions.
+
+**Cost note:** the PS5 Slim does **not** ship with a vertical stand. Sony sells
+it separately at around £25, so this route carries a real added cost. Recorded
+in `lib/consoles/types.ts` and surfaced in the UI.
+
+A bay still scores higher than standing it on top (1.0 vs 0.55 on the
+criterion): a bay hides the console and leaves the top surface clear, whereas
+standing it up puts it on show, eats space next to the TV and needs the extra
+stand. Both pass; they are not equal.
+
+### 13.2 Research method
+
+Per-product `WebFetch` was the wrong tool and is abandoned. Retailers 403 it,
+and it yields one product per request.
+
+**What works:** `curl` with a browser User-Agent. Category pages then carry the
+whole page of products as JSON-LD `ItemList` — 40–60 products per request.
+Retailer-specific richer sources:
+
+| Retailer | Source | Yield |
+|---|---|---|
+| Dunelm | `application/json` blob: `features` (dimensions, composition, storage layout) + `skus` (price, rating) | 160 |
+| Oak Furnitureland | Product JSON-LD carries `width`/`height`/`depth` directly | 57 |
+| Roseland Furniture | Shopify `.json` endpoint + rendered page; **the only source publishing internal compartment sizes at scale** | 34 |
+| Furniture123 | Category JSON-LD | 24 |
+
+Sitemaps (`robots.txt` → `sitemap_index.xml`) are the generic discovery
+fallback where category pages render client-side.
+
+**Still blocked:** Argos and Next 403 even with a browser UA. John Lewis serves
+a category `__NEXT_DATA__` but its PDPs resisted the generic extractor.
+Furniture Village and Costco render product data client-side. The bed research
+solved this class of problem with **headful Chrome over CDP** — headless was
+detected, headful was not — and by finding unprotected CDN endpoints (Next's
+assembly PDFs at `xcdn.next.co.uk`). Those routes remain available if the
+corpus needs those retailers.
+
+### 13.3 Result
+
+183 floor-standing units across 7 retailers (19 wall-mounted rows dropped at
+import under R8), against 13 before.
+
+- **93 confirmed** to take the TV, the soundbar in front and a PS5
+- **82** of those within the £500 budget
+- **11** house the PS5 in a bay rather than standing it on the top
+- 49 unconfirmed, 41 ruled out
+
+R2 remains the discriminator: the market clusters at 35–40 cm deep against a
+37 cm requirement.

@@ -1,15 +1,18 @@
 "use client";
 
-import { largestOpenBay } from "@/lib/consoles/fit";
+import { fitFor, largestOpenBay } from "@/lib/consoles/fit";
 import {
   MIN_TOP_DEPTH_CM,
   PS5_DEPTH_CM,
   PS5_HEIGHT_CM,
   PS5_WIDTH_CM,
+  PS5_VERTICAL_DEPTH_CM,
+  PS5_VERTICAL_WIDTH_CM,
   SOUNDBAR_DEPTH_CM,
   SOUNDBAR_WIDTH_CM,
   TV_STAND_DEPTH_CM,
   TV_STAND_WIDTH_CM,
+  TV_WIDTH_CM,
   type TvConsole,
 } from "@/lib/consoles/types";
 
@@ -51,6 +54,12 @@ function TopSurface({ c }: { c: TvConsole }) {
   const barOverflows = d < MIN_TOP_DEPTH_CM;
   const standOverflows = w < TV_STAND_WIDTH_CM || d < TV_STAND_DEPTH_CM;
 
+  // When the PS5 has to stand upright there is no bay for it, so show where it
+  // actually goes: on the top, clear of the TV panel's 122.8cm overhang.
+  const upright = fitFor(c).ps5Route === "top";
+  const panelRight = ox + (w + TV_WIDTH_CM) / 2;
+  const uprightX = Math.min(panelRight + 3, ox + w - PS5_VERTICAL_WIDTH_CM - 1);
+
   return (
     <svg
       viewBox={`0 0 ${canvasW} ${canvasD}`}
@@ -91,6 +100,19 @@ function TopSurface({ c }: { c: TvConsole }) {
         stroke={barOverflows ? BAD : OK}
         strokeWidth={0.4}
       />
+      {upright && (
+        <rect
+          x={uprightX}
+          y={2}
+          width={PS5_VERTICAL_WIDTH_CM}
+          height={PS5_VERTICAL_DEPTH_CM}
+          fill="var(--status-info)"
+          fillOpacity={0.35}
+          stroke="var(--status-info)"
+          strokeWidth={0.4}
+          rx={0.5}
+        />
+      )}
       {/* front edge of the console, so overflow reads as overflow */}
       <line x1={ox} y1={2 + d} x2={ox + w} y2={2 + d} stroke={barOverflows ? BAD : MUTED} strokeWidth={0.5} />
       <text x={ox + w / 2} y={1.4} fontSize={2.6} fill={MUTED} textAnchor="middle">
@@ -109,7 +131,15 @@ function TopSurface({ c }: { c: TvConsole }) {
 function Ps5Bay({ c }: { c: TvConsole }) {
   const bay = largestOpenBay(c.bays);
   if (!bay || bay.widthCm == null || bay.heightCm == null) {
-    return <Empty label="No open bay with published internal dimensions" />;
+    return (
+      <Empty
+        label={
+          fitFor(c).ps5Route === "top"
+            ? "No measured open bay — the PS5 stands upright on the top instead, shown left"
+            : "No open bay with published internal dimensions"
+        }
+      />
+    );
   }
 
   const bw = bay.widthCm;

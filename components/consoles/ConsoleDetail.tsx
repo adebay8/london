@@ -105,7 +105,11 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
         <div className="mt-2">
           <VerdictRow label="55&quot; LG B5 on its stand" verdict={c.fit.tv} />
           <VerdictRow label="S80TR soundbar in front" verdict={c.fit.soundbar} />
-          <VerdictRow label="PS5 Slim lying flat" verdict={c.fit.ps5} />
+          <VerdictRow label="PS5 Slim housed" verdict={c.fit.ps5} />
+          <div className="pl-3">
+            <VerdictRow label="— lying flat in a bay" verdict={c.fit.ps5Bay} />
+            <VerdictRow label="— upright beside the TV" verdict={c.fit.ps5Top} />
+          </div>
         </div>
         {c.fit.notes.length > 0 && (
           <ul className="mt-2 space-y-1">
