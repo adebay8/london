@@ -38,7 +38,7 @@ const PROMOTED = new Set([
   "overall_width_cm", "overall_length_cm", "overall_height_cm", "footprint_overhang_cm",
   "longest_box_cm", "upholstery_material", "headboard_style",
   "warranty", "warranty_covers_mechanism", "spare_parts_available",
-  "returns_window", "delivery_lead_time", "review_score", "review_count", "notes",
+  "returns_window", "delivery_lead_time", "review_score", "review_count", "image_url", "notes",
   // derived in the CSV, recomputed live in score.ts — do not persist
   "clears_32cm_suitcase", "slat_gap_ok_7cm",
 ]);
@@ -196,6 +196,7 @@ function toBed(r: Record<string, string>): Bed | null {
     deliveryLeadTime: str(r.delivery_lead_time),
     reviewScore: num(r.review_score),
     reviewCount: num(r.review_count),
+    imageUrl: str(r.image_url),
 
     // Filled from rows/finance.jsonl after parsing — retailer policy, not per-product.
     finance: { ...NO_FINANCE },

@@ -286,6 +286,10 @@ model Bed {
   reviewScore             Float?
   reviewCount             Int?
 
+  /// Merchandising image from the retailer's product data. Nullable: not every
+  /// retailer exposes one, and a missing photo must never affect ranking.
+  imageUrl                String?
+
   // Consumer finance — a RETAILER-level policy applied to every one of that
   // retailer's rows at import, and deliberately excluded from the
   // recommendation score (it changes how you pay, not how good the bed is).
@@ -384,6 +388,10 @@ model TvConsole {
   deliveryLeadTime    String?
   reviewScore         Float?
   reviewCount         Int?
+
+  /// Merchandising image from the retailer's product data. Nullable: not every
+  /// retailer exposes one, and a missing photo must never affect ranking.
+  imageUrl            String?
 
   // Retailer-level finance policy, stamped onto every one of that retailer's
   // rows at import and deliberately excluded from the recommendation score.

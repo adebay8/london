@@ -157,6 +157,8 @@ export interface TvConsole {
   deliveryLeadTime: string | null;
   reviewScore: number | null;
   reviewCount: number | null;
+  /** Retailer's product image. Null is normal and never affects ranking. */
+  imageUrl: string | null;
 
   finance: FinancePolicy;
 

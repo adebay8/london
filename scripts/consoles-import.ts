@@ -36,7 +36,7 @@ const PROMOTED = new Set([
   "bays_json", "back_panel", "cable_management",
   "frame_material", "finish_material", "leg_style",
   "warranty", "spare_parts_available", "returns_window", "delivery_lead_time",
-  "review_score", "review_count", "notes",
+  "review_score", "review_count", "image_url", "notes",
 ]);
 
 /** Minimal RFC4180 CSV parser — the research CSV has quoted fields containing
@@ -223,6 +223,7 @@ function toConsole(r: Record<string, string>): TvConsole | null {
     deliveryLeadTime: str(r.delivery_lead_time),
     reviewScore: num(r.review_score),
     reviewCount: num(r.review_count),
+    imageUrl: str(r.image_url),
 
     // Filled from rows/finance.jsonl after parsing — retailer policy, not
     // per-product.

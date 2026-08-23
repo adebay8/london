@@ -117,6 +117,7 @@ export async function loadConsoles(prisma: PC): Promise<TvConsole[]> {
       deliveryLeadTime: c.deliveryLeadTime,
       reviewScore: c.reviewScore,
       reviewCount: c.reviewCount,
+      imageUrl: c.imageUrl,
 
       finance: parseFinance(c.finance),
 
@@ -169,6 +170,7 @@ export async function saveConsole(prisma: PC, c: TvConsole): Promise<void> {
     deliveryLeadTime: c.deliveryLeadTime ?? null,
     reviewScore: c.reviewScore ?? null,
     reviewCount: c.reviewCount ?? null,
+    imageUrl: c.imageUrl ?? null,
 
     finance: JSON.stringify(c.finance ?? NO_FINANCE),
 

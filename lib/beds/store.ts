@@ -85,6 +85,7 @@ export async function loadBeds(prisma: PC): Promise<Bed[]> {
       deliveryLeadTime: b.deliveryLeadTime,
       reviewScore: b.reviewScore,
       reviewCount: b.reviewCount,
+      imageUrl: b.imageUrl,
 
       finance: parseFinance(b.finance),
 
@@ -144,6 +145,7 @@ export async function saveBed(prisma: PC, b: Bed): Promise<void> {
     deliveryLeadTime: b.deliveryLeadTime ?? null,
     reviewScore: b.reviewScore ?? null,
     reviewCount: b.reviewCount ?? null,
+    imageUrl: b.imageUrl ?? null,
 
     finance: JSON.stringify(b.finance ?? NO_FINANCE),
 
