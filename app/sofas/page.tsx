@@ -47,6 +47,7 @@ function readUI(): UIState {
       legRest: list("leg", DEFAULT_SOFA_FILTERS.legRest),
       condition: list("cond", DEFAULT_SOFA_FILTERS.condition),
       modularOnly: bool("mod", DEFAULT_SOFA_FILTERS.modularOnly),
+      hideSoldOut: bool("stock", DEFAULT_SOFA_FILTERS.hideSoldOut),
       retailers: list("ret", DEFAULT_SOFA_FILTERS.retailers),
       hideOverBudget: bool("over", DEFAULT_SOFA_FILTERS.hideOverBudget),
       hideThinData: bool("thin", DEFAULT_SOFA_FILTERS.hideThinData),
@@ -69,6 +70,7 @@ function writeUI(s: UIState) {
   if (f.legRest.length) p.set("leg", f.legRest.join(","));
   if (f.condition.length) p.set("cond", f.condition.join(","));
   if (f.modularOnly) p.set("mod", "1");
+  if (f.hideSoldOut !== DEFAULT_SOFA_FILTERS.hideSoldOut) p.set("stock", f.hideSoldOut ? "1" : "0");
   if (f.retailers.length) p.set("ret", f.retailers.join(","));
   if (f.hideOverBudget !== DEFAULT_SOFA_FILTERS.hideOverBudget) p.set("over", f.hideOverBudget ? "1" : "0");
   if (f.hideThinData !== DEFAULT_SOFA_FILTERS.hideThinData) p.set("thin", f.hideThinData ? "1" : "0");
@@ -116,6 +118,10 @@ export default function SofasPage() {
     const q = ui.search.trim().toLowerCase();
     const out = scored.filter((s) => {
       if (f.hideRejected && s.pref === "reject") return false;
+      // Availability, not quality — an unbuyable sofa is excluded outright
+      // rather than marked down. Null means the retailer published nothing,
+      // which is not the same as sold out.
+      if (f.hideSoldOut && s.inStock === false) return false;
       if (ui.savedOnly && s.pref !== "want") return false;
       if (f.hideOverBudget && s.landedCostGbp > BUDGET_CAP_GBP) return false;
       if (s.landedCostGbp > f.maxLanded) return false;

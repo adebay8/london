@@ -30,7 +30,7 @@ const DEFAULT_DIR = path.join(os.homedir(), "Documents", "sofa-search", "rows");
 const PROMOTED = new Set([
   "retailer", "brand", "model", "product_url", "image_url", "colourway_shown",
   "price_gbp", "rrp_gbp", "delivery_cost_gbp", "landed_cost_gbp", "over_budget",
-  "condition", "one_off", "seats", "leg_rest", "chaise_side", "modular",
+  "condition", "one_off", "in_stock", "seats", "leg_rest", "chaise_side", "modular",
   "overall_width_cm", "overall_depth_cm", "overall_height_cm", "seat_depth_cm", "seat_height_cm",
   "arm_style", "fabric", "easy_clean", "removable_covers", "seat_filling", "frame_material",
   "warranty", "returns_window", "delivery_lead_time", "review_score", "review_count", "notes",
@@ -136,6 +136,11 @@ function toSofa(r: Record<string, string>): Sofa | null {
     overBudget: str(r.over_budget) ? /^yes$/i.test(r.over_budget.trim()) : landed > BUDGET_CAP_GBP,
 
     condition,
+    // Availability: trust an explicit column, otherwise read the researcher's
+    // note. A row that says "sold out" in prose is still a sofa you cannot buy.
+    inStock:
+      yes(r.in_stock) ??
+      (/(sold\s*out|out of stock|no longer available|outofstock)/i.test(`${r.notes ?? ""}`) ? false : null),
     // Second-hand is always one-off; ex-display usually is. Trust the flag
     // where given, otherwise infer from condition.
     oneOff: yes(r.one_off) ?? (condition === "second-hand" || condition === "ex-display"),

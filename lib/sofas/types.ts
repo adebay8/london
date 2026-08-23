@@ -93,6 +93,12 @@ export interface Sofa {
   overBudget: boolean;
 
   condition: Condition;
+  /** Null when the retailer publishes no availability. False means the
+   *  listing says sold out. A sofa you cannot buy must not be recommended,
+   *  however well it scores — this is availability, not quality, so it is a
+   *  hard exclusion rather than a scoring penalty. */
+  inStock: boolean | null;
+
   /** One-off stock that cannot be reordered — true for most ex-display and
    *  all second-hand. Worth surfacing: it changes how fast you must decide. */
   oneOff: boolean;

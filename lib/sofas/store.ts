@@ -54,6 +54,7 @@ export async function loadSofas(prisma: PC): Promise<Sofa[]> {
       overBudget: s.overBudget,
 
       condition: (oneOf(CONDITIONS, s.condition) ?? "new") as Condition,
+      inStock: s.inStock,
       oneOff: s.oneOff,
 
       seats: s.seats,
@@ -106,6 +107,7 @@ export async function saveSofa(prisma: PC, s: Sofa): Promise<void> {
     overBudget: s.overBudget,
 
     condition: s.condition,
+    inStock: s.inStock ?? null,
     oneOff: s.oneOff,
 
     seats: s.seats ?? null,

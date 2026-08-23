@@ -451,6 +451,11 @@ model Sofa {
   condition String  @default("new")
   oneOff    Boolean @default(false) // stock that cannot be reordered
 
+  /// Null when the retailer publishes no availability. False means the
+  /// listing itself says sold out — a sofa you cannot buy must never be
+  /// recommended, however well it scores.
+  inStock Boolean?
+
   seats      Int?
   legRest    String? // "chaise" | "footstool" | "both" | "none"
   chaiseSide String? // "left" | "right" | "reversible"

@@ -15,6 +15,7 @@ export interface SofaFilterState {
   condition: string[]; // empty = all
   modularOnly: boolean;
   retailers: string[];
+  hideSoldOut: boolean;
   hideOverBudget: boolean;
   hideThinData: boolean;
   hideRejected: boolean;
@@ -29,6 +30,7 @@ export const DEFAULT_SOFA_FILTERS: SofaFilterState = {
   condition: [],
   modularOnly: false,
   retailers: [],
+  hideSoldOut: true,
   hideOverBudget: true,
   hideThinData: false,
   hideRejected: true,
@@ -222,6 +224,14 @@ export default function SofaFilterRail({
             label={CONDITION_LABEL[c] ?? c}
           />
         ))}
+      </Section>
+
+      <Section title="Availability" hint="A sofa you can't buy shouldn't be recommended, however well it scores.">
+        <Check
+          checked={filters.hideSoldOut}
+          onChange={() => set({ hideSoldOut: !filters.hideSoldOut })}
+          label="Hide sold out"
+        />
       </Section>
 
       <Section title="Build">

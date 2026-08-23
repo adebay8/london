@@ -180,7 +180,7 @@ export async function GET() {
         saved: savedSofas.length,
         confirmed: scoredSofas.filter((s) => s.fit.overall === "pass").length,
         deep: scoredSofas.filter((s) => (bodyDepthOf(s) ?? 0) >= TARGET_DEPTH_CM).length,
-        inBudgetFits: scoredSofas.filter((s) => s.fit.overall === "pass" && !s.overBudget).length,
+        inBudgetFits: scoredSofas.filter((s) => s.fit.overall === "pass" && !s.overBudget && s.inStock !== false).length,
       },
       consoles: {
         count: consoles.length,
@@ -191,7 +191,10 @@ export async function GET() {
       },
     },
     shelves: {
-      sofas: scoredSofas.filter((s) => !s.overBudget && s.fit.overall !== "fail").slice(0, 10).map(sofaProduct),
+      sofas: scoredSofas
+        .filter((s) => !s.overBudget && s.fit.overall !== "fail" && s.inStock !== false)
+        .slice(0, 10)
+        .map(sofaProduct),
       beds: scoredBeds.slice(0, 10).map(bedProduct),
       consoles: inBudgetFits.slice(0, 10).map(consoleProduct),
       flats: flatRows.map(flatProduct),

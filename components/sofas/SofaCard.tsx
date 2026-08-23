@@ -114,6 +114,7 @@ export default function SofaCard({
         <Chip label={fitLabel(s.fit)} tone={FIT_TONE[s.fit.overall]} />
         {deep && <Chip label={`${bodyDepth}cm deep`} tone="good" />}
         <Chip label={s.condition} tone={CONDITION_TONE[s.condition] ?? "unknown"} />
+        {s.inStock === false && <Chip label="sold out" tone="bad" />}
         {s.oneOff && <Chip label="one-off stock" tone="unknown" />}
         {s.modular && <Chip label="modular" tone="good" />}
       </div>
