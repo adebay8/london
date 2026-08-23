@@ -417,3 +417,82 @@ model ConsolePref {
 
   @@map("console_prefs")
 }
+
+// ---------------------------------------------------------------------------
+// Sofa search. One row per MODEL/configuration of 2-seat-plus-leg-rest sofa,
+// in the style of the Raft Loft modular. Raw data only — the fit verdict, the
+// recommendation score and the style match are recomputed live in
+// lib/sofas/{fit,score}.ts. Populated by scripts/sofas-import.ts.
+//
+// Depth is the headline field: the user is 5'11" and chose the reference for
+// the leg support its 112cm gives. Note that overallDepthCm and seatDepthCm
+// are different things and the second is rarely published.
+// ---------------------------------------------------------------------------
+
+model Sofa {
+  id             String  @id @map("_id") // kebab: retailer-model
+  retailer       String
+  brand          String
+  model          String
+  productUrl     String
+  imageUrl       String?
+  colourwayShown String?
+
+  priceGbp         Float
+  rrpGbp           Float? // list price where this row is a discount
+  deliveryCostGbp  Float?
+  deliveryIncluded Boolean @default(false)
+  landedCostGbp    Float
+  overBudget       Boolean @default(false)
+
+  // "new" | "ex-display" | "clearance" | "second-hand". Deliberately excluded
+  // from the recommendation score — like finance, it changes what you get and
+  // what protection comes with it, not how good the sofa is.
+  condition String  @default("new")
+  oneOff    Boolean @default(false) // stock that cannot be reordered
+
+  seats      Int?
+  legRest    String? // "chaise" | "footstool" | "both" | "none"
+  chaiseSide String? // "left" | "right" | "reversible"
+  modular    Boolean?
+
+  overallWidthCm  Float?
+  overallDepthCm  Float?
+  overallHeightCm Float?
+  seatDepthCm     Float?
+  seatHeightCm    Float?
+
+  armStyle        String?
+  fabric          String?
+  easyClean       Boolean?
+  removableCovers Boolean?
+  seatFilling     String? // "feather" | "feather-blend" | "foam" | "fibre" | "mixed"
+  frameMaterial   String?
+
+  warranty         String?
+  returnsWindow    String?
+  deliveryLeadTime String?
+  reviewScore      Float?
+  reviewCount      Int?
+
+  finance String @default("{}")
+
+  notes String?
+  extra String @default("{}")
+
+  pref SofaPref?
+
+  @@index([retailer])
+  @@map("sofas")
+}
+
+model SofaPref {
+  id        String   @id @default(cuid()) @map("_id")
+  sofaId    String   @unique
+  pref      String // "want" | "reject"
+  updatedAt DateTime @default(now()) @updatedAt
+
+  sofa Sofa @relation(fields: [sofaId], references: [id], onDelete: Cascade)
+
+  @@map("sofa_prefs")
+}

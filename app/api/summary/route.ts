@@ -4,6 +4,9 @@ import { loadBeds } from "@/lib/beds/store";
 import { scoreAll as scoreBeds } from "@/lib/beds/score";
 import { loadConsoles } from "@/lib/consoles/store";
 import { scoreAll as scoreConsoles } from "@/lib/consoles/score";
+import { loadSofas } from "@/lib/sofas/store";
+import { scoreAll as scoreSofas } from "@/lib/sofas/score";
+import { TARGET_DEPTH_CM } from "@/lib/sofas/types";
 import { loadConfig } from "@/lib/flat-search/store";
 
 // GET /api/summary — everything the home page merchandises.
@@ -20,7 +23,7 @@ export const dynamic = "force-dynamic";
 
 export interface Product {
   id: string;
-  dept: "bed" | "console" | "flat";
+  dept: "bed" | "console" | "sofa" | "flat";
   label: string;
   eyebrow: string | null;
   price: number;
@@ -39,7 +42,7 @@ export async function GET() {
   const [
     flatsActive, flatsNew, flatsGone, savedFlatIds, areas,
     neighbourhoods, ranked, apartments,
-    journalTotal, journalRecent, config, beds, consoles,
+    journalTotal, journalRecent, config, beds, consoles, sofas,
   ] = await Promise.all([
     prisma.flatListing.count({ where: { status: "active" } }),
     prisma.flatListing.count({ where: { status: "active", isNew: true } }),
@@ -57,6 +60,7 @@ export async function GET() {
     loadConfig(prisma),
     loadBeds(prisma),
     loadConsoles(prisma),
+    loadSofas(prisma),
   ]);
 
   const savedIds = savedFlatIds.map((p) => p.listingId);
@@ -90,6 +94,24 @@ export async function GET() {
     saved: c.pref === "want",
   });
 
+  const scoredSofas = scoreSofas(sofas).sort(
+    (a, b) => FIT_RANK[a.fit.overall] - FIT_RANK[b.fit.overall] || b.score - a.score,
+  );
+
+  const sofaProduct = (s: (typeof scoredSofas)[number]): Product => ({
+    id: s.id, dept: "sofa", label: s.model, eyebrow: s.retailer,
+    price: Math.round(s.landedCostGbp), priceSuffix: null,
+    image: s.imageUrl, url: s.productUrl, href: "/sofas",
+    score: Math.round(s.score),
+    badge:
+      (s.overallDepthCm ?? 0) >= TARGET_DEPTH_CM
+        ? `${s.overallDepthCm}cm deep — like the Raft`
+        : s.condition !== "new"
+          ? s.condition
+          : null,
+    saved: s.pref === "want",
+  });
+
   const savedSet = new Set(savedIds);
   const flatProduct = (l: (typeof flatRows)[number]): Product => ({
     id: l.id, dept: "flat", label: l.building, eyebrow: l.area?.name ?? null,
@@ -105,6 +127,7 @@ export async function GET() {
   // shortlist actually spans shown alongside it.
   const savedBeds = scoredBeds.filter((b) => b.pref === "want").map(bedProduct);
   const savedConsoles = scoredConsoles.filter((c) => c.pref === "want").map(consoleProduct);
+  const savedSofas = scoredSofas.filter((s) => s.pref === "want").map(sofaProduct);
 
   const dept = (label: string, href: string, items: Product[]) => {
     if (!items.length) return { label, href, chosen: null, items: [], alternatives: 0, min: 0, max: 0 };
@@ -117,7 +140,11 @@ export async function GET() {
     };
   };
 
-  const roomDepts = [dept("Bed", "/beds", savedBeds), dept("TV unit", "/consoles", savedConsoles)];
+  const roomDepts = [
+    dept("Sofa", "/sofas", savedSofas),
+    dept("Bed", "/beds", savedBeds),
+    dept("TV unit", "/consoles", savedConsoles),
+  ];
   const picked = roomDepts.filter((d) => d.chosen);
 
   const inBudgetFits = scoredConsoles.filter((c) => c.fit.overall === "pass" && !c.overBudget);
@@ -147,6 +174,13 @@ export async function GET() {
         saved: savedBeds.length,
         assembled: beds.filter((b) => b.arrivesAssembled === "included").length,
       },
+      sofas: {
+        count: sofas.length,
+        saved: savedSofas.length,
+        confirmed: scoredSofas.filter((s) => s.fit.overall === "pass").length,
+        deep: scoredSofas.filter((s) => (s.overallDepthCm ?? 0) >= TARGET_DEPTH_CM).length,
+        inBudgetFits: scoredSofas.filter((s) => s.fit.overall === "pass" && !s.overBudget).length,
+      },
       consoles: {
         count: consoles.length,
         saved: savedConsoles.length,
@@ -156,6 +190,7 @@ export async function GET() {
       },
     },
     shelves: {
+      sofas: scoredSofas.filter((s) => !s.overBudget && s.fit.overall !== "fail").slice(0, 10).map(sofaProduct),
       beds: scoredBeds.slice(0, 10).map(bedProduct),
       consoles: inBudgetFits.slice(0, 10).map(consoleProduct),
       flats: flatRows.map(flatProduct),

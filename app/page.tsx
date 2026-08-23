@@ -26,10 +26,11 @@ interface Summary {
   departments: {
     flats: { count: number; isNew: number; gone: number; saved: number; areas: number; lastRun: string | null };
     areas: { count: number; yes: number; maybe: number; undecided: number; ranked: number; apartments: number };
+    sofas: { count: number; saved: number; confirmed: number; deep: number; inBudgetFits: number };
     beds: { count: number; saved: number; assembled: number };
     consoles: { count: number; saved: number; confirmed: number; inBudgetFits: number; withBay: number };
   };
-  shelves: { beds: Product[]; consoles: Product[]; flats: Product[] };
+  shelves: { sofas: Product[]; beds: Product[]; consoles: Product[]; flats: Product[] };
   journal: { total: number; recent: JournalEntry[] };
 }
 
@@ -172,7 +173,7 @@ export default function Home() {
 
             <section className="mt-8">
               <h2 className="mb-2 text-sm font-bold text-[var(--text-primary)]">Departments</h2>
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 <DepartmentTile
                   href="/flats" icon="🔑" title="Flats"
                   count={d.flats.count} countLabel="on the board"
@@ -183,6 +184,11 @@ export default function Home() {
                   href="/research" icon="🔬" title="Areas"
                   count={d.areas.undecided} countLabel="still undecided"
                   line={`${d.areas.yes} yes · ${d.areas.maybe} maybe · ${d.areas.ranked} ranked`}
+                />
+                <DepartmentTile
+                  href="/sofas" icon="🛋️" title="Sofas"
+                  count={d.sofas.inBudgetFits} countLabel="meet the brief"
+                  line={`of ${d.sofas.count} researched · ${d.sofas.deep} at 112cm deep`}
                 />
                 <DepartmentTile
                   href="/beds" icon="🛏️" title="Beds"
@@ -196,6 +202,14 @@ export default function Home() {
                 />
               </div>
             </section>
+
+            <Shelf
+              title="Sofas with two seats and somewhere for your legs"
+              hint="Ranked on depth first — the 112cm on the Raft is what you liked."
+              href="/sofas" hrefLabel="Browse all sofas"
+              items={s.shelves.sofas}
+              empty="No sofas researched yet."
+            />
 
             <Shelf
               title="TV units that take the whole setup"
