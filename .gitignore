@@ -54,3 +54,6 @@ london.db-journal
 
 # local credential scratch copy — contains live API keys
 copy.local
+
+# stray scraper scratch files
+/*.html
