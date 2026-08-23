@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import SofaCard from "@/components/sofas/SofaCard";
 import SofaDetail from "@/components/sofas/SofaDetail";
 import SofaFilterRail, { DEFAULT_SOFA_FILTERS, type SofaFilterState } from "@/components/sofas/SofaFilterRail";
+import { bodyDepthOf } from "@/lib/sofas/fit";
 import { scoreAll, type ScoredSofa } from "@/lib/sofas/score";
 import { BUDGET_CAP_GBP, TARGET_DEPTH_CM, type Pref, type Sofa } from "@/lib/sofas/types";
 
@@ -120,7 +121,10 @@ export default function SofasPage() {
       if (s.landedCostGbp > f.maxLanded) return false;
       // A blank depth never passes as deep — asking for depth means you need
       // the evidence, not the benefit of the doubt.
-      if (f.minDepth > 0 && (s.overallDepthCm == null || s.overallDepthCm < f.minDepth)) return false;
+      if (f.minDepth > 0) {
+        const d = bodyDepthOf(s);
+        if (d == null || d < f.minDepth) return false;
+      }
       if (s.overallWidthCm != null && s.overallWidthCm > f.maxWidth) return false;
       if (f.fit === "confirmed" && s.fit.overall !== "pass") return false;
       if (f.fit === "notfailed" && s.fit.overall === "fail") return false;
@@ -141,7 +145,7 @@ export default function SofasPage() {
     const by: Record<SortKey, (a: ScoredSofa, b: ScoredSofa) => number> = {
       recommended: (a, b) =>
         FIT_RANK[a.fit.overall] - FIT_RANK[b.fit.overall] || b.score - a.score || a.landedCostGbp - b.landedCostGbp,
-      deepest: (a, b) => (b.overallDepthCm ?? -1) - (a.overallDepthCm ?? -1) || b.score - a.score,
+      deepest: (a, b) => (bodyDepthOf(b) ?? -1) - (bodyDepthOf(a) ?? -1) || b.score - a.score,
       style: (a, b) => b.styleMatch - a.styleMatch || b.score - a.score,
       cheapest: (a, b) => a.landedCostGbp - b.landedCostGbp,
       measured: (a, b) => b.rawScore - a.rawScore || b.confidence - a.confidence,
@@ -153,7 +157,7 @@ export default function SofasPage() {
 
   const setFilters = useCallback((filters: SofaFilterState) => setUi((s) => ({ ...s, filters })), []);
   const savedCount = scored.filter((s) => s.pref === "want").length;
-  const deepCount = visible.filter((s) => (s.overallDepthCm ?? 0) >= TARGET_DEPTH_CM).length;
+  const deepCount = visible.filter((s) => (bodyDepthOf(s) ?? 0) >= TARGET_DEPTH_CM).length;
 
   return (
     <div className="flex h-full">

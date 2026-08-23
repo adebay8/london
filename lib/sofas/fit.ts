@@ -6,7 +6,39 @@
 // the sofa is unsuitable. Seat depth in particular is almost never published,
 // and it is the number that decides whether something looks like the
 // reference, so an unpublished spec must not be read as a failure.
-import { MAX_WIDTH_CM, MIN_SEATS, type Sofa } from "./types";
+import {
+  MAX_PLAUSIBLE_BODY_DEPTH_CM,
+  MAX_PLAUSIBLE_SEAT_DEPTH_CM,
+  MAX_WIDTH_CM,
+  MIN_SEATS,
+  type Sofa,
+} from "./types";
+
+/** The sofa's back-to-front body depth, or null when the recorded figure is
+ *  really an L-shape footprint. See the sanity bounds in types.ts — this guard
+ *  is the difference between ranking on how deep a sofa is and ranking on how
+ *  far its chaise sticks out. */
+export function bodyDepthOf(s: Pick<Sofa, "overallDepthCm">): number | null {
+  const d = s.overallDepthCm;
+  if (d == null || d > MAX_PLAUSIBLE_BODY_DEPTH_CM) return null;
+  return d;
+}
+
+/** The usable seat depth, or null when the recorded figure is a chaise length. */
+export function seatDepthOf(s: Pick<Sofa, "seatDepthCm">): number | null {
+  const d = s.seatDepthCm;
+  if (d == null || d > MAX_PLAUSIBLE_SEAT_DEPTH_CM) return null;
+  return d;
+}
+
+/** True when the row carries a depth figure we had to discard as implausible —
+ *  worth telling the user, since it usually means an L-shape footprint. */
+export function hasSuspectDepth(s: Pick<Sofa, "overallDepthCm" | "seatDepthCm">): boolean {
+  return (
+    (s.overallDepthCm != null && s.overallDepthCm > MAX_PLAUSIBLE_BODY_DEPTH_CM) ||
+    (s.seatDepthCm != null && s.seatDepthCm > MAX_PLAUSIBLE_SEAT_DEPTH_CM)
+  );
+}
 
 export type Verdict = "pass" | "fail" | "unknown";
 

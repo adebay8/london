@@ -4,6 +4,7 @@ import { loadBeds } from "@/lib/beds/store";
 import { scoreAll as scoreBeds } from "@/lib/beds/score";
 import { loadConsoles } from "@/lib/consoles/store";
 import { scoreAll as scoreConsoles } from "@/lib/consoles/score";
+import { bodyDepthOf } from "@/lib/sofas/fit";
 import { loadSofas } from "@/lib/sofas/store";
 import { scoreAll as scoreSofas } from "@/lib/sofas/score";
 import { TARGET_DEPTH_CM } from "@/lib/sofas/types";
@@ -104,8 +105,8 @@ export async function GET() {
     image: s.imageUrl, url: s.productUrl, href: "/sofas",
     score: Math.round(s.score),
     badge:
-      (s.overallDepthCm ?? 0) >= TARGET_DEPTH_CM
-        ? `${s.overallDepthCm}cm deep — like the Raft`
+      (bodyDepthOf(s) ?? 0) >= TARGET_DEPTH_CM
+        ? `${bodyDepthOf(s)}cm deep — like the Raft`
         : s.condition !== "new"
           ? s.condition
           : null,
@@ -178,7 +179,7 @@ export async function GET() {
         count: sofas.length,
         saved: savedSofas.length,
         confirmed: scoredSofas.filter((s) => s.fit.overall === "pass").length,
-        deep: scoredSofas.filter((s) => (s.overallDepthCm ?? 0) >= TARGET_DEPTH_CM).length,
+        deep: scoredSofas.filter((s) => (bodyDepthOf(s) ?? 0) >= TARGET_DEPTH_CM).length,
         inBudgetFits: scoredSofas.filter((s) => s.fit.overall === "pass" && !s.overBudget).length,
       },
       consoles: {

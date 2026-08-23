@@ -10,7 +10,7 @@
 // most important number for this brief and almost no retailer publishes it,
 // so scoring its absence as a failure would rank the corpus by how chatty the
 // product page is rather than by how the sofa sits.
-import { fitFor, type Fit } from "./fit";
+import { bodyDepthOf, fitFor, seatDepthOf, type Fit } from "./fit";
 import {
   BUDGET_CAP_GBP,
   GOOD_SEAT_DEPTH_CM,
@@ -60,8 +60,13 @@ const CRITERIA: Criterion[] = [
     // The heaviest criterion, because it is the reason the user picked the
     // reference: at 5'11" the 112cm depth supports their legs.
     evaluate: (s, _f, out) => {
-      const d = s.overallDepthCm;
-      if (d == null) return null;
+      const d = bodyDepthOf(s);
+      if (d == null) {
+        if (s.overallDepthCm != null) {
+          out.push({ label: "Published depth is an L-shape footprint, not the sofa's depth", tone: "unknown" });
+        }
+        return null;
+      }
       if (d >= TARGET_DEPTH_CM) {
         out.push({ label: `${d}cm deep — matches the Raft you liked`, tone: "good" });
         return 1;
@@ -85,7 +90,7 @@ const CRITERIA: Criterion[] = [
     // Rarely published. When it is, it beats overall depth as evidence,
     // because it is the part that actually holds your legs.
     evaluate: (s, _f, out) => {
-      const d = s.seatDepthCm;
+      const d = seatDepthOf(s);
       if (d == null) return null;
       if (d >= LOUNGE_SEAT_DEPTH_CM) {
         out.push({ label: `${d}cm seat — full lounging depth`, tone: "good" });
@@ -228,7 +233,8 @@ const TOTAL_WEIGHT = CRITERIA.reduce((a, c) => a + c.weight, 0);
  *  a sofa can be excellent and look nothing like the reference. */
 function styleMatchOf(s: Sofa): number {
   const bits: number[] = [];
-  if (s.overallDepthCm != null) bits.push(clamp01((s.overallDepthCm - 85) / (TARGET_DEPTH_CM - 85)));
+  const bd = bodyDepthOf(s);
+  if (bd != null) bits.push(clamp01((bd - 85) / (TARGET_DEPTH_CM - 85)));
   if (s.modular != null) bits.push(s.modular ? 1 : 0.3);
   if (s.seatFilling != null) bits.push(/feather|mixed/.test(s.seatFilling) ? 1 : 0.4);
   if (s.armStyle) bits.push(/square|track|block|wide/i.test(s.armStyle) ? 1 : 0.3);

@@ -52,6 +52,23 @@ export const TARGET_DEPTH_CM = 112;
  *  no thigh support past the knee. Scored hard, but not gated — gating would
  *  empty the corpus at this budget. */
 export const MIN_USEFUL_DEPTH_CM = 100;
+// --- Sanity bounds, learned from the corpus ------------------------------
+//
+// Retailers routinely put an L-shape's FOOTPRINT depth (how far the chaise
+// projects into the room) in the same column as the sofa's body depth, and a
+// chaise's LENGTH in the same column as seat depth. Both are much larger
+// numbers, and taken at face value they make a shallow sofa with a long chaise
+// outrank the reference — the exact opposite of what the buyer wants.
+//
+// No sofa's back-to-front body depth exceeds about 130cm, and no seat is
+// deeper than about 90cm. Beyond those, the figure is measuring something
+// else, so it is treated as UNKNOWN rather than as an excellent depth.
+
+/** Above this, an "overall depth" is an L-shape footprint, not a body depth. */
+export const MAX_PLAUSIBLE_BODY_DEPTH_CM = 130;
+/** Above this, a "seat depth" is a chaise length. */
+export const MAX_PLAUSIBLE_SEAT_DEPTH_CM = 90;
+
 /** Seat depth that actually supports the thigh of someone around 5'11".
  *  Buttock-to-knee is roughly 50cm, so anything past ~60cm supports the leg;
  *  past ~75cm you are lounging rather than sitting. */

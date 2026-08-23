@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import type { Verdict } from "@/lib/sofas/fit";
+import { bodyDepthOf, hasSuspectDepth, seatDepthOf, type Verdict } from "@/lib/sofas/fit";
 import type { ScoredSofa } from "@/lib/sofas/score";
 import { GOOD_SEAT_DEPTH_CM, REF_DEPTH_CM, TARGET_DEPTH_CM } from "@/lib/sofas/types";
 
@@ -118,12 +118,19 @@ export default function SofaDetail({ sofa, onClose }: { sofa: ScoredSofa | null;
 
         <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Depth</h3>
         <div className="mt-2 rounded-xl bg-[var(--bg-secondary)] p-3">
-          <DepthBar depth={s.overallDepthCm} />
+          <DepthBar depth={bodyDepthOf(s)} />
+          {hasSuspectDepth(s) && (
+            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+              The retailer lists {s.overallDepthCm}cm, but that is the L-shape&apos;s footprint — how far the chaise
+              projects into the room — not how deep the sofa is back to front. Treated as unpublished rather than as a
+              very deep sofa.
+            </p>
+          )}
           <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
             Overall depth includes the back cushions. The seat itself is usually 25–30cm less, and that is the part that
             supports your legs — anything past about {GOOD_SEAT_DEPTH_CM}cm of seat does the job.
-            {s.seatDepthCm != null && (
-              <span className="font-medium text-[var(--text-secondary)]"> This one publishes a {s.seatDepthCm}cm seat.</span>
+            {seatDepthOf(s) != null && (
+              <span className="font-medium text-[var(--text-secondary)]"> This one publishes a {seatDepthOf(s)}cm seat.</span>
             )}
           </p>
         </div>
@@ -197,7 +204,7 @@ export default function SofaDetail({ sofa, onClose }: { sofa: ScoredSofa | null;
         <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Specification</h3>
         <dl className="mt-1">
           <Row label="Overall" value={s.overallWidthCm != null ? `${s.overallWidthCm} × ${s.overallDepthCm ?? "?"} × ${s.overallHeightCm ?? "?"} cm (W×D×H)` : null} />
-          <Row label="Seat depth" value={s.seatDepthCm != null ? `${s.seatDepthCm}cm` : null} />
+          <Row label="Seat depth" value={seatDepthOf(s) != null ? `${seatDepthOf(s)}cm` : null} />
           <Row label="Seat height" value={s.seatHeightCm != null ? `${s.seatHeightCm}cm` : null} />
           <Row label="Seats" value={s.seats} />
           <Row label="Leg rest" value={s.legRest} />

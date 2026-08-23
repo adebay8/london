@@ -1,6 +1,6 @@
 "use client";
 
-import { fitLabel } from "@/lib/sofas/fit";
+import { bodyDepthOf, fitLabel } from "@/lib/sofas/fit";
 import type { ScoredSofa } from "@/lib/sofas/score";
 import { TARGET_DEPTH_CM, type Pref } from "@/lib/sofas/types";
 
@@ -30,7 +30,8 @@ export default function SofaCard({
   const s = sofa;
   const wanted = s.pref === "want";
   const rejected = s.pref === "reject";
-  const deep = (s.overallDepthCm ?? 0) >= TARGET_DEPTH_CM;
+  const bodyDepth = bodyDepthOf(s);
+  const deep = (bodyDepth ?? 0) >= TARGET_DEPTH_CM;
   const discount = s.rrpGbp && s.rrpGbp > s.landedCostGbp * 1.1 ? Math.round((1 - s.landedCostGbp / s.rrpGbp) * 100) : null;
 
   return (
@@ -103,7 +104,7 @@ export default function SofaCard({
         <div className="text-[11px] text-[var(--text-secondary)]">
           {[
             s.overallWidthCm != null ? `${s.overallWidthCm}cm wide` : null,
-            s.overallDepthCm != null ? `${s.overallDepthCm}cm deep` : "depth unpublished",
+            bodyDepth != null ? `${bodyDepth}cm deep` : "depth unpublished",
             s.seats != null ? `${s.seats} seats` : null,
           ].filter(Boolean).join(" · ")}
         </div>
@@ -111,7 +112,7 @@ export default function SofaCard({
 
       <div className="pointer-events-none flex flex-wrap gap-1">
         <Chip label={fitLabel(s.fit)} tone={FIT_TONE[s.fit.overall]} />
-        {deep && <Chip label={`${s.overallDepthCm}cm deep`} tone="good" />}
+        {deep && <Chip label={`${bodyDepth}cm deep`} tone="good" />}
         <Chip label={s.condition} tone={CONDITION_TONE[s.condition] ?? "unknown"} />
         {s.oneOff && <Chip label="one-off stock" tone="unknown" />}
         {s.modular && <Chip label="modular" tone="good" />}
