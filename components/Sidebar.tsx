@@ -30,6 +30,7 @@ const NAV_GROUPS: NavItem[][] = [
   ],
   [
     { href: "/beds", label: "Beds", icon: "🛏️" },
+    { href: "/mattresses", label: "Mattress", icon: "💤" },
     { href: "/consoles", label: "TV unit", icon: "📺" },
     { href: "/sofas", label: "Sofas", icon: "🛋️" },
   ],

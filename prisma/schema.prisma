@@ -501,3 +501,103 @@ model SofaPref {
 
   @@map("sofa_prefs")
 }
+
+model Mattress {
+  id         String  @id @map("_id") // kebab: retailer-model
+  retailer   String
+  brand      String
+  model      String
+  productUrl String
+  imageUrl   String?
+
+  priceGbp         Float
+  rrpGbp           Float? // the retailer's "was" price — see rrpEvidence
+  deliveryCostGbp  Float?
+  deliveryIncluded Boolean @default(false)
+  disposalCostGbp  Float? // taking the old mattress away, where it is charged
+  landedCostGbp    Float
+  overBudget       Boolean @default(false)
+
+  // Only "new" and "clearance" are in scope. Second-hand and ex-display floor
+  // models are excluded from the corpus outright — you don't buy a used
+  // mattress.
+  condition String  @default("new")
+  inStock   Boolean?
+
+  /// How much the "was" price can be believed:
+  /// "verified-higher"     — seen selling at the RRP
+  /// "permanent-sale"      — the "sale" price is the only price it ever has
+  /// "single-observation"  — one price check; not yet enough to tell
+  /// Recorded and displayed. NEVER scored — see lib/mattresses/deal.ts.
+  rrpEvidence   String?
+  /// The lowest price actually observed, across runs. A second run is what
+  /// gives this teeth; the first can only set it equal to today's price.
+  priceFloorGbp Float?
+
+  size     String? // "double" — the corpus is 135 x 190 only
+  widthCm  Float?
+  lengthCm Float?
+  depthCm  Float?
+
+  // "pocket-sprung" | "hybrid" | "memory-foam" | "foam" | "open-coil" | "latex" | "natural"
+  type         String?
+  springType   String? // "pocket" | "open-coil" | "continuous" | "none"
+  springCount  Int?
+  zoned        Boolean?
+  turnRequired Boolean?
+
+  /// The retailer's own firmness wording, verbatim, and the scale it sits on.
+  /// One brand's "medium" is another's "firm", so the words and the scale are
+  /// kept and `firmness` is filled in only where the mapping is unambiguous.
+  firmnessLabel String?
+  firmnessScale String?
+  firmness      String? // "soft" | "medium-soft" | "medium" | "medium-firm" | "firm"
+
+  comfortLayer        String?
+  comfortLayerDepthCm Float?
+  /// Decides whether the ottoman's gas struts can lift the bed with this
+  /// mattress on it. Rarely published, which is exactly why bed compatibility
+  /// is a badge and never a gate.
+  weightKg            Float?
+
+  slattedBaseOk  Boolean?
+  platformBaseOk Boolean?
+  ottomanOk      Boolean?
+
+  coverRemovable Boolean?
+  coverWashable  Boolean?
+
+  /// You cannot tell if a mattress suits you in a showroom, so the trial is
+  /// worth more than most of the spec sheet.
+  trialNights      Int?
+  trialFreeReturns Boolean?
+  warrantyYears    Int?
+  returnsWindow    String?
+  deliveryLeadTime String?
+
+  reviewScore Float?
+  reviewCount Int?
+  testedBy    String? // independent tester, e.g. "Which?"
+  testScore   Float?
+
+  finance String @default("{}")
+
+  notes String?
+  extra String @default("{}")
+
+  pref MattressPref?
+
+  @@index([retailer])
+  @@map("mattresses")
+}
+
+model MattressPref {
+  id         String   @id @default(cuid()) @map("_id")
+  mattressId String   @unique
+  pref       String // "want" | "reject"
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  mattress Mattress @relation(fields: [mattressId], references: [id], onDelete: Cascade)
+
+  @@map("mattress_prefs")
+}

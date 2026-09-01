@@ -28,9 +28,13 @@ interface Summary {
     areas: { count: number; yes: number; maybe: number; undecided: number; ranked: number; apartments: number };
     sofas: { count: number; saved: number; confirmed: number; deep: number; inBudgetFits: number };
     beds: { count: number; saved: number; assembled: number };
+    mattresses: {
+      count: number; saved: number; inBand: number; inBudgetFits: number;
+      claimedDeals: number; verifiedDeals: number;
+    };
     consoles: { count: number; saved: number; confirmed: number; inBudgetFits: number; withBay: number };
   };
-  shelves: { sofas: Product[]; beds: Product[]; consoles: Product[]; flats: Product[] };
+  shelves: { sofas: Product[]; beds: Product[]; mattresses: Product[]; consoles: Product[]; flats: Product[] };
   journal: { total: number; recent: JournalEntry[] };
 }
 
@@ -154,7 +158,7 @@ export default function Home() {
             ? "Couldn't load the shop."
             : !d
               ? "Opening up…"
-              : `${d.flats.count} flats on the board · ${d.beds.count} beds and ${d.consoles.count} TV units researched`}
+              : `${d.flats.count} flats on the board · ${d.beds.count} beds, ${d.mattresses.count} mattresses and ${d.consoles.count} TV units researched`}
           {s?.departments.flats.lastRun && ` · flat search ran ${relative(s.departments.flats.lastRun)}`}
         </p>
       </header>
@@ -173,7 +177,7 @@ export default function Home() {
 
             <section className="mt-8">
               <h2 className="mb-2 text-sm font-bold text-[var(--text-primary)]">Departments</h2>
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
                 <DepartmentTile
                   href="/flats" icon="🔑" title="Flats"
                   count={d.flats.count} countLabel="on the board"
@@ -194,6 +198,11 @@ export default function Home() {
                   href="/beds" icon="🛏️" title="Beds"
                   count={d.beds.count} countLabel="double ottomans"
                   line={`${d.beds.assembled} arrive assembled · ${d.beds.saved} saved`}
+                />
+                <DepartmentTile
+                  href="/mattresses" icon="💤" title="Mattress"
+                  count={d.mattresses.inBand} countLabel="in your firmness band"
+                  line={`of ${d.mattresses.count} researched · ${d.mattresses.verifiedDeals} of ${d.mattresses.claimedDeals} “sales” are real`}
                 />
                 <DepartmentTile
                   href="/consoles" icon="📺" title="TV units"
@@ -224,6 +233,14 @@ export default function Home() {
               hint="Ranked on landed cost, storage depth, mechanism and build."
               href="/beds" hrefLabel="Browse all beds"
               items={s.shelves.beds}
+            />
+
+            <Shelf
+              title="Mattresses that suit how you sleep"
+              hint="Ranked on firmness first, then sharing, then the sleep trial. Never on the size of the discount."
+              href="/mattresses" hrefLabel="Browse all mattresses"
+              items={s.shelves.mattresses}
+              empty="No mattresses researched yet."
             />
 
             <Shelf

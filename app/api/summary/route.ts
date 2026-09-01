@@ -8,6 +8,9 @@ import { bodyDepthOf } from "@/lib/sofas/fit";
 import { loadSofas } from "@/lib/sofas/store";
 import { scoreAll as scoreSofas } from "@/lib/sofas/score";
 import { TARGET_DEPTH_CM } from "@/lib/sofas/types";
+import { dealFor } from "@/lib/mattresses/deal";
+import { loadMattresses } from "@/lib/mattresses/store";
+import { scoreAll as scoreMattresses } from "@/lib/mattresses/score";
 import { loadConfig } from "@/lib/flat-search/store";
 
 // GET /api/summary — everything the home page merchandises.
@@ -24,7 +27,7 @@ export const dynamic = "force-dynamic";
 
 export interface Product {
   id: string;
-  dept: "bed" | "console" | "sofa" | "flat";
+  dept: "bed" | "mattress" | "console" | "sofa" | "flat";
   label: string;
   eyebrow: string | null;
   price: number;
@@ -43,7 +46,7 @@ export async function GET() {
   const [
     flatsActive, flatsNew, flatsGone, savedFlatIds, areas,
     neighbourhoods, ranked, apartments,
-    journalTotal, journalRecent, config, beds, consoles, sofas,
+    journalTotal, journalRecent, config, beds, consoles, sofas, mattresses,
   ] = await Promise.all([
     prisma.flatListing.count({ where: { status: "active" } }),
     prisma.flatListing.count({ where: { status: "active", isNew: true } }),
@@ -62,6 +65,7 @@ export async function GET() {
     loadBeds(prisma),
     loadConsoles(prisma),
     loadSofas(prisma),
+    loadMattresses(prisma),
   ]);
 
   const savedIds = savedFlatIds.map((p) => p.listingId);
@@ -113,6 +117,33 @@ export async function GET() {
     saved: s.pref === "want",
   });
 
+  const scoredMattresses = scoreMattresses(mattresses).sort(
+    (a, b) => FIT_RANK[a.fit.overall] - FIT_RANK[b.fit.overall] || b.score - a.score,
+  );
+
+  // The badge deliberately never prints a discount percentage. In this
+  // category the biggest "saving" usually just means the most inflated RRP —
+  // see lib/mattresses/deal.ts. A saving only gets said out loud when the
+  // higher price was actually verified.
+  const mattressProduct = (m: (typeof scoredMattresses)[number]): Product => {
+    const deal = dealFor(m);
+    return {
+      id: m.id, dept: "mattress", label: m.model, eyebrow: m.retailer,
+      price: Math.round(m.landedCostGbp), priceSuffix: null,
+      image: m.imageUrl, url: m.productUrl, href: "/mattresses",
+      score: Math.round(m.score),
+      badge:
+        deal.credible && deal.realSavingGbp != null
+          ? `£${deal.realSavingGbp} off, verified`
+          : m.fit.firmness === "pass" && m.fit.firmnessRead.value
+            ? `${m.fit.firmnessRead.value} — your band`
+            : m.trialNights != null && m.trialNights >= 100
+              ? `${m.trialNights}-night trial`
+              : null,
+      saved: m.pref === "want",
+    };
+  };
+
   const savedSet = new Set(savedIds);
   const flatProduct = (l: (typeof flatRows)[number]): Product => ({
     id: l.id, dept: "flat", label: l.building, eyebrow: l.area?.name ?? null,
@@ -129,6 +160,7 @@ export async function GET() {
   const savedBeds = scoredBeds.filter((b) => b.pref === "want").map(bedProduct);
   const savedConsoles = scoredConsoles.filter((c) => c.pref === "want").map(consoleProduct);
   const savedSofas = scoredSofas.filter((s) => s.pref === "want").map(sofaProduct);
+  const savedMattresses = scoredMattresses.filter((m) => m.pref === "want").map(mattressProduct);
 
   const dept = (label: string, href: string, items: Product[]) => {
     if (!items.length) return { label, href, chosen: null, items: [], alternatives: 0, min: 0, max: 0 };
@@ -144,6 +176,7 @@ export async function GET() {
   const roomDepts = [
     dept("Sofa", "/sofas", savedSofas),
     dept("Bed", "/beds", savedBeds),
+    dept("Mattress", "/mattresses", savedMattresses),
     dept("TV unit", "/consoles", savedConsoles),
   ];
   const picked = roomDepts.filter((d) => d.chosen);
@@ -158,7 +191,7 @@ export async function GET() {
       /** What the shortlist spans, if you picked the cheapest or dearest of each. */
       min: picked.reduce((sum, d) => sum + d.min, 0),
       max: picked.reduce((sum, d) => sum + d.max, 0),
-      shortlisted: savedBeds.length + savedConsoles.length,
+      shortlisted: savedBeds.length + savedConsoles.length + savedSofas.length + savedMattresses.length,
       outstanding: roomDepts.filter((d) => !d.chosen).map((d) => d.label.toLowerCase()),
     },
     departments: {
@@ -182,6 +215,19 @@ export async function GET() {
         deep: scoredSofas.filter((s) => (bodyDepthOf(s) ?? 0) >= TARGET_DEPTH_CM).length,
         inBudgetFits: scoredSofas.filter((s) => s.fit.overall === "pass" && !s.overBudget && s.inStock !== false).length,
       },
+      mattresses: {
+        count: mattresses.length,
+        saved: savedMattresses.length,
+        inBand: scoredMattresses.filter((m) => m.fit.firmness === "pass").length,
+        inBudgetFits: scoredMattresses.filter(
+          (m) => m.fit.overall === "pass" && !m.overBudget && m.inStock !== false,
+        ).length,
+        /// How many "sale" tickets survive being checked. Worth a number on
+        /// the home page: it is the single most surprising fact this search
+        /// turned up.
+        claimedDeals: mattresses.filter((m) => m.rrpGbp != null && m.rrpGbp > m.priceGbp).length,
+        verifiedDeals: mattresses.filter((m) => dealFor(m).credible).length,
+      },
       consoles: {
         count: consoles.length,
         saved: savedConsoles.length,
@@ -196,6 +242,10 @@ export async function GET() {
         .slice(0, 10)
         .map(sofaProduct),
       beds: scoredBeds.slice(0, 10).map(bedProduct),
+      mattresses: scoredMattresses
+        .filter((m) => !m.overBudget && m.fit.overall !== "fail" && m.inStock !== false)
+        .slice(0, 10)
+        .map(mattressProduct),
       consoles: inBudgetFits.slice(0, 10).map(consoleProduct),
       flats: flatRows.map(flatProduct),
     },
