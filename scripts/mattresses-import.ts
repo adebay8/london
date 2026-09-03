@@ -17,7 +17,7 @@ loadEnv({ path: ".env" });
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { saveMattress } from "../lib/mattresses/store";
 import {
   BUDGET_CAP_GBP,

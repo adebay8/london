@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 // MongoDB (Atlas) — the connection string is read from MONGO_URI via the schema
 // datasource; the MongoDB connector connects natively (no driver adapter).

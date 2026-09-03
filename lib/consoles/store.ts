@@ -3,7 +3,7 @@
 // and the import script all read/write through here. The three JSON-string
 // columns (`bays`, `finance`, `extra`) are parsed/serialised at this boundary,
 // exactly as the bed store does for its own.
-import type { PrismaClient } from "@/app/generated/prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { NO_FINANCE, type FinancePolicy } from "@/lib/retail/finance";
 import type { Assembly, BackPanel, Bay, BayKind, Pref, TvConsole } from "./types";
 

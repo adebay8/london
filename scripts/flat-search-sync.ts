@@ -7,7 +7,7 @@ loadEnv({ path: ".env.local" });
 loadEnv({ path: ".env" });
 
 import fs from "node:fs";
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { loadAreas, loadConfig, loadListings, saveListings, setLastRun } from "../lib/flat-search/store";
 import { reconcile, type AreaResult } from "../lib/flat-search/reconcile";
 

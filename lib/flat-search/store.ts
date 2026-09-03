@@ -1,7 +1,7 @@
 // DB <-> plain-object mapping for the flat-search store. The Flat* Prisma models
 // are the source of truth; the page, migrate script, and sync script all read/write
 // through here. JSON-string columns (rosters, config) are parsed/serialised at this boundary.
-import type { PrismaClient } from "@/app/generated/prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import type { Area, FlatConfig, Listing, Pref, Source } from "./types";
 
 const CONFIG_KEYS = {

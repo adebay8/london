@@ -47,17 +47,6 @@ london.db-journal
 # superpowers
 .superpowers/
 
-# The generated Prisma client IS committed. Prisma's Vercel guide recommends
-# it for exactly this setup: "use a custom output path and check your client
-# into version control. This way each deployment is guaranteed to include the
-# correct Prisma Client." MongoDB needs the Rust query engine — there is no
-# @prisma/adapter-mongodb, so the binary-free engineType="client" route is not
-# available to us, and Prisma 7 (which drops the Rust engine) dropped MongoDB.
-#
-# Only the Linux engine is tracked. Each developer's native engine is rebuilt
-# by the postinstall hook and would otherwise add ~18MB per platform.
-/app/generated/prisma/*.node
-!/app/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node
 
 # worktrees
 .worktrees/

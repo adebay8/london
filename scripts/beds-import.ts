@@ -12,7 +12,7 @@ loadEnv({ path: ".env" });
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { saveBed } from "../lib/beds/store";
 import { MATTRESS_WIDTH_CM, NO_FINANCE, type Assembly, type Bed, type Opening, type OttomanType } from "../lib/beds/types";
 

@@ -7,7 +7,7 @@ loadEnv({ path: ".env.local" });
 loadEnv({ path: ".env" });
 
 import fs from "node:fs";
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { upsertAreas, saveConfig, saveListing } from "../lib/flat-search/store";
 import type { Area, Budget, Listing, MoveTiming, StaleThresholds } from "../lib/flat-search/types";
 

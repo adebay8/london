@@ -3,7 +3,7 @@
 // read/write through here. The `extra` JSON-string column (the long-tail spec
 // columns) is parsed/serialised at this boundary, exactly as the flat store
 // does for its roster/config columns.
-import type { PrismaClient } from "@/app/generated/prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { NO_FINANCE, type Assembly, type Bed, type FinancePolicy, type Opening, type OttomanType, type Pref } from "./types";
 
 type PC = PrismaClient;

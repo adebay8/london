@@ -4,7 +4,7 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 config({ path: ".env" });
 
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import districts from "../data/districts.json";
 import districtZones from "../data/districts_zones.json";
 import neighbourhoodZones from "../data/neighbourhood_zones.json";

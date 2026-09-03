@@ -1,7 +1,7 @@
 // DB <-> plain-object mapping for the mattress store. Same boundary discipline
 // as the bed, console and sofa stores: the JSON-string columns are parsed and
 // serialised here, and nothing derived is ever persisted.
-import type { PrismaClient } from "@/app/generated/prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { NO_FINANCE, type FinancePolicy } from "@/lib/retail/finance";
 import { ventilatedBase, type BedConstraint } from "./compat";
 import type { Condition, Firmness, Mattress, MattressType, Pref, RrpEvidence, SpringType } from "./types";

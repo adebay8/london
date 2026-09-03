@@ -12,7 +12,7 @@ loadEnv({ path: ".env" });
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { saveConsole } from "../lib/consoles/store";
 import { NO_FINANCE, type Assembly, type BackPanel, type Bay, type BayKind, type TvConsole } from "../lib/consoles/types";
 import { BUDGET_CAP_GBP } from "../lib/consoles/types";
