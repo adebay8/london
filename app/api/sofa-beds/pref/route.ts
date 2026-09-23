@@ -17,7 +17,10 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   const { sofaBedId } = await request.json();
-  if (!sofaBedId) return NextResponse.json({ error: "sofaBedId is required" }, { status: 400 });
+  // Unlike the sofas route, DELETE validates type as POST does, to prevent Prisma errors on malformed where clauses.
+  if (!sofaBedId || typeof sofaBedId !== "string") {
+    return NextResponse.json({ error: "sofaBedId is required" }, { status: 400 });
+  }
   await setSofaBedPref(prisma, sofaBedId, null);
   return NextResponse.json({ ok: true });
 }
