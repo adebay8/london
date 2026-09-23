@@ -133,10 +133,13 @@ column, and that an unguarded figure ranks the corpus backwards. The existing
 guards carry over (body depth > 130cm is an L-shape footprint; seat depth >
 90cm is a chaise length), plus two new ones:
 
-- **Bed width > 200cm is a bed *length*.** A super king is 180cm, so anything
-  above 200 in that column is the 190cm-ish length filed wrongly. Treated as
-  unknown, never as a magnificent bed.
-- **Bed length < 170cm is a width.** Same error, mirrored.
+- **Bed width > 185cm is a bed *length*.** A super king is 180cm wide, so
+  185 is the ceiling with a little slack. The bound has to sit here and not
+  at 200: the number most often filed wrongly in this column is **190**, the
+  standard UK bed length, and a 200cm bound would wave it through as a
+  magnificent bed. Treated as unknown instead.
+- **Bed length outside 170-230cm is not a length.** Under 170 it is a width
+  filed wrongly; over 230 it is something else entirely.
 
 As everywhere else: unknown means unpublished, never unsuitable.
 
