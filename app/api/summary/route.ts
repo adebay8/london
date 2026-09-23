@@ -12,7 +12,7 @@ import { dealFor } from "@/lib/mattresses/deal";
 import { loadMattresses } from "@/lib/mattresses/store";
 import { scoreAll as scoreMattresses } from "@/lib/mattresses/score";
 import { loadConfig } from "@/lib/flat-search/store";
-import { bedWidthOf } from "@/lib/sofabeds/fit";
+import { bedWidthOf, budgetVerdict } from "@/lib/sofabeds/fit";
 import { loadSofaBeds } from "@/lib/sofabeds/store";
 import { scoreAll as scoreSofaBeds } from "@/lib/sofabeds/score";
 import { MIN_BED_WIDTH_CM } from "@/lib/sofabeds/types";
@@ -279,7 +279,14 @@ export async function GET() {
       sofaBeds: {
         count: sofaBeds.length,
         saved: savedSofaBeds.length,
-        fits: scoredSofaBeds.filter((s) => s.fit.overall === "pass" && !s.overBudget).length,
+        // A COUNT asserts, so it may only count what is known. budgetVerdict
+        // is "in" solely when delivery is published and the total clears the
+        // cap; an unpublished charge leaves the row out. (The /sofa-beds
+        // budget FILTER deliberately differs — see the note there.) Sold out
+        // is a hard exclusion per types.ts, not a scoring penalty.
+        fits: scoredSofaBeds.filter(
+          (s) => s.fit.overall === "pass" && budgetVerdict(s) === "in" && s.inStock !== false,
+        ).length,
         sleepsApart: scoredSofaBeds.filter((s) => s.separateMattress === true).length,
         double: scoredSofaBeds.filter((s) => (bedWidthOf(s) ?? 0) >= MIN_BED_WIDTH_CM).length,
       },
@@ -309,7 +316,10 @@ export async function GET() {
         .filter((s) => !s.overBudget && s.fit.overall !== "fail" && s.inStock !== false)
         .slice(0, 10)
         .map(sofaProduct),
-      sofaBeds: scoredSofaBeds.slice(0, 12).map(sofaBedProduct),
+      sofaBeds: scoredSofaBeds
+        .filter((s) => !s.overBudget && s.fit.overall !== "fail" && s.inStock !== false)
+        .slice(0, 12)
+        .map(sofaBedProduct),
       beds: scoredBeds.slice(0, 10).map(bedProduct),
       mattresses: scoredMattresses
         .filter((m) => !m.overBudget && m.fit.overall !== "fail" && m.inStock !== false)

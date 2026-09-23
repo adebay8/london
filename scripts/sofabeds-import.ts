@@ -116,6 +116,14 @@ export function toSofaBed(r: Record<string, string>): SofaBed | null {
 
   const deliveryIncluded = isIncluded(r.delivery_cost_gbp);
   const delivery = deliveryIncluded ? null : num(r.delivery_cost_gbp);
+  // When the retailer publishes no delivery charge (IKEA's is postcode-
+  // dependent), `delivery ?? 0` makes this a FLOOR, not the price you pay.
+  // The arithmetic stays as-is deliberately: the stored row still carries the
+  // detector (deliveryIncluded === false && deliveryCostGbp == null), so the
+  // app derives the caveat rather than pushing `number | null` through the
+  // model, both store directions, the price sort and the `value` criterion.
+  // See deliveryUnknown()/budgetVerdict() in lib/sofabeds/fit.ts — every
+  // consumer that displays or counts this figure must go through them.
   const landed = num(r.landed_cost_gbp) ?? price + (delivery ?? 0);
 
   const extra: Record<string, string> = {};

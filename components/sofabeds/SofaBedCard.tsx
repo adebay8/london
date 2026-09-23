@@ -1,6 +1,6 @@
 "use client";
 
-import { bedWidthOf, bodyDepthOf, fitLabel } from "@/lib/sofabeds/fit";
+import { bedWidthOf, bodyDepthOf, budgetVerdict, fitLabel } from "@/lib/sofabeds/fit";
 import type { ScoredSofaBed } from "@/lib/sofabeds/score";
 import { BUDGET_CAP_GBP, TARGET_DEPTH_CM, type Pref } from "@/lib/sofabeds/types";
 
@@ -48,7 +48,11 @@ export default function SofaBedCard({
   const bedWidth = bedWidthOf(s);
   const deep = (bodyDepth ?? 0) >= TARGET_DEPTH_CM;
   const sleep = SLEEP[String(s.separateMattress)];
-  const overBudget = s.landedCostGbp > BUDGET_CAP_GBP;
+  const budget = budgetVerdict(s);
+  const overBudget = budget === "over";
+  // The retailer publishes no delivery charge, so the landed figure is price
+  // with nothing added: a floor, not the total. Shown as "£1,199+".
+  const landedIsFloor = budget === "unknown";
   const discount = s.rrpGbp && s.rrpGbp > s.landedCostGbp * 1.1 ? Math.round((1 - s.landedCostGbp / s.rrpGbp) * 100) : null;
   const dims = [
     bedWidth != null ? `${bedWidth}cm bed` : null,
@@ -75,7 +79,7 @@ export default function SofaBedCard({
           <img src={s.imageUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-1" aria-label="No photo published">
-            <span className="text-3xl opacity-60" aria-hidden>🛋️</span>
+            <span className="text-3xl opacity-60" aria-hidden>🛌</span>
             <span className="text-[9px] uppercase tracking-wide text-[var(--text-muted)]">no photo</span>
           </div>
         )}
@@ -116,11 +120,12 @@ export default function SofaBedCard({
         <div className="flex items-baseline gap-2">
           <span className="text-xl font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
             £{Math.round(s.landedCostGbp).toLocaleString()}
+            {landedIsFloor && "+"}
           </span>
           {s.rrpGbp && s.rrpGbp > s.landedCostGbp && (
             <span className="text-[11px] text-[var(--text-muted)] line-through">£{Math.round(s.rrpGbp).toLocaleString()}</span>
           )}
-          <span className="text-[11px] text-[var(--text-muted)]">landed</span>
+          <span className="text-[11px] text-[var(--text-muted)]">{landedIsFloor ? "landed, at least" : "landed"}</span>
         </div>
         <div className="text-[11px] text-[var(--text-secondary)]">
           {dims.length ? dims.join(" · ") : "no dimensions published"}
@@ -134,6 +139,8 @@ export default function SofaBedCard({
         {/* Over budget is flagged, never hidden — most of the corpus is, and a
             search that quietly drops it answers a question you didn't ask. */}
         {overBudget && <Chip label={`£${Math.round(s.landedCostGbp - BUDGET_CAP_GBP).toLocaleString()} over budget`} tone="bad" />}
+        {/* Unpublished delivery must read as unknown, never as free (spec §8). */}
+        {landedIsFloor && <Chip label="delivery not published" tone="unknown" />}
         <Chip label={s.condition} tone={CONDITION_TONE[s.condition] ?? "unknown"} />
         {s.inStock === false && <Chip label="sold out" tone="bad" />}
         {s.oneOff && <Chip label="one-off stock" tone="unknown" />}

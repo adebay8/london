@@ -10,6 +10,15 @@ Rules:
   a guessed number silently corrupts the ranking.
 - `landed_cost_gbp` = price + delivery. If delivery is free/included, put
   "included" in delivery_cost_gbp and landed = price.
+- If the retailer publishes NO delivery charge at all — IKEA's is
+  postcode-dependent, so the listing carries no number — leave BOTH
+  `delivery_cost_gbp` and `landed_cost_gbp` EMPTY. Do not write 0, and do not
+  write "included": unpublished is not free. The importer then stores
+  landed = price, and because the row still says delivery is neither included
+  nor priced, the app reads that figure as a landed FLOOR: it prints it as
+  "£1,199+", chips the card "delivery not published", and leaves the row out
+  of the home page's "meet the brief" count. The /sofa-beds budget filter
+  still shows it — unpublished must never read as unsuitable.
 - `condition`: new | ex-display | clearance | second-hand
 - `one_off`: yes when the stock cannot be reordered (most ex-display, all
   second-hand)

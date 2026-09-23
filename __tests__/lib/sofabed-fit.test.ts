@@ -1,6 +1,6 @@
 import {
   bedLengthOf, bedWidthOf, bodyDepthOf, fitFor, fitLabel,
-  hasSuspectBedSize, seatDepthOf,
+  budgetVerdict, deliveryUnknown, hasSuspectBedSize, seatDepthOf,
 } from "@/lib/sofabeds/fit";
 import { NO_FINANCE, type SofaBed } from "@/lib/sofabeds/types";
 
@@ -126,6 +126,44 @@ describe("fitFor — R1 seats, R2 width band, R3 bed width", () => {
 
   it("leaves sleepsApart null when the listing does not make it clear", () => {
     expect(fitFor(s({ mechanism: null, separateMattress: null })).sleepsApart).toBeNull();
+  });
+});
+
+describe("deliveryUnknown — unpublished delivery is not free delivery", () => {
+  it("is false when delivery is included", () => {
+    expect(deliveryUnknown(s({ deliveryIncluded: true, deliveryCostGbp: null }))).toBe(false);
+  });
+
+  it("is false when a charge is published", () => {
+    expect(deliveryUnknown(s({ deliveryIncluded: false, deliveryCostGbp: 85 }))).toBe(false);
+    // Zero is a published figure, not an absent one.
+    expect(deliveryUnknown(s({ deliveryIncluded: false, deliveryCostGbp: 0 }))).toBe(false);
+  });
+
+  it("is true when the retailer publishes neither 'free' nor a figure", () => {
+    expect(deliveryUnknown(s({ deliveryIncluded: false, deliveryCostGbp: null }))).toBe(true);
+  });
+});
+
+describe("budgetVerdict — an unpublished delivery charge reads as unknown", () => {
+  it("is 'in' when the landed total is published and clears the cap", () => {
+    expect(
+      budgetVerdict(s({ priceGbp: 900, landedCostGbp: 985, deliveryIncluded: false, deliveryCostGbp: 85 })),
+    ).toBe("in");
+    expect(budgetVerdict(s({ landedCostGbp: 900, deliveryIncluded: true, deliveryCostGbp: null }))).toBe("in");
+  });
+
+  it("is 'over' whatever delivery turns out to be, once the floor alone clears the cap", () => {
+    // BUDGET_CAP_GBP is 1200. Delivery can only push this further over, so
+    // the verdict is assertable even with the charge unpublished.
+    expect(budgetVerdict(s({ landedCostGbp: 1795, deliveryIncluded: false, deliveryCostGbp: null }))).toBe("over");
+    expect(budgetVerdict(s({ landedCostGbp: 1961, deliveryIncluded: false, deliveryCostGbp: 85 }))).toBe("over");
+  });
+
+  it("is 'unknown' when the floor is inside the cap but delivery is unpublished", () => {
+    // The LANDSKRONA case: £1,199 is under £1,200 only if delivery is free,
+    // and IKEA never says it is. Nothing can be asserted either way.
+    expect(budgetVerdict(s({ landedCostGbp: 1199, deliveryIncluded: false, deliveryCostGbp: null }))).toBe("unknown");
   });
 });
 

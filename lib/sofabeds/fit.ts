@@ -5,6 +5,7 @@
 // unknown means the retailer did not publish the measurement, never that the
 // sofa bed is unsuitable.
 import {
+  BUDGET_CAP_GBP,
   MAX_PLAUSIBLE_BED_LENGTH_CM,
   MAX_PLAUSIBLE_BED_WIDTH_CM,
   MAX_PLAUSIBLE_BODY_DEPTH_CM,
@@ -47,19 +48,35 @@ export function bedLengthOf(s: Pick<SofaBed, "bedLengthCm">): number | null {
   return l;
 }
 
-export function hasSuspectDepth(s: Pick<SofaBed, "overallDepthCm" | "seatDepthCm">): boolean {
-  return (
-    (s.overallDepthCm != null && s.overallDepthCm > MAX_PLAUSIBLE_BODY_DEPTH_CM) ||
-    (s.seatDepthCm != null && s.seatDepthCm > MAX_PLAUSIBLE_SEAT_DEPTH_CM)
-  );
-}
-
 export function hasSuspectBedSize(s: Pick<SofaBed, "bedWidthCm" | "bedLengthCm">): boolean {
   return (
     (s.bedWidthCm != null && s.bedWidthCm > MAX_PLAUSIBLE_BED_WIDTH_CM) ||
     (s.bedLengthCm != null &&
       (s.bedLengthCm < MIN_PLAUSIBLE_BED_LENGTH_CM || s.bedLengthCm > MAX_PLAUSIBLE_BED_LENGTH_CM))
   );
+}
+
+/** True when the retailer publishes no delivery charge at all — neither "free"
+ *  nor a figure. IKEA is the reason this exists: its charge is postcode-
+ *  dependent, so the listing carries no number. The importer's landed cost
+ *  then falls back to price + 0, which is a FLOOR, not the price you pay. */
+export function deliveryUnknown(s: Pick<SofaBed, "deliveryIncluded" | "deliveryCostGbp">): boolean {
+  return !s.deliveryIncluded && s.deliveryCostGbp == null;
+}
+
+/** Tri-state budget verdict, same discipline as the measurement guards above:
+ *  an unpublished delivery charge must read as UNKNOWN, never as free.
+ *
+ *  - "over": the floor alone already clears the cap, so it is over whatever
+ *    delivery turns out to be. Safe to assert.
+ *  - "unknown": the floor is inside the cap but delivery is unpublished, so
+ *    nothing can be asserted either way.
+ *  - "in": inside the cap with delivery accounted for. */
+export function budgetVerdict(
+  s: Pick<SofaBed, "landedCostGbp" | "deliveryIncluded" | "deliveryCostGbp">,
+): "in" | "over" | "unknown" {
+  if (s.landedCostGbp > BUDGET_CAP_GBP) return "over";
+  return deliveryUnknown(s) ? "unknown" : "in";
 }
 
 export type Verdict = "pass" | "fail" | "unknown";

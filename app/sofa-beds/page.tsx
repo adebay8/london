@@ -154,6 +154,12 @@ export default function SofaBedsPage() {
       if (ui.savedOnly && s.pref !== "want") return false;
       // Over budget is a flag on the card, not a deletion — most of this corpus
       // is over £1,200 and hiding it by default would answer the wrong question.
+      //
+      // Deliberately looser than the home page's "fits" COUNT, which requires
+      // budgetVerdict(s) === "in". A count asserts, so it may only count what
+      // is known; a filter is a lens, so a row whose delivery is unpublished
+      // stays IN — dropping it would make "unpublished" read as "unsuitable",
+      // which spec §8 forbids. The card carries the caveat instead.
       if (f.budget === "in" && s.landedCostGbp > BUDGET_CAP_GBP) return false;
       if (f.fit === "pass" && s.fit.overall !== "pass") return false;
       if (f.mechanism.length && (s.mechanism == null || !f.mechanism.includes(s.mechanism))) return false;

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import {
-  bedLengthOf, bedWidthOf, bodyDepthOf, hasSuspectBedSize, seatDepthOf, type Verdict,
+  bedLengthOf, bedWidthOf, bodyDepthOf, budgetVerdict, hasSuspectBedSize, seatDepthOf, type Verdict,
 } from "@/lib/sofabeds/fit";
 import type { ScoredSofaBed } from "@/lib/sofabeds/score";
 import {
@@ -109,6 +109,10 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
   const suspectBodyDepth = s.overallDepthCm != null && s.overallDepthCm > MAX_PLAUSIBLE_BODY_DEPTH_CM;
   const suspectSeatDepth = s.seatDepthCm != null && s.seatDepthCm > MAX_PLAUSIBLE_SEAT_DEPTH_CM;
   const bedSize = bedWidth != null || bedLength != null ? `${bedWidth ?? "?"} × ${bedLength ?? "?"} cm (W×L)` : null;
+  // "unknown" means the landed figure is price with no delivery added, because
+  // the retailer publishes none. Show it as a floor, never as the total.
+  const budget = budgetVerdict(s);
+  const landedIsFloor = budget === "unknown";
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -229,13 +233,23 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold [font-variant-numeric:tabular-nums]">
               £{Math.round(s.landedCostGbp).toLocaleString()}
+              {landedIsFloor && "+"}
             </span>
-            <span className="text-xs text-[var(--text-muted)]">landed</span>
+            <span className="text-xs text-[var(--text-muted)]">{landedIsFloor ? "landed, at least" : "landed"}</span>
           </div>
           <dl className="mt-2">
             <Row label="Item price" value={`£${s.priceGbp.toLocaleString()}`} />
             <Row label="Was" value={s.rrpGbp ? `£${s.rrpGbp.toLocaleString()}` : null} />
-            <Row label="Delivery" value={s.deliveryIncluded ? "Included" : s.deliveryCostGbp != null ? `£${s.deliveryCostGbp}` : null} />
+            <Row
+              label="Delivery"
+              value={
+                s.deliveryIncluded
+                  ? "Included"
+                  : s.deliveryCostGbp != null
+                    ? `£${s.deliveryCostGbp}`
+                    : "Not published — the landed figure above assumes none, so it is a floor"
+              }
+            />
             <Row label="Condition" value={s.condition} />
             <Row label="Stock" value={s.oneOff ? "One-off — cannot be reordered" : null} />
           </dl>

@@ -9,7 +9,7 @@
 // The heaviest criterion here is not a dimension. Spec §4: the mechanism sits
 // in the seat box, so what predicts how a sofa bed SITS is whether the thing
 // you sleep on is a different object from the thing you sit on.
-import { bedWidthOf, bodyDepthOf, fitFor, seatDepthOf, type Fit } from "./fit";
+import { bedWidthOf, bodyDepthOf, budgetVerdict, fitFor, seatDepthOf, type Fit } from "./fit";
 import {
   BUDGET_CAP_GBP,
   FULL_DOUBLE_WIDTH_CM,
@@ -178,12 +178,21 @@ const CRITERIA: Criterion[] = [
     weight: 10,
     evaluate: (s, _f, out) => {
       const c = s.landedCostGbp;
-      if (c == null) return null;
       if (c > BUDGET_CAP_GBP) {
         out.push({ label: `£${Math.round(c)} landed — £${Math.round(c - BUDGET_CAP_GBP)} over budget`, tone: "bad" });
         return clamp01(1 - (c - BUDGET_CAP_GBP) / BUDGET_CAP_GBP) * 0.4;
       }
-      out.push({ label: `£${Math.round(c)} landed — inside budget`, tone: "good" });
+      // The score is unchanged either way — only what we claim about it is.
+      // With delivery unpublished the figure is a floor, so "inside budget"
+      // would be an assertion the data does not support (spec §8).
+      if (budgetVerdict(s) === "unknown") {
+        out.push({
+          label: `£${Math.round(c)}+ landed — a floor, delivery not published`,
+          tone: "unknown",
+        });
+      } else {
+        out.push({ label: `£${Math.round(c)} landed — inside budget`, tone: "good" });
+      }
       return clamp01(0.6 + 0.4 * (1 - c / BUDGET_CAP_GBP));
     },
   },
