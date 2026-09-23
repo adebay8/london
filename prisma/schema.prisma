@@ -508,6 +508,94 @@ model SofaPref {
   @@map("sofa_prefs")
 }
 
+model SofaBed {
+  id             String  @id @map("_id") // kebab: retailer-model
+  retailer       String
+  brand          String
+  model          String
+  productUrl     String
+  imageUrl       String?
+  colourwayShown String?
+
+  priceGbp         Float
+  rrpGbp           Float?
+  deliveryCostGbp  Float?
+  deliveryIncluded Boolean @default(false)
+  landedCostGbp    Float
+  overBudget       Boolean @default(false)
+
+  /// "new" | "ex-display" | "clearance" | "second-hand". Out of the score.
+  condition String  @default("new")
+  oneOff    Boolean @default(false)
+
+  /// Null when no availability is published. False means sold out.
+  inStock Boolean?
+
+  seats        Int?
+  seatCushions Int?
+
+  /// "fold-out" | "pull-out" | "click-clack" | "futon"
+  mechanism String?
+  /// Whether you sleep on a different object from the one you sit on.
+  /// Null when the listing is not unambiguous — this is the score's main
+  /// axis and must never be inferred from a marketing name.
+  separateMattress Boolean?
+
+  bedWidthCm          Float?
+  bedLengthCm         Float?
+  /// "pocket-sprung" | "sprung" | "memory" | "foam" | "fibre"
+  mattressType        String?
+  mattressThicknessCm Float?
+  beddingStorage      Boolean?
+
+  /// "chaise" | "storage-chaise" | "footstool" | "both" | "none"
+  legRest    String?
+  chaiseSide String?
+  modular    Boolean?
+
+  overallWidthCm  Float?
+  overallDepthCm  Float?
+  overallHeightCm Float?
+  /// How far it reaches into the room when open. Recorded, never gated.
+  extendedDepthCm Float?
+  seatDepthCm     Float?
+  seatHeightCm    Float?
+
+  armStyle        String?
+  fabric          String?
+  easyClean       Boolean?
+  removableCovers Boolean?
+  seatFilling     String?
+  frameMaterial   String?
+
+  warranty         String?
+  returnsWindow    String?
+  deliveryLeadTime String?
+  reviewScore      Float?
+  reviewCount      Int?
+
+  finance String @default("{}")
+
+  notes String?
+  extra String @default("{}")
+
+  pref SofaBedPref?
+
+  @@index([retailer])
+  @@map("sofa_beds")
+}
+
+model SofaBedPref {
+  id        String   @id @default(cuid()) @map("_id")
+  sofaBedId String   @unique
+  pref      String // "want" | "reject"
+  updatedAt DateTime @default(now()) @updatedAt
+
+  sofaBed SofaBed @relation(fields: [sofaBedId], references: [id], onDelete: Cascade)
+
+  @@map("sofa_bed_prefs")
+}
+
 model Mattress {
   id         String  @id @map("_id") // kebab: retailer-model
   retailer   String
