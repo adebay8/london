@@ -2024,7 +2024,7 @@ Each gets the brief below, with `YOUR TARGETS` and the output path swapped per t
 >
 > THE FIELD THAT MATTERS MOST is `separate_mattress`: does a mattress fold out of the frame (you sit on real seat cushions), or is the seat itself the sleeping surface (click-clack/futon)? **If the listing does not make this unambiguous, leave it EMPTY.** Do not infer it from the product name. A guess here corrupts the ranking more than a missing value does.
 >
-> YOUR TARGETS (do these only): <bucket targets from spec §10>
+> YOUR TARGETS (do these only): *[paste this agent's row from the bucket table above, verbatim]*
 >
 > METHOD — plain WebFetch is blocked by most of these. Use:
 > `curl -sL --http1.1 --compressed --max-time 60 -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" -H "Accept-Language: en-GB,en;q=0.9" -H "Upgrade-Insecure-Requests: 1" <url>`
