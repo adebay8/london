@@ -36,6 +36,7 @@ describe("sitting comfort is the axis, and it is a boolean not a dimension", () 
     const apart = scoreSofaBed(s({ separateMattress: true, mechanism: "fold-out" }));
     const onSeat = scoreSofaBed(s({ separateMattress: false, mechanism: "click-clack" }));
     expect(apart.score).toBeGreaterThan(onSeat.score);
+    expect(onSeat.fit.overall).toBe("pass");
   });
 
   it("does not punish an unclear listing — it scores it as unknown", () => {
@@ -52,6 +53,9 @@ describe("a missing spec is never a bad spec", () => {
     const full = scoreSofaBed(s({ seatDepthCm: 62, frameMaterial: "solid hardwood" }));
     const sparse = scoreSofaBed(s({ seatDepthCm: null, frameMaterial: null }));
     expect(sparse.confidence).toBeLessThan(full.confidence);
+    // With null-exclusion, missing fields should not drag down the raw score.
+    // If nulls were counted as zero, sparse.rawScore would collapse to ~0.62; it should stay above 0.70.
+    expect(sparse.rawScore).toBeGreaterThan(0.70);
   });
 
   it("shrinks a low-confidence score toward the corpus prior", () => {
