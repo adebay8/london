@@ -53,7 +53,15 @@ export default function ProductCard({
             aria-label="No photo published"
           >
             <span className="text-3xl opacity-70" aria-hidden>
-              {p.dept === "bed" ? "🛏️" : p.dept === "console" ? "📺" : "🔑"}
+              {p.dept === "bed"
+                ? "🛏️"
+                : p.dept === "console"
+                  ? "📺"
+                  : p.dept === "sofabed"
+                    ? "🛌"
+                    : p.dept === "sofa"
+                      ? "🛋️"
+                      : "🔑"}
             </span>
             <span className="text-[9px] uppercase tracking-wide text-[var(--text-muted)]">no photo</span>
           </div>

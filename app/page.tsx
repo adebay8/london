@@ -27,6 +27,7 @@ interface Summary {
     flats: { count: number; isNew: number; gone: number; saved: number; areas: number; lastRun: string | null };
     areas: { count: number; yes: number; maybe: number; undecided: number; ranked: number; apartments: number };
     sofas: { count: number; saved: number; confirmed: number; deep: number; inBudgetFits: number };
+    sofaBeds: { count: number; saved: number; fits: number; sleepsApart: number; double: number };
     beds: { count: number; saved: number; assembled: number };
     mattresses: {
       count: number; saved: number; inBand: number; inBudgetFits: number;
@@ -34,7 +35,10 @@ interface Summary {
     };
     consoles: { count: number; saved: number; confirmed: number; inBudgetFits: number; withBay: number };
   };
-  shelves: { sofas: Product[]; beds: Product[]; mattresses: Product[]; consoles: Product[]; flats: Product[] };
+  shelves: {
+    sofas: Product[]; sofaBeds: Product[]; beds: Product[]; mattresses: Product[]; consoles: Product[];
+    flats: Product[];
+  };
   journal: { total: number; recent: JournalEntry[] };
 }
 
@@ -195,6 +199,11 @@ export default function Home() {
                   line={`of ${d.sofas.count} researched · ${d.sofas.deep} at 112cm deep`}
                 />
                 <DepartmentTile
+                  href="/sofa-beds" icon="🛌" title="Sofa beds"
+                  count={d.sofaBeds.fits} countLabel="meet the brief"
+                  line={`of ${d.sofaBeds.count} researched · ${d.sofaBeds.sleepsApart} sleep on their own mattress`}
+                />
+                <DepartmentTile
                   href="/beds" icon="🛏️" title="Beds"
                   count={d.beds.count} countLabel="double ottomans"
                   line={`${d.beds.assembled} arrive assembled · ${d.beds.saved} saved`}
@@ -218,6 +227,14 @@ export default function Home() {
               href="/sofas" hrefLabel="Browse all sofas"
               items={s.shelves.sofas}
               empty="No sofas researched yet."
+            />
+
+            <Shelf
+              title="Sofa beds that seat three and sleep two"
+              hint="Ranked on sitting comfort first — whether you sleep on a separate mattress or the seat itself."
+              href="/sofa-beds" hrefLabel="Browse all sofa beds"
+              items={s.shelves.sofaBeds}
+              empty="No sofa beds researched yet."
             />
 
             <Shelf

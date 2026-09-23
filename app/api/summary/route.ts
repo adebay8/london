@@ -12,6 +12,10 @@ import { dealFor } from "@/lib/mattresses/deal";
 import { loadMattresses } from "@/lib/mattresses/store";
 import { scoreAll as scoreMattresses } from "@/lib/mattresses/score";
 import { loadConfig } from "@/lib/flat-search/store";
+import { bedWidthOf } from "@/lib/sofabeds/fit";
+import { loadSofaBeds } from "@/lib/sofabeds/store";
+import { scoreAll as scoreSofaBeds } from "@/lib/sofabeds/score";
+import { MIN_BED_WIDTH_CM } from "@/lib/sofabeds/types";
 
 // GET /api/summary — everything the home page merchandises.
 //
@@ -27,7 +31,7 @@ export const dynamic = "force-dynamic";
 
 export interface Product {
   id: string;
-  dept: "bed" | "mattress" | "console" | "sofa" | "flat";
+  dept: "bed" | "mattress" | "console" | "sofa" | "sofabed" | "flat";
   label: string;
   eyebrow: string | null;
   price: number;
@@ -46,7 +50,7 @@ export async function GET() {
   const [
     flatsActive, flatsNew, flatsGone, savedFlatIds, areas,
     neighbourhoods, ranked, apartments,
-    journalTotal, journalRecent, config, beds, consoles, sofas, mattresses,
+    journalTotal, journalRecent, config, beds, consoles, sofas, mattresses, sofaBeds,
   ] = await Promise.all([
     prisma.flatListing.count({ where: { status: "active" } }),
     prisma.flatListing.count({ where: { status: "active", isNew: true } }),
@@ -66,6 +70,7 @@ export async function GET() {
     loadConsoles(prisma),
     loadSofas(prisma),
     loadMattresses(prisma),
+    loadSofaBeds(prisma),
   ]);
 
   const savedIds = savedFlatIds.map((p) => p.listingId);
@@ -117,6 +122,27 @@ export async function GET() {
     saved: s.pref === "want",
   });
 
+  const scoredSofaBeds = scoreSofaBeds(sofaBeds).sort(
+    (a, b) => FIT_RANK[a.fit.overall] - FIT_RANK[b.fit.overall] || b.score - a.score,
+  );
+
+  const sofaBedProduct = (s: (typeof scoredSofaBeds)[number]): Product => ({
+    id: s.id, dept: "sofabed", label: s.model, eyebrow: s.retailer,
+    price: Math.round(s.landedCostGbp), priceSuffix: null,
+    image: s.imageUrl, url: s.productUrl, href: "/sofa-beds",
+    score: Math.round(s.score),
+    // The badge says the thing the ranking is actually about.
+    badge:
+      s.separateMattress === true
+        ? "Sleeps on its own mattress"
+        : s.legRest === "storage-chaise"
+          ? "Storage chaise"
+          : s.condition !== "new"
+            ? s.condition
+            : null,
+    saved: s.pref === "want",
+  });
+
   const scoredMattresses = scoreMattresses(mattresses).sort(
     (a, b) => FIT_RANK[a.fit.overall] - FIT_RANK[b.fit.overall] || b.score - a.score,
   );
@@ -161,6 +187,7 @@ export async function GET() {
   const savedConsoles = scoredConsoles.filter((c) => c.pref === "want").map(consoleProduct);
   const savedSofas = scoredSofas.filter((s) => s.pref === "want").map(sofaProduct);
   const savedMattresses = scoredMattresses.filter((m) => m.pref === "want").map(mattressProduct);
+  const savedSofaBeds = scoredSofaBeds.filter((s) => s.pref === "want").map(sofaBedProduct);
 
   const dept = (label: string, href: string, items: Product[]) => {
     if (!items.length) return { label, href, chosen: null, items: [], alternatives: 0, min: 0, max: 0 };
@@ -175,6 +202,7 @@ export async function GET() {
 
   const roomDepts = [
     dept("Sofa", "/sofas", savedSofas),
+    dept("Sofa bed", "/sofa-beds", savedSofaBeds),
     dept("Bed", "/beds", savedBeds),
     dept("Mattress", "/mattresses", savedMattresses),
     dept("TV unit", "/consoles", savedConsoles),
@@ -182,6 +210,10 @@ export async function GET() {
   const picked = roomDepts.filter((d) => d.chosen);
 
   const inBudgetFits = scoredConsoles.filter((c) => c.fit.overall === "pass" && !c.overBudget);
+
+  // A sofa and a sofa bed fill the same slot — the buyer is choosing between
+  // them, not buying both.
+  const SEATING = new Set(["Sofa", "Sofa bed"]);
 
   return NextResponse.json({
     room: {
@@ -191,8 +223,15 @@ export async function GET() {
       /** What the shortlist spans, if you picked the cheapest or dearest of each. */
       min: picked.reduce((sum, d) => sum + d.min, 0),
       max: picked.reduce((sum, d) => sum + d.max, 0),
-      shortlisted: savedBeds.length + savedConsoles.length + savedSofas.length + savedMattresses.length,
-      outstanding: roomDepts.filter((d) => !d.chosen).map((d) => d.label.toLowerCase()),
+      shortlisted:
+        savedBeds.length + savedConsoles.length + savedSofas.length + savedMattresses.length + savedSofaBeds.length,
+      // A sofa and a sofa bed fill the same slot — the buyer is choosing
+      // between them, not buying both. Once either is shortlisted, stop
+      // asking for the other.
+      outstanding: roomDepts
+        .filter((d) => !d.chosen)
+        .filter((d) => !(SEATING.has(d.label) && roomDepts.some((o) => SEATING.has(o.label) && o.chosen)))
+        .map((d) => d.label.toLowerCase()),
     },
     departments: {
       flats: { count: flatsActive, isNew: flatsNew, gone: flatsGone, saved: savedIds.length, areas, lastRun: config.lastRun },
@@ -214,6 +253,13 @@ export async function GET() {
         confirmed: scoredSofas.filter((s) => s.fit.overall === "pass").length,
         deep: scoredSofas.filter((s) => (bodyDepthOf(s) ?? 0) >= TARGET_DEPTH_CM).length,
         inBudgetFits: scoredSofas.filter((s) => s.fit.overall === "pass" && !s.overBudget && s.inStock !== false).length,
+      },
+      sofaBeds: {
+        count: sofaBeds.length,
+        saved: savedSofaBeds.length,
+        fits: scoredSofaBeds.filter((s) => s.fit.overall === "pass" && !s.overBudget).length,
+        sleepsApart: scoredSofaBeds.filter((s) => s.separateMattress === true).length,
+        double: scoredSofaBeds.filter((s) => (bedWidthOf(s) ?? 0) >= MIN_BED_WIDTH_CM).length,
       },
       mattresses: {
         count: mattresses.length,
@@ -241,6 +287,7 @@ export async function GET() {
         .filter((s) => !s.overBudget && s.fit.overall !== "fail" && s.inStock !== false)
         .slice(0, 10)
         .map(sofaProduct),
+      sofaBeds: scoredSofaBeds.slice(0, 12).map(sofaBedProduct),
       beds: scoredBeds.slice(0, 10).map(bedProduct),
       mattresses: scoredMattresses
         .filter((m) => !m.overBudget && m.fit.overall !== "fail" && m.inStock !== false)
