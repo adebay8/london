@@ -10,7 +10,7 @@ import {
 // rather than a continuum.
 export interface SofaBedFilterState {
   retailer: string;            // "" = all
-  condition: string;           // "" = all
+  condition: string[];         // empty = all
   fit: "all" | "pass";
   budget: "all" | "in";
   mechanism: Mechanism[];      // empty = all
@@ -23,7 +23,7 @@ export interface SofaBedFilterState {
 }
 
 export const DEFAULT_SOFABED_FILTERS: SofaBedFilterState = {
-  retailer: "", condition: "", fit: "all", budget: "all",
+  retailer: "", condition: [], fit: "all", budget: "all",
   mechanism: [], separateMattressOnly: false, bedSize: "all",
   beddingStorage: false, hideSoldOut: true, hideRejected: true, sort: "score",
 };
@@ -194,14 +194,15 @@ export default function SofaBedFilterRail({
         />
       </Section>
 
+      {/* Multi-select, because clearance and second-hand are the two routes
+          the research says to look at together at this budget — the empty
+          state sends you here to tick both. */}
       <Section title="Condition" hint="Doesn't affect the ranking — it changes what you get, not how good the sofa bed is.">
-        <Radio name="sofabed-condition" checked={filters.condition === ""} onChange={() => set({ condition: "" })} label="All" />
         {conditions.map((c) => (
-          <Radio
+          <Check
             key={c}
-            name="sofabed-condition"
-            checked={filters.condition === c}
-            onChange={() => set({ condition: c })}
+            checked={filters.condition.includes(c)}
+            onChange={() => set({ condition: toggle(filters.condition, c) })}
             label={CONDITION_LABEL[c] ?? c}
           />
         ))}

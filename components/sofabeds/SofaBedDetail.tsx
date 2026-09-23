@@ -2,11 +2,12 @@
 
 import { useEffect } from "react";
 import {
-  bedLengthOf, bedWidthOf, bodyDepthOf, hasSuspectBedSize, hasSuspectDepth, seatDepthOf, type Verdict,
+  bedLengthOf, bedWidthOf, bodyDepthOf, hasSuspectBedSize, seatDepthOf, type Verdict,
 } from "@/lib/sofabeds/fit";
 import type { ScoredSofaBed } from "@/lib/sofabeds/score";
 import {
-  FULL_DOUBLE_WIDTH_CM, GOOD_SEAT_DEPTH_CM, MIN_BED_WIDTH_CM, TARGET_DEPTH_CM,
+  FULL_DOUBLE_WIDTH_CM, GOOD_SEAT_DEPTH_CM, MAX_PLAUSIBLE_BODY_DEPTH_CM, MAX_PLAUSIBLE_SEAT_DEPTH_CM,
+  MIN_BED_WIDTH_CM, TARGET_DEPTH_CM,
 } from "@/lib/sofabeds/types";
 
 const TONE: Record<string, string> = {
@@ -105,6 +106,8 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
   const bedWidth = bedWidthOf(s);
   const bedLength = bedLengthOf(s);
   const suspectBed = hasSuspectBedSize(s);
+  const suspectBodyDepth = s.overallDepthCm != null && s.overallDepthCm > MAX_PLAUSIBLE_BODY_DEPTH_CM;
+  const suspectSeatDepth = s.seatDepthCm != null && s.seatDepthCm > MAX_PLAUSIBLE_SEAT_DEPTH_CM;
   const bedSize = bedWidth != null || bedLength != null ? `${bedWidth ?? "?"} × ${bedLength ?? "?"} cm (W×L)` : null;
 
   return (
@@ -182,11 +185,21 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
         <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Depth</h3>
         <div className="mt-2 rounded-xl bg-[var(--bg-secondary)] p-3">
           <DepthBar depth={bodyDepthOf(s)} />
-          {hasSuspectDepth(s) && (
+          {/* Two different columns can trip the depth guard, so the caveat says
+              which one actually did. The sibling's single paragraph only ever
+              described the overall-depth case, which renders an empty number
+              when it was the seat depth that was wrong. */}
+          {suspectBodyDepth && (
             <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
-              The retailer lists {s.overallDepthCm}cm, but that is the L-shape&apos;s footprint — how far the chaise
-              projects into the room — not how deep the sofa bed is back to front. Treated as unpublished rather than as
-              a very deep sofa bed.
+              The retailer lists {s.overallDepthCm}cm deep, but that is the L-shape&apos;s footprint — how far the
+              chaise projects into the room — not how deep the sofa bed is back to front. Treated as unpublished rather
+              than as a very deep sofa bed.
+            </p>
+          )}
+          {suspectSeatDepth && (
+            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+              The retailer lists a {s.seatDepthCm}cm seat, but no seat is that deep — that is a chaise length filed in
+              the seat-depth column. Treated as unpublished rather than as an exceptionally deep seat.
             </p>
           )}
           <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">

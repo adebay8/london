@@ -35,6 +35,7 @@ function readUI(): UIState {
   const base: UIState = { search: "", savedOnly: false, filters: { ...DEFAULT_SOFABED_FILTERS } };
   if (typeof window === "undefined") return base;
   const p = new URLSearchParams(window.location.search);
+  const list = (k: string, fb: string[]) => (p.has(k) ? (p.get(k) ? p.get(k)!.split(",") : []) : fb);
   const bool = (k: string, fb: boolean) => (p.has(k) ? p.get(k) === "1" : fb);
   const one = <T extends string>(k: string, allowed: readonly T[], fb: T): T =>
     (allowed as readonly string[]).includes(p.get(k) ?? "") ? (p.get(k) as T) : fb;
@@ -46,7 +47,7 @@ function readUI(): UIState {
     savedOnly: bool("saved", false),
     filters: {
       retailer: p.get("ret") ?? DEFAULT_SOFABED_FILTERS.retailer,
-      condition: p.get("cond") ?? DEFAULT_SOFABED_FILTERS.condition,
+      condition: list("cond", DEFAULT_SOFABED_FILTERS.condition),
       fit: one("fit", ["all", "pass"] as const, DEFAULT_SOFABED_FILTERS.fit),
       budget: one("budget", ["all", "in"] as const, DEFAULT_SOFABED_FILTERS.budget),
       mechanism,
@@ -67,7 +68,7 @@ function writeUI(s: UIState) {
   if (s.search) p.set("q", s.search);
   if (s.savedOnly) p.set("saved", "1");
   if (f.retailer) p.set("ret", f.retailer);
-  if (f.condition) p.set("cond", f.condition);
+  if (f.condition.length) p.set("cond", f.condition.join(","));
   if (f.fit !== DEFAULT_SOFABED_FILTERS.fit) p.set("fit", f.fit);
   if (f.budget !== DEFAULT_SOFABED_FILTERS.budget) p.set("budget", f.budget);
   if (f.mechanism.length) p.set("mech", f.mechanism.join(","));
@@ -82,6 +83,32 @@ function writeUI(s: UIState) {
 }
 
 const FIT_RANK: Record<string, number> = { pass: 0, unknown: 1, fail: 2 };
+
+/** Is the user looking at the whole corpus?
+ *
+ *  Gates the empty state. "Nothing meets all three gates" is a finding about
+ *  the corpus at this budget, and it is only true when nothing has been
+ *  narrowed — said over a one-retailer view it would be a claim about the
+ *  research that the research never made. Sort is excluded deliberately: it
+ *  reorders rows, it never removes one. */
+function isUnfiltered(ui: UIState): boolean {
+  const f = ui.filters;
+  const d = DEFAULT_SOFABED_FILTERS;
+  return (
+    !ui.search.trim() &&
+    !ui.savedOnly &&
+    f.retailer === d.retailer &&
+    f.condition.length === 0 &&
+    f.fit === d.fit &&
+    f.budget === d.budget &&
+    f.mechanism.length === 0 &&
+    f.separateMattressOnly === d.separateMattressOnly &&
+    f.bedSize === d.bedSize &&
+    f.beddingStorage === d.beddingStorage &&
+    f.hideSoldOut === d.hideSoldOut &&
+    f.hideRejected === d.hideRejected
+  );
+}
 
 export default function SofaBedsPage() {
   const [sofaBeds, setSofaBeds] = useState<SofaBed[] | null>(null);
@@ -141,7 +168,7 @@ export default function SofaBedsPage() {
         if (w == null || w < floor) return false;
       }
       if (f.beddingStorage && s.beddingStorage !== true) return false;
-      if (f.condition && s.condition !== f.condition) return false;
+      if (f.condition.length && !f.condition.includes(s.condition)) return false;
       if (f.retailer && s.retailer !== f.retailer) return false;
       if (q && !`${s.retailer} ${s.brand} ${s.model} ${s.mechanism ?? ""} ${s.fabric ?? ""}`.toLowerCase().includes(q))
         return false;
@@ -217,14 +244,17 @@ export default function SofaBedsPage() {
             </div>
           )}
           {sofaBeds == null && !error && <div className="text-sm text-[var(--text-secondary)]">Loading sofa beds…</div>}
-          {/* An empty column here is a finding, not a fault. Three seats, the
-              200-250cm band and a small double at £1,200 landed is a hard ask,
-              and the page should say so in words rather than go blank. */}
+          {/* An empty column on the unfiltered view is a finding, not a fault:
+              three seats, the 200-250cm band and a small double at £1,200
+              landed is a hard ask, and the page should say so in words rather
+              than go blank. Narrow the filters and it is just an empty result
+              again, so the finding gives way to the plain sentence. */}
           {sofaBeds != null && visible.length === 0 && (
             <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-8 text-center">
               <p className="mx-auto max-w-md text-sm leading-relaxed text-[var(--text-secondary)]">
-                Nothing in the corpus meets all three gates. At £{BUDGET_CAP_GBP.toLocaleString()} landed that is the
-                expected answer — try the clearance and second-hand filters.
+                {isUnfiltered(ui)
+                  ? `Nothing in the corpus meets all three gates. At £${BUDGET_CAP_GBP.toLocaleString()} landed that is the expected answer — try the clearance and second-hand filters.`
+                  : "Nothing matches these filters."}
               </p>
               <button
                 onClick={() => setUi((s) => ({ ...s, filters: { ...DEFAULT_SOFABED_FILTERS }, savedOnly: false }))}
