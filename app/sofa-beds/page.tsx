@@ -53,6 +53,8 @@ function readUI(): UIState {
       separateMattressOnly: bool("sep", DEFAULT_SOFABED_FILTERS.separateMattressOnly),
       bedSize: one("bed", ["all", "small-double", "double"] as const, DEFAULT_SOFABED_FILTERS.bedSize),
       beddingStorage: bool("store", DEFAULT_SOFABED_FILTERS.beddingStorage),
+      hideSoldOut: bool("stock", DEFAULT_SOFABED_FILTERS.hideSoldOut),
+      hideRejected: bool("hide", DEFAULT_SOFABED_FILTERS.hideRejected),
       sort: one("sort", Object.keys(SORT_LABELS) as SortKey[], DEFAULT_SOFABED_FILTERS.sort),
     },
   };
@@ -72,6 +74,8 @@ function writeUI(s: UIState) {
   if (f.separateMattressOnly) p.set("sep", "1");
   if (f.bedSize !== DEFAULT_SOFABED_FILTERS.bedSize) p.set("bed", f.bedSize);
   if (f.beddingStorage) p.set("store", "1");
+  if (f.hideSoldOut !== DEFAULT_SOFABED_FILTERS.hideSoldOut) p.set("stock", f.hideSoldOut ? "1" : "0");
+  if (f.hideRejected !== DEFAULT_SOFABED_FILTERS.hideRejected) p.set("hide", f.hideRejected ? "1" : "0");
   if (f.sort !== DEFAULT_SOFABED_FILTERS.sort) p.set("sort", f.sort);
   const qs = p.toString();
   window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
@@ -115,6 +119,11 @@ export default function SofaBedsPage() {
     const f = ui.filters;
     const q = ui.search.trim().toLowerCase();
     const out = scored.filter((s) => {
+      if (f.hideRejected && s.pref === "reject") return false;
+      // Availability, not quality — a sofa bed you can't buy is excluded
+      // outright rather than marked down, however well it scores. Null means
+      // the retailer published nothing, which is not the same as sold out.
+      if (f.hideSoldOut && s.inStock === false) return false;
       if (ui.savedOnly && s.pref !== "want") return false;
       // Over budget is a flag on the card, not a deletion — most of this corpus
       // is over £1,200 and hiding it by default would answer the wrong question.

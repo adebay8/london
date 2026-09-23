@@ -17,13 +17,15 @@ export interface SofaBedFilterState {
   separateMattressOnly: boolean;
   bedSize: "all" | "small-double" | "double";  // >=120 | >=135
   beddingStorage: boolean;
+  hideSoldOut: boolean;
+  hideRejected: boolean;
   sort: "score" | "price" | "depth" | "bed";
 }
 
 export const DEFAULT_SOFABED_FILTERS: SofaBedFilterState = {
   retailer: "", condition: "", fit: "all", budget: "all",
   mechanism: [], separateMattressOnly: false, bedSize: "all",
-  beddingStorage: false, sort: "score",
+  beddingStorage: false, hideSoldOut: true, hideRejected: true, sort: "score",
 };
 
 const MECHANISM_LABEL: Record<Mechanism, string> = {
@@ -205,6 +207,17 @@ export default function SofaBedFilterRail({
         ))}
       </Section>
 
+      <Section title="Availability" hint="A sofa bed you can't buy shouldn't be recommended, however well it scores.">
+        <Check
+          checked={filters.hideSoldOut}
+          onChange={() => set({ hideSoldOut: !filters.hideSoldOut })}
+          label="Hide sold out"
+        />
+        <p className="mt-1 text-[11px] leading-snug text-[var(--text-muted)]">
+          Only listings that say sold out. A retailer who publishes no availability at all is left in.
+        </p>
+      </Section>
+
       <Section title="Retailer">
         <div className="max-h-56 space-y-1.5 overflow-y-auto pr-1">
           <Radio name="sofabed-retailer" checked={filters.retailer === ""} onChange={() => set({ retailer: "" })} label="All" />
@@ -218,6 +231,14 @@ export default function SofaBedFilterRail({
             />
           ))}
         </div>
+      </Section>
+
+      <Section title="Dismissed" hint="A row you've hidden stays hidden — that is what dismissing it was for.">
+        <Check
+          checked={filters.hideRejected}
+          onChange={() => set({ hideRejected: !filters.hideRejected })}
+          label="Hide dismissed"
+        />
       </Section>
     </div>
   );
