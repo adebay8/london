@@ -215,14 +215,36 @@ export async function GET() {
   // them, not buying both.
   const SEATING = new Set(["Sofa", "Sofa bed"]);
 
+  // The basket sums ONE figure per department, same rule as beds and TV
+  // units above — but Sofa and Sofa bed are two departments for one slot, so
+  // summing both picks here would invent a living room with two sofas in it.
+  // The seating pair is folded into a single contribution: the better-scoring
+  // chosen item stands in for the pair in `total`, and `min`/`max` span the
+  // union of both shortlists rather than each department's range in turn.
+  const nonSeatingPicked = picked.filter((d) => !SEATING.has(d.label));
+  const seatingPicked = picked.filter((d) => SEATING.has(d.label));
+  const bestSeating = seatingPicked.reduce<(typeof seatingPicked)[number] | null>((best, d) => {
+    if (!best) return d;
+    const bestScore = best.chosen?.score ?? -Infinity;
+    const dScore = d.chosen?.score ?? -Infinity;
+    if (dScore > bestScore) return d;
+    if (dScore === bestScore && (d.chosen?.price ?? Infinity) < (best.chosen?.price ?? Infinity)) return d;
+    return best;
+  }, null);
+  const seatingItems = [...savedSofas, ...savedSofaBeds];
+  const seatingMin = seatingItems.length ? Math.min(...seatingItems.map((i) => i.price)) : 0;
+  const seatingMax = seatingItems.length ? Math.max(...seatingItems.map((i) => i.price)) : 0;
+
   return NextResponse.json({
     room: {
       depts: roomDepts,
-      /** Best-scoring pick in each department. The headline figure. */
-      total: picked.reduce((sum, d) => sum + (d.chosen?.price ?? 0), 0),
-      /** What the shortlist spans, if you picked the cheapest or dearest of each. */
-      min: picked.reduce((sum, d) => sum + d.min, 0),
-      max: picked.reduce((sum, d) => sum + d.max, 0),
+      /** Best-scoring pick in each department, with the seating pair folded
+       *  into a single contribution. The headline figure. */
+      total:
+        nonSeatingPicked.reduce((sum, d) => sum + (d.chosen?.price ?? 0), 0) + (bestSeating?.chosen?.price ?? 0),
+      /** What the shortlist spans, if you picked the cheapest or dearest of each — the seating pair counted once. */
+      min: nonSeatingPicked.reduce((sum, d) => sum + d.min, 0) + (seatingItems.length ? seatingMin : 0),
+      max: nonSeatingPicked.reduce((sum, d) => sum + d.max, 0) + (seatingItems.length ? seatingMax : 0),
       shortlisted:
         savedBeds.length + savedConsoles.length + savedSofas.length + savedMattresses.length + savedSofaBeds.length,
       // A sofa and a sofa bed fill the same slot — the buyer is choosing
