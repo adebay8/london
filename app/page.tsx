@@ -25,6 +25,7 @@ interface Summary {
     outstanding: string[];
   };
   departments: {
+    buying: { count: number; saved: number; towns: number; townsWithStock: number };
     flats: { count: number; isNew: number; gone: number; saved: number; areas: number; lastRun: string | null };
     areas: { count: number; yes: number; maybe: number; undecided: number; ranked: number; apartments: number };
     sofas: { count: number; saved: number; confirmed: number; deep: number; inBudgetFits: number };
@@ -166,6 +167,7 @@ export default function Home() {
   const tiles: Record<string, { count: number; countLabel: string; line: string; accent?: boolean }> = d
     ? {
         "/flats": { count: d.flats.count, countLabel: "on the board", line: `${d.flats.isNew} new · ${d.flats.saved} saved · ${d.flats.areas} areas`, accent: d.flats.isNew > 0 },
+        "/buying": { count: d.buying.count, countLabel: "homes for sale", line: `near ${d.buying.townsWithStock} of ${d.buying.towns} stations · ${d.buying.saved} saved` },
         "/apartments": { count: d.areas.apartments, countLabel: "buildings tracked", line: "Developments near your shortlisted areas" },
         "/map": { count: d.areas.undecided, countLabel: "still undecided", line: `${d.areas.yes} yes · ${d.areas.maybe} maybe · ${d.areas.ranked} ranked` },
         "/sofas": { count: d.sofas.inBudgetFits, countLabel: "meet the brief", line: `of ${d.sofas.count} researched · ${d.sofas.deep} at 112cm deep` },

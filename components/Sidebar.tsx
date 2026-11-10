@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useTheme, type ThemeChoice } from "./ThemeProvider";
 import { useStoredValue } from "@/lib/useStoredValue";
 
-import { PROJECTS, SETTINGS, SHARED, currentLabel, isPageActive, projectFor, type NavPage, type NavProject } from "@/lib/nav";
+import { APP_NAME, PROJECTS, SETTINGS, SHARED, currentLabel, isPageActive, projectFor, type NavPage, type NavProject } from "@/lib/nav";
 
 // The app's map, built from lib/nav.ts so it always matches the home page.
 //
@@ -203,7 +203,7 @@ export default function Sidebar() {
         className="hidden h-dvh w-[200px] shrink-0 flex-col border-r border-[var(--line)] bg-[var(--paper)] md:flex"
       >
         <Link href="/" className="block px-6 pb-4 pt-5 text-lg font-bold tracking-tight text-[var(--ink)]">
-          London
+          {APP_NAME}
         </Link>
         <NavBody pathname={pathname} />
       </nav>
@@ -222,8 +222,8 @@ export default function Sidebar() {
           </svg>
           Menu
         </button>
-        <Link href="/" className="font-bold text-[var(--ink)]">
-          London
+        <Link href="/" className="shrink-0 font-bold text-[var(--ink)]">
+          {APP_NAME}
         </Link>
         {current && <span className="truncate text-sm text-[var(--ink-3)]">/ {current}</span>}
       </div>
@@ -242,7 +242,7 @@ export default function Sidebar() {
             className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-[var(--paper)] shadow-xl"
           >
             <div className="flex items-center justify-between px-6 pb-3 pt-4">
-              <span className="text-lg font-bold text-[var(--ink)]">London</span>
+              <span className="text-lg font-bold text-[var(--ink)]">{APP_NAME}</span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}

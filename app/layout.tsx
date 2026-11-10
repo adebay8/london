@@ -3,6 +3,7 @@ import { Literata, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import ThemeProvider from "@/components/ThemeProvider";
+import { APP_NAME } from "@/lib/nav";
 
 // Throughline's two voices: the grotesk for structure (titles, labels,
 // numbers, controls) and Literata for anything you read as prose.
@@ -21,8 +22,8 @@ const serif = Literata({
 });
 
 export const metadata: Metadata = {
-  title: "London Neighbourhood Research",
-  description: "Research and compare London neighbourhoods for apartment hunting",
+  title: { default: APP_NAME, template: `%s · ${APP_NAME}` },
+  description: "Research for renting, buying and furnishing a home: listings, areas and the things that go in it",
 };
 
 // Applies the saved theme (or the system one) before React hydrates, so the

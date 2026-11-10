@@ -695,3 +695,97 @@ model MattressPref {
 
   @@map("mattress_prefs")
 }
+
+// ---------------------------------------------------------------------------
+// Buying a home — 2-bed homes for sale near commuter stations.
+//
+// Research arrives as CSV passes (docs/home-buying/). Unlike the furniture
+// corpora, a listing missing from a later pass is NOT deleted: passes are
+// partial by town, so absence is "not re-confirmed", not "gone". Tracking
+// lives in firstSeenAt / lastSeenAt / priceHistory. Every judgement (verify
+// needed, short lease, possible duplicate…) is derived live in lib/homes.
+// ---------------------------------------------------------------------------
+
+model BuyTown {
+  id             String    @id @map("_id") // kebab: "st-albans"
+  town           String
+  station        String
+  /// What was searched in the latest pass, in words.
+  searched       String?
+  /// Why coverage is thin or empty.
+  gap            String?
+  /// A decision the user needs to make (e.g. Bedford's price floor).
+  policy         String?
+  nextAction     String?
+  /// JSON array of { label, priceGbp | null } — leads seen without a URL.
+  leads          String    @default("[]")
+  lastSearchedAt DateTime?
+
+  listings HomeListing[]
+
+  @@map("buy_towns")
+}
+
+model HomeListing {
+  id         String  @id @map("_id") // "<source>-<portal id>"
+  townId     String
+  source     String // "Rightmove" | "Zoopla" | "OnTheMarket" …
+  listingUrl String
+  agent      String?
+
+  priceGbp       Float
+  priceQualifier String?
+  address        String
+  propertyType   String?
+  newBuild       Boolean?
+
+  /// "leasehold" | "freehold" | "share-of-freehold"; null = not captured.
+  tenure          String?
+  leaseYears      Int?
+  serviceChargePa Float?
+  groundRentPa    Float?
+
+  beds          Int
+  baths         Int?
+  floorAreaSqFt Float?
+  councilTax    String?
+  epc           String?
+
+  /// "added" | "reduced" | "listed" — the portal's own date label.
+  listedEvent String?
+  listedOn    DateTime?
+
+  /// Portal-stated, probably straight-line. Null when not stated.
+  distanceMiles Float?
+  distanceNote  String?
+
+  keyFeatures String @default("[]") // JSON string[]
+  photos      String @default("[]") // JSON string[]
+
+  /// "available" | "coming-soon" | "under-offer" | "sold-stc" | "withdrawn"
+  status String @default("available")
+
+  firstSeenAt  DateTime
+  lastSeenAt   DateTime
+  /// JSON [{ date, priceGbp }], oldest first. Appended when a pass sees a new price.
+  priceHistory String @default("[]")
+  /// Unpromoted CSV fields, verbatim, so nothing the researcher wrote is lost.
+  raw          String @default("{}")
+
+  town BuyTown          @relation(fields: [townId], references: [id])
+  pref HomeListingPref?
+
+  @@index([townId])
+  @@map("home_listings")
+}
+
+model HomeListingPref {
+  id        String   @id @default(cuid()) @map("_id")
+  listingId String   @unique
+  pref      String // "want" | "reject"
+  updatedAt DateTime @default(now()) @updatedAt
+
+  listing HomeListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@map("home_listing_prefs")
+}

@@ -9,9 +9,13 @@
 //                  project can use them without copying them.
 //
 // The sidebar and the home page both read this file, so they always agree.
-// To add a project (say, buying a home): add an entry to PROJECTS with its
+// To add a project: add an entry to PROJECTS with its
 // pages. That's it for navigation; give the home page counts for it in
 // /api/summary when there is data to count.
+
+/** The app's name. It started as a London flat search; it now covers renting,
+ *  buying and furnishing anywhere, so the name says what it's for, not where. */
+export const APP_NAME = "Home research";
 
 export interface NavPage {
   href: string;
@@ -37,6 +41,12 @@ export const PROJECTS: NavProject[] = [
       { href: "/flats", label: "Flats" },
       { href: "/apartments", label: "Buildings" },
     ],
+  },
+  {
+    id: "buying",
+    label: "Buying",
+    question: "Where a 2-bed near a good station is affordable",
+    pages: [{ href: "/buying", label: "Homes for sale" }],
   },
   {
     id: "furnishing",

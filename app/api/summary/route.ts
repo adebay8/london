@@ -51,6 +51,7 @@ export async function GET() {
     flatsActive, flatsNew, flatsGone, savedFlatIds, areas,
     neighbourhoods, ranked, apartments,
     journalTotal, journalRecent, config, beds, consoles, sofas, mattresses, sofaBeds,
+    homesCount, homesSaved, homeTowns, homeTownIds,
   ] = await Promise.all([
     prisma.flatListing.count({ where: { status: "active" } }),
     prisma.flatListing.count({ where: { status: "active", isNew: true } }),
@@ -71,6 +72,10 @@ export async function GET() {
     loadSofas(prisma),
     loadMattresses(prisma),
     loadSofaBeds(prisma),
+    prisma.homeListing.count(),
+    prisma.homeListingPref.count({ where: { pref: "want" } }),
+    prisma.buyTown.count(),
+    prisma.homeListing.findMany({ distinct: ["townId"], select: { townId: true } }),
   ]);
 
   const savedIds = savedFlatIds.map((p) => p.listingId);
@@ -256,6 +261,7 @@ export async function GET() {
         .map((d) => d.label.toLowerCase()),
     },
     departments: {
+      buying: { count: homesCount, saved: homesSaved, towns: homeTowns, townsWithStock: homeTownIds.length },
       flats: { count: flatsActive, isNew: flatsNew, gone: flatsGone, saved: savedIds.length, areas, lastRun: config.lastRun },
       areas: {
         count: neighbourhoods.length,
