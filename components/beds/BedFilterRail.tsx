@@ -55,8 +55,8 @@ function Check({ checked, onChange, label }: { checked: boolean; onChange: () =>
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="border-b border-[var(--border-secondary)] py-3">
-      <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">{title}</div>
-      {hint && <div className="mb-2 text-[11px] leading-snug text-[var(--text-muted)]">{hint}</div>}
+      <div className="mb-2 text-xs font-semibold text-[var(--text-secondary)]">{title}</div>
+      {hint && <div className="mb-2 text-xs leading-snug text-[var(--text-muted)]">{hint}</div>}
       <div className="space-y-1.5">{children}</div>
     </div>
   );
@@ -72,15 +72,15 @@ function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="flex overflow-hidden rounded-md border border-[var(--border-primary)] text-xs">
+    <div className="flex gap-0.5 rounded-full border border-[var(--line-control)] p-[3px] text-xs">
       {options.map((o) => (
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
           aria-pressed={value === o.value}
-          className={`flex-1 px-2 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--accent)] ${
+          className={`flex-1 px-2 py-1 transition-colors ${
             value === o.value
-              ? "bg-[var(--accent)] text-white"
+              ? "bg-[var(--action)] text-[var(--on-action)]"
               : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
           }`}
         >
@@ -105,13 +105,11 @@ export default function BedFilterRail({
   return (
     <div className="text-[var(--text-primary)]">
       <div className="flex items-center justify-between pb-2">
-        <span className="text-sm font-bold">Filters</span>
+        <span className="hidden text-base font-semibold lg:inline">Filters</span>
         <button
           onClick={() => onChange(DEFAULT_BED_FILTERS)}
-          className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-        >
-          reset
-        </button>
+          className="rounded text-xs text-[var(--accent)] hover:underline"
+        >Reset all</button>
       </div>
 
       <Section title="Landed budget" hint="Item + delivery + assembly — the only figure comparable across retailers.">
@@ -119,7 +117,7 @@ export default function BedFilterRail({
           <span className="text-lg font-bold [font-variant-numeric:tabular-nums]">
             £{filters.maxLanded.toLocaleString()}
           </span>
-          <span className="text-[11px] text-[var(--text-muted)]">max</span>
+          <span className="text-xs text-[var(--text-muted)]">max</span>
         </div>
         <input
           type="range"

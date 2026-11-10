@@ -32,9 +32,9 @@ export default function ProfileCard({ profile }: Props) {
         <ScoreBar label="New Builds" score={profile.newBuilds.score} />
       </div>
       <div className="flex flex-wrap gap-1.5">
-        {status && <span className={`rounded px-2 py-0.5 text-[11px] ${statusBadge[status] ?? ""}`}>{status.charAt(0).toUpperCase() + status.slice(1)}</span>}
-        {profile.transport.lines.length > 0 && <span className="rounded bg-[var(--status-info-bg)] px-2 py-0.5 text-[11px] text-[var(--status-info)]">{profile.transport.lines.join(", ")}</span>}
-        <span className="rounded bg-[var(--bg-tertiary)] px-2 py-0.5 text-[11px] text-[var(--text-secondary)]">{profile.transport.commuteMins} min</span>
+        {status && <span className={`rounded px-2 py-0.5 text-xs ${statusBadge[status] ?? ""}`}>{status.charAt(0).toUpperCase() + status.slice(1)}</span>}
+        {profile.transport.lines.length > 0 && <span className="rounded bg-[var(--status-info-bg)] px-2 py-0.5 text-xs text-[var(--status-info)]">{profile.transport.lines.join(", ")}</span>}
+        <span className="rounded bg-[var(--bg-tertiary)] px-2 py-0.5 text-xs text-[var(--text-secondary)]">{profile.transport.commuteMins} min</span>
       </div>
     </Link>
   );

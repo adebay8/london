@@ -14,7 +14,7 @@ const CHIP: Record<string, string> = {
 const FIT_TONE: Record<string, string> = { pass: "good", fail: "bad", unknown: "unknown" };
 
 function Chip({ label, tone }: { label: string; tone: string }) {
-  return <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${CHIP[tone] ?? CHIP.unknown}`}>{label}</span>;
+  return <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${CHIP[tone] ?? CHIP.unknown}`}>{label}</span>;
 }
 
 /** Landed cost is the comparable number, so it leads. The breakdown underneath
@@ -51,7 +51,7 @@ export default function ConsoleCard({
 
   return (
     <div
-      className={`group relative flex flex-col gap-2 rounded-2xl border bg-[var(--bg-primary)] p-3.5 transition-all hover:shadow-md ${
+      className={`group relative flex flex-col gap-2 rounded-2xl border bg-[var(--bg-primary)] p-3.5 transition-all ${
         wanted ? "border-[var(--accent)] ring-1 ring-[var(--accent)]" : "border-[var(--border-primary)]"
       } ${rejected ? "opacity-55" : ""}`}
     >
@@ -61,13 +61,13 @@ export default function ConsoleCard({
         href={c.productUrl}
         target="_blank"
         rel="noreferrer"
-        className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        className="absolute inset-0 z-0 rounded-2xl"
         aria-label={`${c.brand} ${c.model} at ${c.retailer} — opens ${c.retailer} in a new tab`}
       />
 
       <div className="pointer-events-none flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--text-muted)]">{c.retailer}</div>
+          <div className="text-xs font-medium text-[var(--text-muted)]">{c.retailer}</div>
           <div className="truncate text-sm font-semibold text-[var(--text-primary)]">{c.model}</div>
           {c.brand !== c.retailer && <div className="truncate text-xs text-[var(--text-secondary)]">{c.brand}</div>}
         </div>
@@ -84,7 +84,7 @@ export default function ConsoleCard({
           <div className="text-sm font-bold leading-none text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
             {Math.round(c.score)}
           </div>
-          <div className="mt-0.5 text-[9px] uppercase tracking-wide text-[var(--text-muted)]">score</div>
+          <div className="mt-0.5 text-xs text-[var(--text-muted)]">Score</div>
           {/* Evidence bar — how much of the spec we actually have. Kept
               visually separate from the score so thin data never reads as a
               low verdict. */}
@@ -103,22 +103,22 @@ export default function ConsoleCard({
 
       <div className="pointer-events-none">
         <div className="flex items-baseline gap-2">
-          <span className="text-xl font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
+          <span className="text-xl font-bold text-[var(--text-primary)] tracking-[-0.02em]">
             £{Math.round(c.landedCostGbp).toLocaleString()}
           </span>
-          <span className="text-[11px] text-[var(--text-muted)]">landed</span>
+          <span className="text-xs text-[var(--text-muted)]">landed</span>
           {c.arrivesAssembled === "included" && (
             <span
-              className="ml-auto rounded-md px-2 py-0.5 text-[10px] font-semibold text-white"
+              className="ml-auto rounded-md px-2 py-0.5 text-xs font-semibold text-[var(--on-status)]"
               style={{ backgroundColor: "var(--status-yes)" }}
             >
               Assembled
             </span>
           )}
         </div>
-        <div className="text-[11px] text-[var(--text-secondary)]">{costLine(c)}</div>
+        <div className="text-xs text-[var(--text-secondary)]">{costLine(c)}</div>
         {fin.interestFree && fin.monthly != null && (
-          <div className="text-[11px] font-medium text-[var(--status-yes)]">
+          <div className="text-xs font-medium text-[var(--status-yes)]">
             {financeLabel(fin)} · £{fin.monthly.toFixed(2)}/mo
           </div>
         )}
@@ -144,7 +144,7 @@ export default function ConsoleCard({
       <div className="relative z-10 mt-auto flex items-center justify-between gap-2 border-t border-[var(--border-secondary)] pt-2">
         <button
           onClick={() => onOpen(c)}
-          className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="rounded text-xs text-[var(--accent)] hover:underline"
         >
           Fit &amp; full spec
         </button>
@@ -153,8 +153,8 @@ export default function ConsoleCard({
             onClick={() => onPref(c.id, wanted ? null : "want")}
             aria-pressed={wanted}
             aria-label={wanted ? `Unsave ${c.model}` : `Save ${c.model}`}
-            className={`rounded px-2 py-0.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-              wanted ? "bg-[var(--accent)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+            className={`rounded px-2 py-0.5 text-xs transition-colors ${
+              wanted ? "bg-[var(--action)] text-[var(--on-action)]" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
             }`}
           >
             {wanted ? "♥ Saved" : "♡ Save"}
@@ -163,7 +163,7 @@ export default function ConsoleCard({
             onClick={() => onPref(c.id, rejected ? null : "reject")}
             aria-pressed={rejected}
             aria-label={rejected ? `Restore ${c.model}` : `Dismiss ${c.model}`}
-            className="rounded px-2 py-0.5 text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--status-no)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="rounded px-2 py-0.5 text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--status-no)]"
           >
             {rejected ? "Undo" : "Hide"}
           </button>

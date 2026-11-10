@@ -44,15 +44,15 @@ export default function SettingsPage() {
       {/* Analysis Provider */}
       <section className="mb-8 rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-6">
         <h2 className="mb-2 text-lg font-semibold text-[var(--text-primary)]">
-          Analysis Model
+          Analysis model
         </h2>
         <p className="mb-4 text-sm text-[var(--text-secondary)]">
           Choose which LLM to use for neighbourhood analysis. Perplexity Sonar is always used for data gathering.
         </p>
         <div className="flex gap-3">
           {[
-            { value: "openai", label: "OpenAI", model: "GPT-4o", icon: "🤖" },
-            { value: "claude", label: "Claude", model: "Sonnet", icon: "🧠" },
+            { value: "openai", label: "OpenAI", model: "GPT-4o" },
+            { value: "claude", label: "Claude", model: "Sonnet" },
           ].map((opt) => (
             <button
               key={opt.value}
@@ -65,7 +65,6 @@ export default function SettingsPage() {
               }`}
             >
               <div className="flex items-center gap-2">
-                <span className="text-lg">{opt.icon}</span>
                 <span className="font-medium text-[var(--text-primary)]">{opt.label}</span>
               </div>
               <div className="mt-1 text-xs text-[var(--text-muted)]">{opt.model}</div>

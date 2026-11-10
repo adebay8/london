@@ -6,12 +6,12 @@ import Link from "next/link";
 import type { ApartmentBuildingRow, BuildingAmenityRow, RentScore } from "@/lib/types";
 import { calculateTotalMonthlyCost, BANDS, DEFAULT_COMMUTE_DAYS, type Band } from "@/data/cost-data";
 
-const CATEGORY_LABELS: Record<string, { label: string; icon: string }> = {
-  grocery: { label: "Grocery Stores", icon: "🛒" },
-  station: { label: "Train / Tube Stations", icon: "🚇" },
-  bus: { label: "Bus Stops", icon: "🚌" },
-  cafe: { label: "Cafes & Quick Food", icon: "☕" },
-  convenience: { label: "Convenience & Pharmacy", icon: "🏪" },
+const CATEGORY_LABELS: Record<string, { label: string }> = {
+  grocery: { label: "Grocery stores" },
+  station: { label: "Train and Tube stations" },
+  bus: { label: "Bus stops" },
+  cafe: { label: "Cafés and quick food" },
+  convenience: { label: "Convenience and pharmacy" },
 };
 
 const CATEGORY_ORDER = ["grocery", "station", "bus", "cafe", "convenience"];
@@ -105,7 +105,7 @@ export default function BuildingDetailPage() {
           <button
             onClick={handleScan}
             disabled={scanning}
-            className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="rounded-lg bg-[var(--action)] px-4 py-2 text-sm font-medium text-[var(--on-action)] transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {scanning ? "Scanning..." : hasAmenities ? "Rescan Amenities" : "Scan Amenities"}
           </button>
@@ -122,7 +122,7 @@ export default function BuildingDetailPage() {
           : null;
         return (
           <div className="mb-6 rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-5">
-            <h2 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Monthly Cost Estimate</h2>
+            <h2 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Monthly cost estimate</h2>
             {costs ? (
               <>
                 <div className="space-y-2 text-sm">
@@ -204,14 +204,13 @@ export default function BuildingDetailPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {CATEGORY_ORDER.map((cat) => {
             const items = amenitiesByCategory[cat] ?? [];
-            const meta = CATEGORY_LABELS[cat] ?? { label: cat, icon: "📍" };
+            const meta = CATEGORY_LABELS[cat] ?? { label: cat };
             return (
               <div
                 key={cat}
                 className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-5"
               >
                 <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
-                  <span>{meta.icon}</span>
                   {meta.label}
                   <span className="ml-auto rounded-full bg-[var(--bg-tertiary)] px-2 py-0.5 text-xs text-[var(--text-muted)]">
                     {items.length}
@@ -233,7 +232,7 @@ export default function BuildingDetailPage() {
                             href={`https://www.google.com/maps/dir/?api=1&origin=${building.lat},${building.lng}&destination=${a.lat},${a.lng}&travelmode=walking`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[10px] text-[var(--accent)] hover:underline"
+                            className="text-xs text-[var(--accent)] hover:underline"
                           >
                             Walk route ↗
                           </a>

@@ -23,7 +23,7 @@ export default function OperatorsPanel({ view }: { view: FlatView }) {
                 {a.btrOperators.map((op) => (
                   <span
                     key={op}
-                    className="rounded bg-[var(--status-info-bg)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-info)]"
+                    className="rounded bg-[var(--status-info-bg)] px-1.5 py-0.5 text-xs font-medium text-[var(--status-info)]"
                   >
                     {op}
                   </span>

@@ -33,10 +33,11 @@ interface Props {
   scanningApartmentId?: string | null;
 }
 
-const OPTION_COLORS: Record<string, string> = {
-  yes: "#22c55e",
-  no: "#ef4444",
-  maybe: "#f59e0b",
+// Throughline palette, Day and Night. Leaflet writes colours into SVG
+// attributes, which can't read CSS variables, so the values live here.
+const PALETTE = {
+  light: { yes: "#16786c", no: "#b3261e", maybe: "#c4621c", none: "#888983", edge: "#dcdcd5", bg: "#f4f4f1", focus: "#2547c7", station: "#87398c", stationEdge: "#5a2560", muted: "#626368" },
+  dark: { yes: "#6cc5b6", no: "#f2a49b", maybe: "#f6b985", none: "#6f706c", edge: "#2b2c30", bg: "#131416", focus: "#7e97f2", station: "#d39bd6", stationEdge: "#87398c", muted: "#90918c" },
 };
 
 const TILE_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
@@ -46,6 +47,7 @@ export default function LondonMap({ selectedOptions, districts, apartments = [],
   const [geoJsonData, setGeoJsonData] = useState<FeatureCollection | null>(null);
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const C = PALETTE[isDark ? "dark" : "light"];
 
   useEffect(() => {
     fetch("/data/london_postcodes.json")
@@ -65,10 +67,10 @@ export default function LondonMap({ selectedOptions, districts, apartments = [],
     const name = feature.properties?.Name;
     const option = selectedOptions[name];
     return {
-      fillColor: option ? OPTION_COLORS[option] ?? "#9ca3af" : "#9ca3af",
+      fillColor: option ? (C[option as "yes" | "no" | "maybe"] ?? C.none) : C.none,
       fillOpacity: 0.5,
       weight: 1,
-      color: isDark ? "#374151" : "#d1d5db",
+      color: C.edge,
     };
   }
 
@@ -86,7 +88,7 @@ export default function LondonMap({ selectedOptions, districts, apartments = [],
       center={[51.5074, -0.1278]}
       zoom={10}
       className="h-full w-full"
-      style={{ background: isDark ? "#111827" : "#f9fafb" }}
+      style={{ background: C.bg }}
     >
       <TileLayer
         url={isDark ? TILE_DARK : TILE_LIGHT}
@@ -98,33 +100,33 @@ export default function LondonMap({ selectedOptions, districts, apartments = [],
           key={a.id}
           center={[a.lat, a.lng]}
           radius={6}
-          pathOptions={{ color: "#3b82f6", fillColor: "#3b82f6", fillOpacity: 0.8, weight: 1 }}
+          pathOptions={{ color: C.focus, fillColor: C.focus, fillOpacity: 0.85, weight: 1 }}
         >
           <Popup>
             <div style={{ minWidth: 180 }}>
               <strong>{a.name}</strong>
               <br />
-              <span style={{ fontSize: 12, color: "#6b7280" }}>{a.address}</span>
+              <span style={{ fontSize: 12, color: "#626368" }}>{a.address}</span>
               {a.neighbourhood && (
                 <>
                   <br />
-                  <span style={{ fontSize: 11, color: "#9ca3af" }}>
+                  <span style={{ fontSize: 11, color: "#626368" }}>
                     {a.neighbourhood.name} · {a.neighbourhood.borough}
                   </span>
                 </>
               )}
               <div style={{ display: "flex", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
-                <a href={a.googleMapsUri} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#3b82f6" }}>
+                <a href={a.googleMapsUri} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#2547c7" }}>
                   Maps ↗
                 </a>
-                <a href={`/apartments/${a.id}`} style={{ fontSize: 12, color: "#3b82f6" }}>
+                <a href={`/apartments/${a.id}`} style={{ fontSize: 12, color: "#2547c7" }}>
                   Details →
                 </a>
                 {onScanApartment && (
                   <button
                     onClick={() => onScanApartment(a.id)}
                     disabled={scanningApartmentId === a.id}
-                    style={{ fontSize: 12, color: "#3b82f6", background: "none", border: "none", cursor: "pointer", padding: 0, textDecoration: "underline" }}
+                    style={{ fontSize: 12, color: "#2547c7", background: "none", border: "none", cursor: "pointer", padding: 0, textDecoration: "underline" }}
                   >
                     {scanningApartmentId === a.id ? "Scanning..." : "Scan"}
                   </button>
@@ -139,13 +141,13 @@ export default function LondonMap({ selectedOptions, districts, apartments = [],
           key={s.name}
           center={[s.lat, s.lng]}
           radius={8}
-          pathOptions={{ color: "#581c87", fillColor: "#a855f7", fillOpacity: 0.9, weight: 2 }}
+          pathOptions={{ color: C.stationEdge, fillColor: C.station, fillOpacity: 0.9, weight: 2 }}
         >
           <Popup>
             <div style={{ minWidth: 150 }}>
               <strong>{s.name}</strong>
               <br />
-              <span style={{ fontSize: 12, color: "#6b7280" }}>{s.lines.join(", ")}</span>
+              <span style={{ fontSize: 12, color: "#626368" }}>{s.lines.join(", ")}</span>
             </div>
           </Popup>
         </CircleMarker>

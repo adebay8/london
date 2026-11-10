@@ -25,7 +25,7 @@ const CHIP: Record<string, string> = {
 };
 
 function Chip({ label, cls }: { label: string; cls: string }) {
-  return <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${CHIP[cls] ?? CHIP.muted}`}>{label}</span>;
+  return <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${CHIP[cls] ?? CHIP.muted}`}>{label}</span>;
 }
 
 export default function PickCard({
@@ -49,7 +49,7 @@ export default function PickCard({
     <button
       onClick={() => onOpen(l)}
       aria-label={`View ${l.building}, £${l.price.toLocaleString()}, in Homes`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-primary)] text-left transition-all hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-primary)] text-left transition-all hover:border-[var(--accent)]"
     >
       <div className="relative h-36 w-full overflow-hidden">
         {img ? (
@@ -62,11 +62,11 @@ export default function PickCard({
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-secondary)]">
+          <div className="flex h-full w-full items-center justify-center bg-[var(--sunk)]">
             <span className="text-4xl font-bold text-[var(--text-muted)]">{l.building.charAt(0)}</span>
           </div>
         )}
-        <span className="absolute left-2 top-2 rounded-md bg-black/55 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+        <span className="absolute left-2 top-2 rounded-md bg-black/55 px-2 py-0.5 text-xs font-semibold text-white">
           {tierLabel}
         </span>
       </div>

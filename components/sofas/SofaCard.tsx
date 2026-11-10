@@ -1,5 +1,6 @@
 "use client";
 
+import NoPhoto from "@/components/NoPhoto";
 import { bodyDepthOf, fitLabel } from "@/lib/sofas/fit";
 import type { ScoredSofa } from "@/lib/sofas/score";
 import { TARGET_DEPTH_CM, type Pref } from "@/lib/sofas/types";
@@ -21,7 +22,7 @@ const CONDITION_TONE: Record<string, string> = {
 };
 
 function Chip({ label, tone }: { label: string; tone: string }) {
-  return <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${CHIP[tone] ?? CHIP.unknown}`}>{label}</span>;
+  return <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${CHIP[tone] ?? CHIP.unknown}`}>{label}</span>;
 }
 
 export default function SofaCard({
@@ -36,7 +37,7 @@ export default function SofaCard({
 
   return (
     <div
-      className={`group relative flex flex-col gap-2 rounded-2xl border bg-[var(--bg-primary)] p-3.5 transition-all hover:shadow-md ${
+      className={`group relative flex flex-col gap-2 rounded-2xl border bg-[var(--bg-primary)] p-3.5 transition-all ${
         wanted ? "border-[var(--accent)] ring-1 ring-[var(--accent)]" : "border-[var(--border-primary)]"
       } ${rejected ? "opacity-55" : ""}`}
     >
@@ -44,7 +45,7 @@ export default function SofaCard({
         href={s.productUrl}
         target="_blank"
         rel="noreferrer"
-        className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        className="absolute inset-0 z-0 rounded-2xl"
         aria-label={`${s.brand} ${s.model} at ${s.retailer} — opens in a new tab`}
       />
 
@@ -53,13 +54,10 @@ export default function SofaCard({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={s.imageUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-1" aria-label="No photo published">
-            <span className="text-3xl opacity-60" aria-hidden>🛋️</span>
-            <span className="text-[9px] uppercase tracking-wide text-[var(--text-muted)]">no photo</span>
-          </div>
+          <NoPhoto />
         )}
         {discount != null && (
-          <span className="absolute left-2 top-2 rounded bg-[var(--status-no)] px-1.5 py-0.5 text-[10px] font-bold text-white">
+          <span className="absolute left-2 top-2 rounded bg-[var(--status-no)] px-1.5 py-0.5 text-xs font-bold text-[var(--on-status)]">
             −{discount}%
           </span>
         )}
@@ -67,7 +65,7 @@ export default function SofaCard({
 
       <div className="pointer-events-none flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--text-muted)]">{s.retailer}</div>
+          <div className="text-xs font-medium text-[var(--text-muted)]">{s.retailer}</div>
           <div className="truncate text-sm font-semibold text-[var(--text-primary)]">{s.model}</div>
         </div>
         <div
@@ -80,7 +78,7 @@ export default function SofaCard({
           <div className="text-sm font-bold leading-none text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
             {Math.round(s.score)}
           </div>
-          <div className="mt-0.5 text-[9px] uppercase tracking-wide text-[var(--text-muted)]">score</div>
+          <div className="mt-0.5 text-xs text-[var(--text-muted)]">Score</div>
           <div
             className="mt-1 h-0.5 w-full overflow-hidden rounded-full bg-[var(--border-primary)]"
             role="img"
@@ -93,15 +91,15 @@ export default function SofaCard({
 
       <div className="pointer-events-none">
         <div className="flex items-baseline gap-2">
-          <span className="text-xl font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
+          <span className="text-xl font-bold text-[var(--text-primary)] tracking-[-0.02em]">
             £{Math.round(s.landedCostGbp).toLocaleString()}
           </span>
           {s.rrpGbp && s.rrpGbp > s.landedCostGbp && (
-            <span className="text-[11px] text-[var(--text-muted)] line-through">£{Math.round(s.rrpGbp).toLocaleString()}</span>
+            <span className="text-xs text-[var(--text-muted)] line-through">£{Math.round(s.rrpGbp).toLocaleString()}</span>
           )}
-          <span className="text-[11px] text-[var(--text-muted)]">landed</span>
+          <span className="text-xs text-[var(--text-muted)]">landed</span>
         </div>
-        <div className="text-[11px] text-[var(--text-secondary)]">
+        <div className="text-xs text-[var(--text-secondary)]">
           {[
             s.overallWidthCm != null ? `${s.overallWidthCm}cm wide` : null,
             bodyDepth != null ? `${bodyDepth}cm deep` : "depth unpublished",
@@ -122,7 +120,7 @@ export default function SofaCard({
       <div className="relative z-10 mt-auto flex items-center justify-between gap-2 border-t border-[var(--border-secondary)] pt-2">
         <button
           onClick={() => onOpen(s)}
-          className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="rounded text-xs text-[var(--accent)] hover:underline"
         >
           Full spec
         </button>
@@ -131,8 +129,8 @@ export default function SofaCard({
             onClick={() => onPref(s.id, wanted ? null : "want")}
             aria-pressed={wanted}
             aria-label={wanted ? `Unsave ${s.model}` : `Save ${s.model}`}
-            className={`rounded px-2 py-0.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-              wanted ? "bg-[var(--accent)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+            className={`rounded px-2 py-0.5 text-xs transition-colors ${
+              wanted ? "bg-[var(--action)] text-[var(--on-action)]" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
             }`}
           >
             {wanted ? "♥ Saved" : "♡ Save"}
@@ -141,7 +139,7 @@ export default function SofaCard({
             onClick={() => onPref(s.id, rejected ? null : "reject")}
             aria-pressed={rejected}
             aria-label={rejected ? `Restore ${s.model}` : `Dismiss ${s.model}`}
-            className="rounded px-2 py-0.5 text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--status-no)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="rounded px-2 py-0.5 text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--status-no)]"
           >
             {rejected ? "Undo" : "Hide"}
           </button>

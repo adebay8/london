@@ -1,5 +1,6 @@
 "use client";
 
+import AreaTabs from "@/components/AreaTabs";
 import { useState, useEffect, useCallback } from "react";
 import ProfileCard from "@/components/ProfileCard";
 import type { ResearchProfileRow } from "@/lib/types";
@@ -67,17 +68,19 @@ export default function RankingsPage() {
   }, [rankings]);
 
   return (
-    <div className="p-6">
+    <>
+    <AreaTabs />
+    <div className="p-4 sm:p-6">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-[var(--text-primary)]">My Rankings</h1>
+          <h2 className="text-lg font-semibold text-[var(--ink)]">My rankings</h2>
           <p className="text-sm text-[var(--text-muted)]">Your handpicked neighbourhood ranking. Drag to reorder.</p>
         </div>
         <div className="relative">
           <button
             onClick={() => setAddPickerOpen(!addPickerOpen)}
             disabled={unrankedProfiles.length === 0}
-            className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="rounded-lg bg-[var(--action)] px-4 py-2 text-sm font-medium text-[var(--on-action)] transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             Add neighbourhood
           </button>
@@ -187,5 +190,6 @@ export default function RankingsPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

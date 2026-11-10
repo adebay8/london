@@ -18,7 +18,7 @@ const ASSEMBLY_BADGE: Record<string, { label: string; bg: string } | null> = {
 };
 
 function Chip({ label, tone }: { label: string; tone: string }) {
-  return <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${CHIP[tone] ?? CHIP.unknown}`}>{label}</span>;
+  return <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${CHIP[tone] ?? CHIP.unknown}`}>{label}</span>;
 }
 
 /** Landed cost is the comparable number, so it leads. The breakdown underneath
@@ -56,7 +56,7 @@ export default function BedCard({
 
   return (
     <div
-      className={`group relative flex flex-col gap-2 rounded-2xl border bg-[var(--bg-primary)] p-3.5 transition-all hover:shadow-md ${
+      className={`group relative flex flex-col gap-2 rounded-2xl border bg-[var(--bg-primary)] p-3.5 transition-all ${
         wanted ? "border-[var(--accent)] ring-1 ring-[var(--accent)]" : "border-[var(--border-primary)]"
       } ${rejected ? "opacity-55" : ""}`}
     >
@@ -66,13 +66,13 @@ export default function BedCard({
         href={b.productUrl}
         target="_blank"
         rel="noreferrer"
-        className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        className="absolute inset-0 z-0 rounded-2xl"
         aria-label={`${b.brand} ${b.model} at ${b.retailer} — opens ${b.retailer} in a new tab`}
       />
 
       <div className="pointer-events-none flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--text-muted)]">{b.retailer}</div>
+          <div className="text-xs font-medium text-[var(--text-muted)]">{b.retailer}</div>
           <div className="truncate text-sm font-semibold text-[var(--text-primary)]">{b.model}</div>
           {b.brand !== b.retailer && <div className="truncate text-xs text-[var(--text-secondary)]">{b.brand}</div>}
         </div>
@@ -89,7 +89,7 @@ export default function BedCard({
           <div className="text-sm font-bold leading-none text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
             {Math.round(b.score)}
           </div>
-          <div className="mt-0.5 text-[9px] uppercase tracking-wide text-[var(--text-muted)]">score</div>
+          <div className="mt-0.5 text-xs text-[var(--text-muted)]">Score</div>
           {/* Evidence bar — how much of the spec we actually have. Kept visually
               separate from the score so thin data never reads as a low verdict. */}
           <div
@@ -107,25 +107,25 @@ export default function BedCard({
 
       <div className="pointer-events-none">
         <div className="flex items-baseline gap-2">
-          <span className="text-xl font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
+          <span className="text-xl font-bold text-[var(--text-primary)] tracking-[-0.02em]">
             £{Math.round(b.landedCostGbp).toLocaleString()}
           </span>
-          <span className="text-[11px] text-[var(--text-muted)]">landed</span>
+          <span className="text-xs text-[var(--text-muted)]">landed</span>
           {badge && (
             <span
-              className="ml-auto rounded-md px-2 py-0.5 text-[10px] font-semibold text-white"
+              className="ml-auto rounded-md px-2 py-0.5 text-xs font-semibold text-[var(--on-status)]"
               style={{ backgroundColor: badge.bg }}
             >
               {badge.label}
             </span>
           )}
         </div>
-        <div className="text-[11px] text-[var(--text-secondary)]">{costLine(b)}</div>
+        <div className="text-xs text-[var(--text-secondary)]">{costLine(b)}</div>
         {b.extraMembershipCost && (
-          <div className="text-[11px] text-[var(--status-maybe)]">+ {b.extraMembershipCost}</div>
+          <div className="text-xs text-[var(--status-maybe)]">+ {b.extraMembershipCost}</div>
         )}
         {fin.interestFree && fin.monthly != null && (
-          <div className="text-[11px] font-medium text-[var(--status-yes)]">
+          <div className="text-xs font-medium text-[var(--status-yes)]">
             {financeLabel(fin)} · £{fin.monthly.toFixed(2)}/mo
           </div>
         )}
@@ -151,7 +151,7 @@ export default function BedCard({
       <div className="relative z-10 mt-auto flex items-center justify-between gap-2 border-t border-[var(--border-secondary)] pt-2">
         <button
           onClick={() => onOpen(b)}
-          className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="rounded text-xs text-[var(--accent)] hover:underline"
         >
           Full spec
         </button>
@@ -160,8 +160,8 @@ export default function BedCard({
             onClick={() => onPref(b.id, wanted ? null : "want")}
             aria-pressed={wanted}
             aria-label={wanted ? `Unsave ${b.model}` : `Save ${b.model}`}
-            className={`rounded px-2 py-0.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-              wanted ? "bg-[var(--accent)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+            className={`rounded px-2 py-0.5 text-xs transition-colors ${
+              wanted ? "bg-[var(--action)] text-[var(--on-action)]" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
             }`}
           >
             {wanted ? "♥ Saved" : "♡ Save"}
@@ -170,7 +170,7 @@ export default function BedCard({
             onClick={() => onPref(b.id, rejected ? null : "reject")}
             aria-pressed={rejected}
             aria-label={rejected ? `Restore ${b.model}` : `Dismiss ${b.model}`}
-            className="rounded px-2 py-0.5 text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--status-no)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="rounded px-2 py-0.5 text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--status-no)]"
           >
             {rejected ? "Undo" : "Hide"}
           </button>

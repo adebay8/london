@@ -180,7 +180,7 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
           placeholder="Search areas, boroughs, postcodes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full rounded-lg bg-[var(--bg-tertiary)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none focus:ring-1 focus:ring-[var(--accent)]"
+          className="w-full rounded-lg bg-[var(--bg-tertiary)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none focus:border-[var(--ink)]"
         />
       </div>
       <div className="flex-1 overflow-y-auto p-2">
@@ -196,9 +196,9 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
               <div className="flex items-center gap-1 px-2 py-1">
                 <button
                   onClick={() => toggleZone(zone)}
-                  className="flex items-center gap-2 flex-1 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+                  className="flex items-center gap-2 flex-1 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                 >
-                  <span className={`text-[10px] transition-transform ${zoneCollapsed ? "" : "rotate-90"}`}>▶</span>
+                  <span className={`text-xs transition-transform ${zoneCollapsed ? "" : "rotate-90"}`}>▶</span>
                   Zone {zone}
                 </button>
                 {renderGroupStatusButtons(allZoneItems)}
@@ -210,7 +210,7 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
                   <div key={borough} className="ml-2">
                     <div className="flex items-center gap-1 rounded px-2 py-1.5 hover:bg-[var(--bg-hover)]">
                       <button onClick={() => toggleBorough(borough)} className="flex items-center gap-2 flex-1 text-sm text-[var(--text-secondary)]">
-                        <span className={`text-[10px] transition-transform ${boroughCollapsed ? "" : "rotate-90"}`}>▶</span>
+                        <span className={`text-xs transition-transform ${boroughCollapsed ? "" : "rotate-90"}`}>▶</span>
                         <span className="flex-1 text-left">{borough}</span>
                       </button>
                       {renderGroupStatusButtons(items)}
@@ -226,10 +226,10 @@ export default function NeighbourhoodSelector({ neighbourhoods, onStatusChange, 
                                   onClick={(e) => { e.stopPropagation(); onResearch(n.id); }}
                                   title={n.researchProfile ? "Re-research" : "Research this area"}
                                   disabled={n.researchJobs?.[0]?.status === "running"}
-                                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] transition-all ${
+                                  className={`flex h-5 w-5 items-center justify-center rounded-full text-xs transition-all ${
                                     n.researchJobs?.[0]?.status === "running"
                                       ? "bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed animate-pulse"
-                                      : "bg-[var(--bg-tertiary)] text-[var(--text-muted)] hover:bg-[var(--accent)] hover:text-white"
+                                      : "bg-[var(--bg-tertiary)] text-[var(--text-muted)] hover:bg-[var(--accent)] hover:text-[var(--on-accent)]"
                                   }`}
                                 >
                                   {n.researchJobs?.[0]?.status === "running" ? "..." : "▶"}

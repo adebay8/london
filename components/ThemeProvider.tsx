@@ -1,17 +1,23 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
+import { usePrefersDark, useStoredValue } from "@/lib/useStoredValue";
 
-type Theme = "dark" | "light";
+// Throughline: "A piece follows the reader's system setting." System is the
+// default; Day and Night are explicit overrides the user can pick.
+export type ThemeChoice = "system" | "light" | "dark";
 
 interface ThemeContextValue {
-  theme: Theme;
-  toggle: () => void;
+  choice: ThemeChoice;
+  /** What is actually showing right now. */
+  theme: "light" | "dark";
+  setChoice: (c: ThemeChoice) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: "dark",
-  toggle: () => {},
+  choice: "system",
+  theme: "light",
+  setChoice: () => {},
 });
 
 export function useTheme() {
@@ -19,42 +25,17 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [stored, store] = useStoredValue("theme");
+  const prefersDark = usePrefersDark();
+  const choice: ThemeChoice = stored === "light" || stored === "dark" ? stored : "system";
+  const theme: "light" | "dark" = choice === "system" ? (prefersDark ? "dark" : "light") : choice;
 
-  // On mount, read persisted theme from localStorage
+  // Syncing the <html> class is a side effect on the DOM outside React.
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("theme") as Theme | null;
-      if (stored === "light" || stored === "dark") {
-        setTheme(stored);
-      }
-    } catch {
-      // localStorage unavailable — stay on dark
-    }
-  }, []);
-
-  // Apply / remove "dark" class on <html> whenever theme changes
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    try {
-      localStorage.setItem("theme", theme);
-    } catch {
-      // ignore
-    }
+    document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
-  function toggle() {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  }
-
   return (
-    <ThemeContext.Provider value={{ theme, toggle }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ choice, theme, setChoice: store }}>{children}</ThemeContext.Provider>
   );
 }

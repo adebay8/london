@@ -2,118 +2,209 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+/* Throughline design language.
+   The raw tokens come first, named as in the design system. The app-level
+   names below them (--bg-*, --text-*, --accent …) are kept so every existing
+   component picks up the new look; they are aliases, never new colours. */
+
 :root {
-  /* Light mode
-     Principle: white/light gray surfaces, dark text, everything clearly readable */
+  /* ---- Throughline · Day ---- */
+  --paper: #f4f4f1;
+  --surface: #ffffff;
+  --sunk: #eaeae5;
+  --line: #dcdcd5;
+  --line-control: #86877f;
+  --ink: #17181a;
+  --ink-2: #45464a;
+  --ink-3: #626368;
+  --context: #888983;
+  --context-soft: #cfd0ca;
+  --focus: #2547c7;
+  --on-focus: #ffffff;
+  --focus-wash: #e3e8fa;
+  --counter: #c4621c;
+  --counter-wash: #f8e6da;
+  --cat-3: #16786c;
+  --cat-4: #87398c;
+  --mark: #ffe36e;
+  --action: #17181a;
+  --on-action: #f4f4f1;
 
-  /* Surfaces */
-  --bg-app: #f8fafc;         /* slate-50: page background */
-  --bg-primary: #ffffff;      /* white: cards, panels */
-  --bg-secondary: #f1f5f9;   /* slate-100: inset areas, selector panel */
-  --bg-tertiary: #e2e8f0;    /* slate-200: inputs, deeply nested */
-  --bg-hover: #e2e8f0;       /* slate-200: hover state */
+  /* Status extension. Throughline has no pass/fail colours, and this app
+     needs them for fit and budget verdicts. Each is paired with a word on
+     screen (Fits, Over budget…), so colour is never the only signal. Text
+     values meet 4.5:1 on paper and surface. */
+  --good: #16786c;
+  --good-wash: #dcefeb;
+  --bad: #b3261e;
+  --bad-wash: #f7e1de;
+  --warn: #a24e10;
+  --on-status: #ffffff;
 
-  /* Sidebar — light mode: white with subtle border */
-  --bg-sidebar: #ffffff;
-  --bg-sidebar-item: #f1f5f9;     /* slate-100 */
-  --bg-sidebar-item-active: #2563eb; /* blue-600 */
-  --bg-sidebar-hover: #e2e8f0;    /* slate-200 */
-  --text-sidebar: #64748b;        /* slate-500 */
-  --text-sidebar-hover: #0f172a;  /* slate-900 */
-  --border-sidebar: #e2e8f0;      /* slate-200 */
+  /* ---- App aliases ---- */
+  --bg-app: var(--paper);
+  --bg-primary: var(--surface);
+  --bg-secondary: var(--sunk);
+  --bg-tertiary: var(--sunk);
+  --bg-hover: var(--sunk);
 
-  /* Text */
-  --text-primary: #0f172a;   /* slate-900 */
-  --text-secondary: #475569; /* slate-600 */
-  --text-muted: #94a3b8;     /* slate-400 */
+  --bg-sidebar: var(--paper);
+  --bg-sidebar-item: var(--sunk);
+  --bg-sidebar-item-active: var(--focus-wash);
+  --bg-sidebar-hover: var(--sunk);
+  --text-sidebar: var(--ink-2);
+  --text-sidebar-hover: var(--ink);
+  --border-sidebar: var(--line);
 
-  /* Borders */
-  --border-primary: #e2e8f0; /* slate-200 */
-  --border-secondary: #f1f5f9; /* slate-100 */
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-2);
+  --text-muted: var(--ink-3);
+  --text-on-accent: var(--on-focus);
 
-  /* Status — strong saturated colors for light backgrounds */
-  --status-yes: #16a34a;     /* green-600 */
-  --status-no: #dc2626;      /* red-600 */
-  --status-maybe: #d97706;   /* amber-600 */
-  --status-info: #2563eb;    /* blue-600 */
-  --status-yes-bg: #dcfce7;  /* green-100 */
-  --status-no-bg: #fee2e2;   /* red-100 */
-  --status-maybe-bg: #fef3c7; /* amber-100 */
-  --status-info-bg: #dbeafe; /* blue-100 */
+  --border-primary: var(--line);
+  --border-secondary: var(--line);
 
-  /* Scores */
-  --score-good: #16a34a;
-  --score-mid: #d97706;
-  --score-bad: #dc2626;
-  --score-good-bar: #22c55e;
-  --score-mid-bar: #f59e0b;
-  --score-bad-bar: #ef4444;
+  --status-yes: var(--good);
+  --status-no: var(--bad);
+  --status-maybe: var(--warn);
+  --status-info: var(--focus);
+  --status-yes-bg: var(--good-wash);
+  --status-no-bg: var(--bad-wash);
+  --status-maybe-bg: var(--counter-wash);
+  --status-info-bg: var(--focus-wash);
 
-  /* Accent */
-  --accent: #2563eb;         /* blue-600 */
-  --accent-hover: #1d4ed8;   /* blue-700 */
+  --score-good: var(--good);
+  --score-mid: var(--warn);
+  --score-bad: var(--bad);
+  --score-good-bar: var(--good);
+  --score-mid-bar: var(--counter);
+  --score-bad-bar: var(--bad);
+
+  --accent: var(--focus);
+  --accent-hover: var(--focus);
+  --on-accent: var(--on-focus);
+
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  color-scheme: light;
 }
 
 .dark {
-  /* Dark mode
-     Principle: dark surfaces, light text, subtle borders */
+  /* ---- Throughline · Night ---- */
+  --paper: #131416;
+  --surface: #1b1c1f;
+  --sunk: #0e0f10;
+  --line: #2b2c30;
+  --line-control: #6d6e73;
+  --ink: #ecece8;
+  --ink-2: #b3b4af;
+  --ink-3: #90918c;
+  --context: #6f706c;
+  --context-soft: #36373b;
+  --focus: #7e97f2;
+  --on-focus: #0e1222;
+  --focus-wash: #1e2645;
+  --counter: #f6b985;
+  --counter-wash: #3a2617;
+  --cat-3: #6cc5b6;
+  --cat-4: #d39bd6;
+  --mark: #4e4416;
+  --action: #ecece8;
+  --on-action: #131416;
 
-  --bg-app: #0f172a;         /* slate-900 */
-  --bg-primary: #1e293b;     /* slate-800 */
-  --bg-secondary: #1e293b;   /* slate-800 (not 700 — keep surfaces close) */
-  --bg-tertiary: #334155;    /* slate-700 */
-  --bg-hover: #334155;       /* slate-700 */
+  --good: #6cc5b6;
+  --good-wash: #12302b;
+  --bad: #f2a49b;
+  --bad-wash: #3a1c19;
+  --warn: #f6b985;
+  --on-status: #131416;
 
-  /* Sidebar — dark mode: darkest surface */
-  --bg-sidebar: #020617;          /* slate-950 */
-  --bg-sidebar-item: #1e293b;     /* slate-800 */
-  --bg-sidebar-item-active: #3b82f6; /* blue-500 */
-  --bg-sidebar-hover: #334155;    /* slate-700 */
-  --text-sidebar: #94a3b8;        /* slate-400 */
-  --text-sidebar-hover: #f1f5f9;  /* slate-100 */
-  --border-sidebar: #1e293b;      /* slate-800 */
+  /* Hover on a surface card needs to lift, not sink, in Night. */
+  --bg-hover: #232428;
+  --bg-sidebar-hover: #1b1c1f;
 
-  /* Text */
-  --text-primary: #f1f5f9;   /* slate-100 */
-  --text-secondary: #cbd5e1; /* slate-300 */
-  --text-muted: #64748b;     /* slate-500 */
-
-  /* Borders */
-  --border-primary: #334155; /* slate-700 */
-  --border-secondary: #1e293b; /* slate-800 */
-
-  /* Status — brighter for dark backgrounds */
-  --status-yes: #4ade80;     /* green-400 */
-  --status-no: #f87171;      /* red-400 */
-  --status-maybe: #fbbf24;   /* amber-400 */
-  --status-info: #60a5fa;    /* blue-400 */
-  --status-yes-bg: rgba(34, 197, 94, 0.15);
-  --status-no-bg: rgba(239, 68, 68, 0.15);
-  --status-maybe-bg: rgba(245, 158, 11, 0.15);
-  --status-info-bg: rgba(59, 130, 246, 0.15);
-
-  /* Scores */
-  --score-good: #4ade80;
-  --score-mid: #fbbf24;
-  --score-bad: #f87171;
-  --score-good-bar: #22c55e;
-  --score-mid-bar: #f59e0b;
-  --score-bad-bar: #ef4444;
-
-  /* Accent */
-  --accent: #3b82f6;         /* blue-500 */
-  --accent-hover: #2563eb;   /* blue-600 */
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--bg-app);
-  --color-foreground: var(--text-primary);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-schibsted), "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-literata), Georgia, "Times New Roman", serif;
+
+  /* Throughline's caption floor is 13px. Raising text-xs here lifts every
+     small label in the app at once. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+
+  /* radius-s 4px for chips, radius-m 8px for panels. Controls use rounded-full. */
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
+  --radius-2xl: 8px;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--bg-app);
-  color: var(--text-primary);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+  letter-spacing: -0.015em;
+}
+
+/* Numbers that sit in columns line up. */
+table,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* One focus ring everywhere: solid 2px ink at 2px offset. */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--focus-wash);
+  color: var(--ink);
+}
+
+input,
+select,
+textarea {
+  accent-color: var(--focus);
+}
+
+/* Form controls get a 3:1 border so their edges are findable. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  border-color: var(--line-control);
+}
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+select {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

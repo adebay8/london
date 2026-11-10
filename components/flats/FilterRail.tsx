@@ -56,7 +56,7 @@ function Check({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-b border-[var(--border-secondary)] py-3">
-      <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">{title}</div>
+      <div className="mb-2 text-xs font-semibold text-[var(--text-secondary)]">{title}</div>
       <div className="space-y-1.5">{children}</div>
     </div>
   );
@@ -81,7 +81,7 @@ export default function FilterRail({
         <span className="text-sm font-bold">Filters</span>
         <button
           onClick={() => onChange(DEFAULT_FILTERS)}
-          className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="rounded text-xs text-[var(--accent)] hover:underline"
         >
           reset
         </button>
@@ -159,9 +159,9 @@ export default function FilterRail({
                 key={m}
                 onClick={() => set({ operatorMode: m })}
                 aria-pressed={filters.operatorMode === m}
-                className={`flex-1 px-2 py-1 capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--accent)] ${
+                className={`flex-1 px-2 py-1 capitalize transition-colors ${
                   filters.operatorMode === m
-                    ? "bg-[var(--accent)] text-white"
+                    ? "bg-[var(--action)] text-[var(--on-action)]"
                     : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
                 }`}
               >

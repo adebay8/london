@@ -1,5 +1,6 @@
 "use client";
 
+import AreaTabs from "@/components/AreaTabs";
 import { useState, useEffect, useMemo } from "react";
 import ProfileCard from "@/components/ProfileCard";
 import type { ResearchProfileRow } from "@/lib/types";
@@ -42,8 +43,9 @@ export default function ResearchPage() {
   }, [profiles, sortBy, sortDir, statusFilter, minScore]);
 
   return (
-    <div className="p-6">
-      <h1 className="mb-4 text-xl font-bold text-[var(--text-primary)]">Research Profiles</h1>
+    <>
+    <AreaTabs blurb="What each neighbourhood is like to live in, researched and scored." />
+    <div className="p-4 sm:p-6">
       <div className="mb-6 flex flex-wrap gap-3">
         <select value={sortBy} onChange={(e) => { const key = e.target.value as SortKey; setSortBy(key); setSortDir(DEFAULT_DIRS[key]); }} className="rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)]">
           <option value="fitScore">Order by: Fit Score</option>
@@ -72,5 +74,6 @@ export default function ResearchPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map((profile) => <ProfileCard key={profile.id} profile={profile} />)}</div>
       )}
     </div>
+    </>
   );
 }

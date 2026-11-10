@@ -69,7 +69,7 @@ function DepthBar({ depth }: { depth: number | null }) {
   return (
     <div className="space-y-1.5">
       <div>
-        <div className="mb-0.5 flex justify-between text-[10px] text-[var(--text-muted)]">
+        <div className="mb-0.5 flex justify-between text-xs text-[var(--text-muted)]">
           <span>This sofa bed</span>
           <span className={meets ? "text-[var(--status-yes)]" : ""}>{depth}cm</span>
         </div>
@@ -81,7 +81,7 @@ function DepthBar({ depth }: { depth: number | null }) {
         </div>
       </div>
       <div>
-        <div className="mb-0.5 flex justify-between text-[10px] text-[var(--text-muted)]">
+        <div className="mb-0.5 flex justify-between text-xs text-[var(--text-muted)]">
           <span>Raft Loft (the one you liked)</span>
           <span>{TARGET_DEPTH_CM}cm</span>
         </div>
@@ -116,7 +116,7 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <button onClick={onClose} aria-label="Close details" className="absolute inset-0 bg-black/50 backdrop-blur-[1px]" />
+      <button onClick={onClose} aria-label="Close details" className="absolute inset-0 bg-black/50-[1px]" />
       <aside
         role="dialog"
         aria-modal="true"
@@ -125,7 +125,7 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--text-muted)]">{s.retailer}</div>
+            <div className="text-xs font-medium text-[var(--text-muted)]">{s.retailer}</div>
             <h2 className="text-lg font-bold text-[var(--text-primary)]">{s.model}</h2>
             <div className="text-sm text-[var(--text-secondary)]">{s.brand}</div>
           </div>
@@ -143,12 +143,12 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
           href={s.productUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 rounded-lg bg-[var(--accent)] px-3 py-2 text-center text-sm font-semibold text-white hover:opacity-90"
+          className="mt-3 rounded-lg bg-[var(--action)] px-3 py-2 text-center text-sm font-semibold text-[var(--on-action)] hover:opacity-90"
         >
           View at {s.retailer} ↗
         </a>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           When it&apos;s a bed
         </h3>
         <div className="mt-2 rounded-xl bg-[var(--bg-secondary)] p-3">
@@ -173,20 +173,20 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
             />
           </dl>
           {suspectBed && (
-            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-xs leading-snug text-[var(--text-secondary)]">
               The retailer publishes {s.bedWidthCm ?? "?"} × {s.bedLengthCm ?? "?"}cm, but the published bed size looks
               like it has width and length the wrong way round. Treated as unpublished rather than as a magnificent bed.
             </p>
           )}
           {s.extendedDepthCm != null && (
-            <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+            <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
               Reaches {s.extendedDepthCm}cm into the room when open — worth checking against the floor you end up with,
               though nothing here is gated on it while you are still flat-hunting.
             </p>
           )}
         </div>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Depth</h3>
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Depth</h3>
         <div className="mt-2 rounded-xl bg-[var(--bg-secondary)] p-3">
           <DepthBar depth={bodyDepthOf(s)} />
           {/* Two different columns can trip the depth guard, so the caveat says
@@ -194,19 +194,19 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
               described the overall-depth case, which renders an empty number
               when it was the seat depth that was wrong. */}
           {suspectBodyDepth && (
-            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-xs leading-snug text-[var(--text-secondary)]">
               The retailer lists {s.overallDepthCm}cm deep, but that is the L-shape&apos;s footprint — how far the
               chaise projects into the room — not how deep the sofa bed is back to front. Treated as unpublished rather
               than as a very deep sofa bed.
             </p>
           )}
           {suspectSeatDepth && (
-            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-xs leading-snug text-[var(--text-secondary)]">
               The retailer lists a {s.seatDepthCm}cm seat, but no seat is that deep — that is a chaise length filed in
               the seat-depth column. Treated as unpublished rather than as an exceptionally deep seat.
             </p>
           )}
-          <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+          <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
             Overall depth includes the back cushions. The seat itself is usually 25–30cm less, and that is the part that
             supports your legs — anything past about {GOOD_SEAT_DEPTH_CM}cm of seat does the job.
             {seatDepthOf(s) != null && (
@@ -215,7 +215,7 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
           </p>
         </div>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Meets the brief?</h3>
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Meets the brief?</h3>
         <div className="mt-1">
           <VerdictRow label="Seats three people" verdict={s.fit.seats} />
           <VerdictRow label="Fits the 200–250cm wall" verdict={s.fit.width} />
@@ -224,14 +224,14 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
         {s.fit.notes.length > 0 && (
           <ul className="mt-2 space-y-1">
             {s.fit.notes.map((n) => (
-              <li key={n} className="text-[11px] leading-snug text-[var(--text-secondary)]">· {n}</li>
+              <li key={n} className="text-xs leading-snug text-[var(--text-secondary)]">· {n}</li>
             ))}
           </ul>
         )}
 
         <div className="mt-5 rounded-xl bg-[var(--bg-secondary)] p-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold [font-variant-numeric:tabular-nums]">
+            <span className="text-2xl font-bold tracking-[-0.02em]">
               £{Math.round(s.landedCostGbp).toLocaleString()}
               {landedIsFloor && "+"}
             </span>
@@ -255,24 +255,24 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
           </dl>
         </div>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Why it ranks {Math.round(s.score)}/100
         </h3>
         <div className="mt-2 flex gap-4 rounded-lg bg-[var(--bg-secondary)] p-2.5 text-xs">
           <div>
             <div className="font-bold [font-variant-numeric:tabular-nums]">{s.rawScore}</div>
-            <div className="text-[10px] text-[var(--text-muted)]">on measured specs</div>
+            <div className="text-xs text-[var(--text-muted)]">on measured specs</div>
           </div>
           <div>
             <div className="font-bold [font-variant-numeric:tabular-nums]">{Math.round(s.confidence * 100)}%</div>
-            <div className="text-[10px] text-[var(--text-muted)]">of criteria known</div>
+            <div className="text-xs text-[var(--text-muted)]">of criteria known</div>
           </div>
           <div>
             <div className="font-bold [font-variant-numeric:tabular-nums]">{Math.round(s.styleMatch * 100)}%</div>
-            <div className="text-[10px] text-[var(--text-muted)]">like the Raft</div>
+            <div className="text-xs text-[var(--text-muted)]">like the Raft</div>
           </div>
         </div>
-        <p className="mt-1.5 text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="mt-1.5 text-xs leading-snug text-[var(--text-muted)]">
           Unpublished specs are excluded from the average, never scored as zero. Condition is reported separately and
           never scored — it changes what you get, not how good the sofa bed is.
         </p>
@@ -286,12 +286,12 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
           ))}
         </ul>
         {s.gaps.length > 0 && (
-          <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+          <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
             <span className="font-medium">Not published:</span> {s.gaps.join(", ")}.
           </p>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Specification</h3>
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Specification</h3>
         <dl className="mt-1">
           <Row label="Overall" value={s.overallWidthCm != null ? `${s.overallWidthCm} × ${bodyDepthOf(s) ?? "?"} × ${s.overallHeightCm ?? "?"} cm (W×D×H)` : null} />
           <Row label="Open depth" value={s.extendedDepthCm != null ? `${s.extendedDepthCm}cm` : null} />
@@ -319,7 +319,7 @@ export default function SofaBedDetail({ sofaBed, onClose }: { sofaBed: ScoredSof
 
         {s.notes && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Research notes</h3>
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Research notes</h3>
             <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-[var(--text-secondary)]">{s.notes}</p>
           </>
         )}

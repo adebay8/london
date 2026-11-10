@@ -98,7 +98,7 @@ export default function JournalPage() {
 
   return (
     <div className="mx-auto max-w-3xl p-6 space-y-6">
-      <h1 className="text-xl font-bold text-[var(--text-primary)]">Journal</h1>
+      <h1 className="text-2xl font-bold tracking-[-0.02em] text-[var(--ink)]">Journal</h1>
 
       <JournalEntryForm neighbourhoods={neighbourhoods} onSubmit={handleSubmit} />
 
@@ -108,7 +108,7 @@ export default function JournalPage() {
         <select
           value={filterNeighbourhoodId}
           onChange={(e) => setFilterNeighbourhoodId(e.target.value)}
-          className="rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+          className="rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] focus:border-[var(--ink)]"
         >
           <option value="">All entries</option>
           {neighbourhoods.map((n) => (

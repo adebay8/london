@@ -23,13 +23,13 @@ export default function Shelf({
   empty?: string;
 }) {
   return (
-    <section className="mt-8">
+    <section className="mt-10">
       <div className="mb-2 flex flex-wrap items-baseline gap-x-3">
-        <h2 className="text-sm font-bold text-[var(--text-primary)]">{title}</h2>
-        <Link href={href} className="text-xs text-[var(--accent)] hover:underline">
+        <h2 className="text-lg font-semibold text-[var(--ink)]">{title}</h2>
+        <Link href={href} className="text-sm font-medium text-[var(--focus)] underline-offset-2 hover:underline">
           {hrefLabel} →
         </Link>
-        {hint && <p className="w-full text-xs text-[var(--text-secondary)]">{hint}</p>}
+        {hint && <p className="mt-0.5 w-full max-w-[68ch] text-sm text-[var(--ink-2)]">{hint}</p>}
       </div>
 
       {items.length === 0 ? (

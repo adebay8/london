@@ -47,7 +47,7 @@ export default function JournalEntryForm({ neighbourhoods, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-4 space-y-3">
-      <h2 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wider">New Entry</h2>
+      <h2 className="text-sm font-semibold text-[var(--text-secondary)]">New entry</h2>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="flex-1">
@@ -55,7 +55,7 @@ export default function JournalEntryForm({ neighbourhoods, onSubmit }: Props) {
           <select
             value={neighbourhoodId}
             onChange={(e) => { setNeighbourhoodId(e.target.value); setDecision("no_change"); }}
-            className="w-full rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+            className="w-full rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] focus:border-[var(--ink)]"
           >
             <option value="">General note</option>
             {neighbourhoods.map((n) => (
@@ -72,7 +72,7 @@ export default function JournalEntryForm({ neighbourhoods, onSubmit }: Props) {
             <select
               value={decision}
               onChange={(e) => setDecision(e.target.value)}
-              className="w-full rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+              className="w-full rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] focus:border-[var(--ink)]"
             >
               {DECISION_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -91,7 +91,7 @@ export default function JournalEntryForm({ neighbourhoods, onSubmit }: Props) {
           onChange={(e) => setContent(e.target.value)}
           rows={3}
           placeholder="Write your thoughts..."
-          className="w-full rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] resize-none"
+          className="w-full rounded-lg bg-[var(--bg-secondary)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--ink)] resize-none"
         />
       </div>
 

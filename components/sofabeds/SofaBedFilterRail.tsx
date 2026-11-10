@@ -71,8 +71,8 @@ function Radio({
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="border-b border-[var(--border-secondary)] py-3">
-      <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">{title}</div>
-      {hint && <div className="mb-2 text-[11px] leading-snug text-[var(--text-muted)]">{hint}</div>}
+      <div className="mb-2 text-xs font-semibold text-[var(--text-secondary)]">{title}</div>
+      {hint && <div className="mb-2 text-xs leading-snug text-[var(--text-muted)]">{hint}</div>}
       <div className="space-y-1.5">{children}</div>
     </div>
   );
@@ -82,14 +82,14 @@ function Segmented<T extends string>({
   value, options, onChange,
 }: { value: T; options: { value: T; label: string }[]; onChange: (v: T) => void }) {
   return (
-    <div className="flex overflow-hidden rounded-md border border-[var(--border-primary)] text-[11px]">
+    <div className="flex gap-0.5 rounded-full border border-[var(--line-control)] p-[3px] text-xs">
       {options.map((o) => (
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
           aria-pressed={value === o.value}
-          className={`flex-1 whitespace-nowrap px-1.5 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--accent)] ${
-            value === o.value ? "bg-[var(--accent)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+          className={`h-8 flex-1 whitespace-nowrap rounded-full px-2 font-semibold transition-colors ${
+            value === o.value ? "bg-[var(--action)] text-[var(--on-action)]" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
           }`}
         >
           {o.label}
@@ -112,13 +112,11 @@ export default function SofaBedFilterRail({
   return (
     <div className="text-[var(--text-primary)]">
       <div className="flex items-center justify-between pb-2">
-        <span className="text-sm font-bold">Filters</span>
+        <span className="hidden text-base font-semibold lg:inline">Filters</span>
         <button
           onClick={() => onChange(DEFAULT_SOFABED_FILTERS)}
-          className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-        >
-          reset
-        </button>
+          className="rounded text-xs text-[var(--accent)] hover:underline"
+        >Reset all</button>
       </div>
 
       <Section
@@ -130,7 +128,7 @@ export default function SofaBedFilterRail({
           onChange={() => set({ separateMattressOnly: !filters.separateMattressOnly })}
           label="Separate mattress only"
         />
-        <p className="mt-1 text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="mt-1 text-xs leading-snug text-[var(--text-muted)]">
           Listings that never said plainly are hidden while this is set — an unclear mechanism never passes as a good one.
         </p>
       </Section>
@@ -159,7 +157,7 @@ export default function SofaBedFilterRail({
             { value: "double", label: `${FULL_DOUBLE_WIDTH_CM}cm+` },
           ]}
         />
-        <p className="mt-1 text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="mt-1 text-xs leading-snug text-[var(--text-muted)]">
           A blank bed width never passes as a big bed, and a figure that is really a bed length is treated as blank.
         </p>
       </Section>
@@ -214,7 +212,7 @@ export default function SofaBedFilterRail({
           onChange={() => set({ hideSoldOut: !filters.hideSoldOut })}
           label="Hide sold out"
         />
-        <p className="mt-1 text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="mt-1 text-xs leading-snug text-[var(--text-muted)]">
           Only listings that say sold out. A retailer who publishes no availability at all is left in.
         </p>
       </Section>

@@ -1,5 +1,6 @@
 "use client";
 
+import FilterPanel from "@/components/FilterPanel";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ConsoleCard from "@/components/consoles/ConsoleCard";
 import ConsoleDetail from "@/components/consoles/ConsoleDetail";
@@ -204,15 +205,15 @@ export default function ConsolesPage() {
 
   return (
     <div className="flex h-full">
-      <aside className="hidden w-64 shrink-0 overflow-y-auto border-r border-[var(--border-primary)] bg-[var(--bg-secondary)] p-4 lg:block">
+      <FilterPanel resultCount={consoles == null ? null : visible.length}>
         <ConsoleFilterRail retailers={retailers} filters={ui.filters} onChange={setFilters} />
-      </aside>
+      </FilterPanel>
 
       <div className="flex-1 overflow-y-auto">
-        <header className="sticky top-0 z-20 border-b border-[var(--border-primary)] bg-[var(--bg-app)]/95 px-6 py-4 backdrop-blur">
+        <header className="z-20 lg:sticky lg:top-0 border-b border-[var(--border-primary)] bg-[var(--bg-app)] px-6 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <div className="mr-auto">
-              <h1 className="text-xl font-bold text-[var(--text-primary)]">TV unit</h1>
+              <h1 className="text-2xl font-bold tracking-[-0.02em] text-[var(--ink)]">TV units</h1>
               <p className="text-xs text-[var(--text-secondary)]">
                 {consoles == null
                   ? "Loading…"
@@ -225,14 +226,14 @@ export default function ConsolesPage() {
               onChange={(e) => setUi((s) => ({ ...s, search: e.target.value }))}
               placeholder="Search model, brand, finish…"
               aria-label="Search TV units"
-              className="w-56 rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+              className="h-10 w-full min-w-0 rounded-full border bg-[var(--surface)] px-4 text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)] sm:w-64"
             />
 
             <select
               value={ui.sort}
               onChange={(e) => setUi((s) => ({ ...s, sort: e.target.value as SortKey }))}
               aria-label="Sort by"
-              className="rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] px-2 py-1.5 text-sm text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+              className="h-10 rounded-full border bg-[var(--surface)] px-3 text-sm text-[var(--ink)]"
             >
               {Object.entries(SORT_LABELS).map(([k, label]) => (
                 <option key={k} value={k}>
@@ -244,10 +245,10 @@ export default function ConsolesPage() {
             <button
               onClick={() => setUi((s) => ({ ...s, savedOnly: !s.savedOnly }))}
               aria-pressed={ui.savedOnly}
-              className={`rounded-lg border px-3 py-1.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+              className={`h-10 rounded-full border px-4 text-sm font-semibold transition-colors ${
                 ui.savedOnly
-                  ? "border-[var(--accent)] bg-[var(--accent)] text-white"
-                  : "border-[var(--border-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                  ? "border-[var(--action)] bg-[var(--action)] text-[var(--on-action)]"
+                  : "border-[var(--line-control)] text-[var(--ink)] hover:bg-[var(--bg-hover)]"
               }`}
             >
               ♥ Saved{savedCount ? ` (${savedCount})` : ""}
@@ -255,7 +256,7 @@ export default function ConsolesPage() {
           </div>
         </header>
 
-        <div className="p-6">
+        <div className="p-4 pb-24 sm:p-6 sm:pb-24 lg:pb-6">
           {error && (
             <div className="rounded-xl border border-[var(--status-no)] bg-[var(--status-no-bg)] p-4 text-sm text-[var(--status-no)]">
               Couldn&apos;t load TV units: {error}

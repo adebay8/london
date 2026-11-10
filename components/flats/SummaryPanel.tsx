@@ -14,7 +14,7 @@ function TimingHero({ view }: { view: FlatView }) {
     info: "border-[var(--status-info)]/30 bg-[var(--status-info-bg)]",
     maybe: "border-[var(--status-maybe)]/30 bg-[var(--status-maybe-bg)]",
     no: "border-[var(--status-no)]/30 bg-[var(--status-no-bg)]",
-    accent: "border-[var(--border-primary)] bg-[var(--bg-secondary)]",
+    accent: "border-transparent bg-[var(--surface)]",
   };
   const strong: Record<string, string> = {
     info: "text-[var(--status-info)]",
@@ -23,20 +23,20 @@ function TimingHero({ view }: { view: FlatView }) {
     accent: "text-[var(--accent)]",
   };
   return (
-    <section className={`grid gap-6 rounded-2xl border p-5 sm:grid-cols-2 sm:p-6 ${tint[urgency]}`}>
+    <section className={`grid gap-6 rounded-2xl border p-5 lg:grid-cols-[1fr_auto] sm:p-7 ${tint[urgency]}`}>
       <div>
-        <div className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <div className="text-xs font-semibold text-[var(--text-secondary)]">
           Earliest move-out
         </div>
-        <div className="mt-1 text-4xl font-bold leading-tight text-[var(--text-primary)] sm:text-5xl">
+        <div className="mt-1 whitespace-nowrap text-4xl font-bold leading-none tracking-[-0.03em] text-[var(--text-primary)] lg:text-5xl">
           {fmtDate(view.moveOutFloor)}
         </div>
         <div className="mt-1 text-sm text-[var(--text-secondary)]">Two full rent periods&rsquo; notice from today</div>
       </div>
-      <div className="flex flex-col justify-center sm:items-end sm:text-right">
+      <div className="flex flex-col justify-center lg:items-end lg:text-right">
         {view.noticeDeadline ? (
           <>
-            <div className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <div className="text-xs font-semibold text-[var(--text-secondary)]">
               Serve notice by {fmtDate(view.noticeDeadline)}
             </div>
             <div className={`mt-1 text-3xl font-bold sm:text-4xl ${strong[urgency]}`}>
@@ -46,7 +46,7 @@ function TimingHero({ view }: { view: FlatView }) {
           </>
         ) : (
           <>
-            <div className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Notice</div>
+            <div className="text-xs font-semibold text-[var(--text-secondary)]">Notice</div>
             <div className="mt-1 text-2xl font-bold text-[var(--text-primary)]">Served — date fixed</div>
           </>
         )}
@@ -62,7 +62,7 @@ function Kpi({ value, label, context, tone }: { value: string | number; label: s
         {value}
       </div>
       <div className="mt-1.5 text-xs font-medium text-[var(--text-primary)]">{label}</div>
-      {context && <div className="text-[11px] text-[var(--text-secondary)]">{context}</div>}
+      {context && <div className="text-xs text-[var(--text-secondary)]">{context}</div>}
     </div>
   );
 }
@@ -76,7 +76,7 @@ function ChangeChip({ children, tone, onClick }: { children: React.ReactNode; to
   return onClick ? (
     <button
       onClick={onClick}
-      className={`${base} transition-transform hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]`}
+      className={`${base} transition-colors hover:border-[var(--line-control)]`}
     >
       {children}
     </button>
@@ -170,7 +170,7 @@ export default function SummaryPanel({
 
       <button
         onClick={onBrowse}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-app)]"
+        className="flex w-full items-center justify-center gap-2 h-12 rounded-full bg-[var(--action)] px-6 text-sm font-semibold text-[var(--on-action)] transition-opacity hover:opacity-90"
       >
         Browse all {view.counts.active} homes →
       </button>

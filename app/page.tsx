@@ -5,6 +5,7 @@ import Link from "next/link";
 import DepartmentTile from "@/components/home/DepartmentTile";
 import ProductCard from "@/components/home/ProductCard";
 import Shelf from "@/components/home/Shelf";
+import { PROJECTS, SHARED } from "@/lib/nav";
 import type { Product } from "@/app/api/summary/route";
 
 // The shop floor.
@@ -83,13 +84,13 @@ function Room({ s }: { s: Summary }) {
   const spread = max > min;
 
   return (
-    <section className="grid items-center gap-6 rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-5 lg:grid-cols-[minmax(0,22rem)_1fr]">
+    <section aria-labelledby="room-heading" className="grid items-center gap-6 rounded-xl bg-[var(--surface)] p-6 lg:grid-cols-[minmax(0,22rem)_1fr]">
       <div>
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h2 id="room-heading" className="text-sm font-semibold text-[var(--ink-2)]">
           Your room so far
         </h2>
         <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-4xl font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
+          <span className="text-6xl font-bold tracking-[-0.035em] text-[var(--ink)]">
             £{total.toLocaleString()}
           </span>
         </div>
@@ -122,9 +123,9 @@ function Room({ s }: { s: Summary }) {
           {chosen.flatMap((dept) =>
             dept.items.map((p, i) => (
               <div key={`${p.dept}-${p.id}`} className="shrink-0">
-                <div className="mb-1 flex items-baseline gap-1.5 text-[10px] uppercase tracking-wide">
+                <div className="mb-1 flex items-baseline gap-1.5 text-xs">
                   <span className="text-[var(--text-muted)]">{dept.label}</span>
-                  {i === 0 && <span className="font-semibold text-[var(--status-yes)]">top pick</span>}
+                  {i === 0 && <span className="font-semibold text-[var(--status-yes)]">Top pick</span>}
                 </div>
                 <ProductCard p={p} width="w-36" tone="sunken" />
               </div>
@@ -140,6 +141,8 @@ export default function Home() {
   const [s, setS] = useState<Summary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
     let cancelled = false;
     fetch("/api/summary")
@@ -149,17 +152,38 @@ export default function Home() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
+
+  function retry() {
+    setError(null);
+    setAttempt((n) => n + 1);
+  }
 
   const d = s?.departments;
 
+  // What each page's tile says on the home page. A page with no entry still
+  // gets a tile — just its name and a door.
+  const tiles: Record<string, { count: number; countLabel: string; line: string; accent?: boolean }> = d
+    ? {
+        "/flats": { count: d.flats.count, countLabel: "on the board", line: `${d.flats.isNew} new · ${d.flats.saved} saved · ${d.flats.areas} areas`, accent: d.flats.isNew > 0 },
+        "/apartments": { count: d.areas.apartments, countLabel: "buildings tracked", line: "Developments near your shortlisted areas" },
+        "/map": { count: d.areas.undecided, countLabel: "still undecided", line: `${d.areas.yes} yes · ${d.areas.maybe} maybe · ${d.areas.ranked} ranked` },
+        "/sofas": { count: d.sofas.inBudgetFits, countLabel: "meet the brief", line: `of ${d.sofas.count} researched · ${d.sofas.deep} at 112cm deep` },
+        "/sofa-beds": { count: d.sofaBeds.fits, countLabel: "meet the brief", line: `of ${d.sofaBeds.count} researched · ${d.sofaBeds.sleepsApart} sleep on their own mattress` },
+        "/beds": { count: d.beds.count, countLabel: "double ottomans", line: `${d.beds.assembled} arrive assembled · ${d.beds.saved} saved` },
+        "/mattresses": { count: d.mattresses.inBand, countLabel: "in your firmness band", line: `of ${d.mattresses.count} researched · ${d.mattresses.verifiedDeals} of ${d.mattresses.claimedDeals} “sales” are real` },
+        "/consoles": { count: d.consoles.inBudgetFits, countLabel: "fit, in budget", line: `of ${d.consoles.count} researched · ${d.consoles.withBay} hide the PS5 in a bay` },
+        "/journal": { count: s!.journal.total, countLabel: "notes", line: "Decisions and things to remember" },
+      }
+    : {};
+
   return (
     <div className="h-full overflow-y-auto">
-      <header className="border-b border-[var(--border-primary)] bg-[var(--bg-app)]/95 px-6 py-4 backdrop-blur">
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">London</h1>
-        <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
+      <header className="px-4 pb-2 pt-6 sm:px-8 sm:pt-8">
+        <h1 className="text-4xl font-bold tracking-[-0.025em] text-[var(--ink)]">Home</h1>
+        <p className="mt-2 max-w-[68ch] font-serif text-lg leading-relaxed text-[var(--ink-2)]">
           {error
-            ? "Couldn't load the shop."
+            ? "Something went wrong loading the summary."
             : !d
               ? "Opening up…"
               : `${d.flats.count} flats on the board · ${d.beds.count} beds, ${d.mattresses.count} mattresses and ${d.consoles.count} TV units researched`}
@@ -167,59 +191,63 @@ export default function Home() {
         </p>
       </header>
 
-      <div className="p-6">
+      <div className="mx-auto max-w-[1400px] px-4 pb-12 pt-4 sm:px-8">
         {error && (
-          <div className="mb-6 rounded-xl border border-[var(--status-no)] bg-[var(--status-no-bg)] p-4 text-sm text-[var(--status-no)]">
-            {error}
+          <div role="alert" className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border-l-4 border-[var(--bad)] bg-[var(--bad-wash)] p-4 text-sm text-[var(--ink)]">
+            <span className="mr-auto">
+              Couldn&apos;t load your summary. The database may be offline. <span className="text-[var(--ink-3)]">({error})</span>
+            </span>
+            <button
+              type="button"
+              onClick={retry}
+              className="h-10 rounded-full border border-[var(--line-control)] bg-[var(--surface)] px-4 text-sm font-semibold"
+            >
+              Try again
+            </button>
           </div>
         )}
-        {!s && !error && <div className="text-sm text-[var(--text-secondary)]">Loading…</div>}
+        {!s && !error && (
+          <div aria-busy="true" aria-label="Loading" className="space-y-6">
+            <div className="h-40 animate-pulse rounded-xl bg-[var(--sunk)]" />
+            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+              {Array.from({ length: 4 }, (_, i) => (
+                <div key={i} className="h-24 animate-pulse rounded-lg bg-[var(--sunk)]" />
+              ))}
+            </div>
+          </div>
+        )}
 
         {s && d && (
           <>
             <Room s={s} />
 
-            <section className="mt-8">
-              <h2 className="mb-2 text-sm font-bold text-[var(--text-primary)]">Departments</h2>
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
-                <DepartmentTile
-                  href="/flats" icon="🔑" title="Flats"
-                  count={d.flats.count} countLabel="on the board"
-                  line={`${d.flats.isNew} new · ${d.flats.saved} saved · ${d.flats.areas} areas`}
-                  accent={d.flats.isNew > 0}
-                />
-                <DepartmentTile
-                  href="/research" icon="🔬" title="Areas"
-                  count={d.areas.undecided} countLabel="still undecided"
-                  line={`${d.areas.yes} yes · ${d.areas.maybe} maybe · ${d.areas.ranked} ranked`}
-                />
-                <DepartmentTile
-                  href="/sofas" icon="🛋️" title="Sofas"
-                  count={d.sofas.inBudgetFits} countLabel="meet the brief"
-                  line={`of ${d.sofas.count} researched · ${d.sofas.deep} at 112cm deep`}
-                />
-                <DepartmentTile
-                  href="/sofa-beds" icon="🛌" title="Sofa beds"
-                  count={d.sofaBeds.fits} countLabel="meet the brief"
-                  line={`of ${d.sofaBeds.count} researched · ${d.sofaBeds.sleepsApart} sleep on their own mattress`}
-                />
-                <DepartmentTile
-                  href="/beds" icon="🛏️" title="Beds"
-                  count={d.beds.count} countLabel="double ottomans"
-                  line={`${d.beds.assembled} arrive assembled · ${d.beds.saved} saved`}
-                />
-                <DepartmentTile
-                  href="/mattresses" icon="💤" title="Mattress"
-                  count={d.mattresses.inBand} countLabel="in your firmness band"
-                  line={`of ${d.mattresses.count} researched · ${d.mattresses.verifiedDeals} of ${d.mattresses.claimedDeals} “sales” are real`}
-                />
-                <DepartmentTile
-                  href="/consoles" icon="📺" title="TV units"
-                  count={d.consoles.inBudgetFits} countLabel="fit, in budget"
-                  line={`of ${d.consoles.count} researched · ${d.consoles.withBay} hide the PS5 in a bay`}
-                />
-              </div>
-            </section>
+            {/* Departments, grouped by project — read from lib/nav.ts, the same
+                source as the sidebar, so a new project shows up in both. */}
+            {[...PROJECTS.map((p) => ({ id: p.id, label: p.label, question: p.question, pages: p.pages })),
+              { id: "tools", label: "Tools", question: "Shared across every project", pages: SHARED }].map((group) => (
+              <section key={group.id} className="mt-10" aria-labelledby={`dept-${group.id}`}>
+                <div className="mb-3 flex flex-wrap items-baseline gap-x-3">
+                  <h2 id={`dept-${group.id}`} className="text-lg font-semibold text-[var(--ink)]">{group.label}</h2>
+                  <p className="text-sm text-[var(--ink-3)]">{group.question}</p>
+                </div>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(190px,1fr))] gap-x-8 gap-y-6">
+                  {group.pages.map((page) => {
+                    const t = tiles[page.href];
+                    return (
+                      <DepartmentTile
+                        key={page.href}
+                        href={page.href}
+                        title={page.label}
+                        count={t?.count}
+                        countLabel={t?.countLabel ?? ""}
+                        line={t?.line}
+                        accent={t?.accent}
+                      />
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
 
             <Shelf
               title="Sofas with two seats and somewhere for your legs"
@@ -269,9 +297,9 @@ export default function Home() {
 
             <section className="mt-8">
               <div className="mb-2 flex items-baseline gap-3">
-                <h2 className="text-sm font-bold text-[var(--text-primary)]">Notes to self</h2>
+                <h2 className="text-lg font-semibold text-[var(--ink)]">Notes to self</h2>
                 <Link href="/journal" className="text-xs text-[var(--accent)] hover:underline">
-                  all {s.journal.total} →
+                  All {s.journal.total} notes →
                 </Link>
               </div>
               {s.journal.recent.length === 0 ? (
@@ -286,12 +314,12 @@ export default function Home() {
                       href="/journal"
                       className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-3 transition-colors hover:bg-[var(--bg-hover)]"
                     >
-                      <div className="flex items-center gap-2 text-[10px] uppercase tracking-wide text-[var(--text-muted)]">
+                      <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
                         <span>{relative(e.createdAt)}</span>
                         {e.neighbourhood && <span>· {e.neighbourhood}</span>}
                         {e.decision && <span className="text-[var(--accent)]">· {e.decision}</span>}
                       </div>
-                      <p className="mt-1 text-xs leading-relaxed text-[var(--text-secondary)]">{e.content}</p>
+                      <p className="mt-1 line-clamp-4 font-serif text-sm leading-relaxed text-[var(--ink)]">{e.content}</p>
                     </Link>
                   ))}
                 </div>

@@ -283,7 +283,7 @@ export default function FlatsPage() {
       <header className="border-b border-[var(--border-primary)] px-6 py-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h1 className="text-xl font-bold text-[var(--text-primary)]">🔑 Flat search</h1>
+            <h1 className="text-2xl font-bold tracking-[-0.02em] text-[var(--ink)]">Flats</h1>
             <p className="text-sm text-[var(--text-secondary)]">
               {view.counts.active} active · {view.counts.isNew} new · last run {view.config.lastRun ?? "—"}
             </p>
@@ -294,9 +294,9 @@ export default function FlatsPage() {
                 key={t}
                 aria-pressed={tab === t}
                 onClick={() => setTab(t)}
-                className={`rounded-md px-3 py-1.5 text-sm font-medium capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                className={`rounded-md px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
                   tab === t
-                    ? "bg-[var(--accent)] text-white"
+                    ? "bg-[var(--action)] text-[var(--on-action)]"
                     : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
                 }`}
               >
@@ -336,13 +336,13 @@ export default function FlatsPage() {
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search building, area, street or operator…"
                     aria-label="Search flats"
-                    className="w-full rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] px-3 py-2 pr-8 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="w-full rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] px-3 py-2 pr-8 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)]"
                   />
                   {search && (
                     <button
                       onClick={() => setSearch("")}
                       aria-label="Clear search"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1.5 py-0.5 text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1.5 py-0.5 text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
                     >
                       ✕
                     </button>
@@ -351,9 +351,9 @@ export default function FlatsPage() {
                 <button
                   onClick={() => setSavedOnly(!savedOnly)}
                   aria-pressed={savedOnly}
-                  className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                  className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                     savedOnly
-                      ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+                      ? "border-[var(--action)] bg-[var(--action)] text-[var(--on-action)]"
                       : "border-[var(--border-primary)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
                   }`}
                 >
@@ -366,8 +366,8 @@ export default function FlatsPage() {
                       key={m}
                       onClick={() => setViewMode(m)}
                       aria-pressed={viewMode === m}
-                      className={`rounded-md px-2.5 py-1.5 text-sm font-medium capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-                        viewMode === m ? "bg-[var(--accent)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                      className={`rounded-md px-2.5 py-1.5 text-sm font-medium capitalize transition-colors ${
+                        viewMode === m ? "bg-[var(--action)] text-[var(--on-action)]" : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
                       }`}
                     >
                       {m}
@@ -381,7 +381,7 @@ export default function FlatsPage() {
                     value={sort}
                     onChange={(e) => setSort(e.target.value as SortKey)}
                     aria-label="Sort flats"
-                    className="rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] px-2 py-2 text-sm text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] px-2 py-2 text-sm text-[var(--text-primary)]"
                   >
                     {(Object.keys(SORT_LABELS) as SortKey[]).map((k) => (
                       <option key={k} value={k}>
@@ -401,7 +401,7 @@ export default function FlatsPage() {
                     key={c.key}
                     onClick={c.onRemove}
                     aria-label={`Remove filter ${c.label}`}
-                    className="group inline-flex items-center gap-1 rounded-full bg-[var(--bg-tertiary)] py-1 pl-2.5 pr-1.5 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="group inline-flex items-center gap-1 rounded-full bg-[var(--bg-tertiary)] py-1 pl-2.5 pr-1.5 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-hover)]"
                   >
                     {c.label}
                     <span className="text-[var(--text-muted)] group-hover:text-[var(--status-no)]">✕</span>
@@ -410,7 +410,7 @@ export default function FlatsPage() {
                 {chips.length > 0 && (
                   <button
                     onClick={clearAll}
-                    className="rounded px-1.5 py-0.5 text-xs font-medium text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="rounded px-1.5 py-0.5 text-xs font-medium text-[var(--accent)] hover:underline"
                   >
                     Clear all
                   </button>

@@ -186,7 +186,7 @@ export default function ApartmentsPage() {
 
   return (
     <div className="p-6">
-      <h1 className="mb-4 text-xl font-bold text-[var(--text-primary)]">Apartment Buildings</h1>
+      <h1 className="mb-4 text-2xl font-bold tracking-[-0.02em] text-[var(--ink)]">Apartment buildings</h1>
 
       {/* Fetch controls */}
       <div className="mb-6 rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-4">
@@ -246,7 +246,7 @@ export default function ApartmentsPage() {
           <button
             onClick={handleFetch}
             disabled={!selectedNeighbourhoodId || !!fetchingId}
-            className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="rounded-lg bg-[var(--action)] px-4 py-2 text-sm font-medium text-[var(--on-action)] transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {fetchingId ? `Fetching${selectedName ? ` ${selectedName}` : ""}...` : "Fetch"}
           </button>
@@ -268,7 +268,7 @@ export default function ApartmentsPage() {
           <button
             onClick={handleDirectSearch}
             disabled={!directSearch.trim() || searching}
-            className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="rounded-lg bg-[var(--action)] px-4 py-2 text-sm font-medium text-[var(--on-action)] transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {searching ? "Searching..." : "Search"}
           </button>
@@ -319,7 +319,7 @@ export default function ApartmentsPage() {
                     <button
                       onClick={() => handleAddBuilding(r)}
                       disabled={!assignNeighbourhoodId || addingPlaceId === r.placeId}
-                      className="rounded bg-[var(--accent)] px-2 py-1 text-xs font-medium text-white disabled:opacity-50"
+                      className="rounded bg-[var(--action)] px-2 py-1 text-xs font-medium text-[var(--on-action)] disabled:opacity-50"
                     >
                       {addingPlaceId === r.placeId ? "..." : "Add"}
                     </button>
@@ -393,7 +393,7 @@ export default function ApartmentsPage() {
                   onClick={() => toggleGroup(group.name)}
                   className="flex w-full items-center gap-3 px-4 py-3 text-left"
                 >
-                  <span className={`text-[10px] text-[var(--text-muted)] transition-transform ${isCollapsed ? "" : "rotate-90"}`}>▶</span>
+                  <span className={`text-xs text-[var(--text-muted)] transition-transform ${isCollapsed ? "" : "rotate-90"}`}>▶</span>
                   <span className="flex-1 text-sm font-semibold text-[var(--text-primary)]">{group.name}</span>
                   <span className="text-xs text-[var(--text-muted)]">{group.borough} · Zone {group.zone}</span>
                   <span className="rounded-full bg-[var(--bg-tertiary)] px-2 py-0.5 text-xs text-[var(--text-muted)]">{group.items.length}</span>

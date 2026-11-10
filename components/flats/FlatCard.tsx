@@ -41,7 +41,7 @@ const CHIP: Record<string, string> = {
 };
 
 function Chip({ label, cls }: { label: string; cls: string }) {
-  return <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${CHIP[cls] ?? CHIP.muted}`}>{label}</span>;
+  return <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${CHIP[cls] ?? CHIP.muted}`}>{label}</span>;
 }
 
 export default function FlatCard({
@@ -79,7 +79,7 @@ export default function FlatCard({
   return (
     <div
       ref={cardRef}
-      className={`flex flex-col overflow-hidden rounded-2xl border bg-[var(--bg-primary)] transition-all hover:shadow-md ${
+      className={`flex flex-col overflow-hidden rounded-2xl border bg-[var(--bg-primary)] transition-all ${
         highlighted
           ? "border-[var(--accent)] ring-2 ring-[var(--accent)]"
           : wanted
@@ -99,12 +99,12 @@ export default function FlatCard({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-secondary)]">
+          <div className="flex h-full w-full items-center justify-center bg-[var(--sunk)]">
             <span className="text-4xl font-bold text-[var(--text-muted)]">{l.building.charAt(0)}</span>
           </div>
         )}
         <span
-          className="absolute left-2 top-2 rounded-md px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm"
+          className="absolute left-2 top-2 rounded-md px-2 py-0.5 text-xs font-semibold text-[var(--on-status)]"
           style={{ backgroundColor: budget.bg }}
         >
           {budget.label}
@@ -114,8 +114,8 @@ export default function FlatCard({
           aria-label={wanted ? `Unsave ${l.building}` : `Save ${l.building}`}
           aria-pressed={wanted}
           title={wanted ? "Saved" : "Save"}
-          className={`absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-sm backdrop-blur-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-            wanted ? "bg-[var(--accent)] text-white" : "bg-black/45 text-white hover:bg-black/65"
+          className={`absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors ${
+            wanted ? "bg-[var(--action)] text-[var(--on-action)]" : "bg-black/45 text-[var(--on-action)] hover:bg-black/65"
           }`}
         >
           {wanted ? "♥" : "♡"}
@@ -124,7 +124,7 @@ export default function FlatCard({
 
       <div className="flex flex-1 flex-col gap-2 p-3.5">
         <div className="flex items-baseline justify-between gap-2">
-          <span className="text-xl font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
+          <span className="text-xl font-bold text-[var(--text-primary)] tracking-[-0.02em]">
             £{l.price.toLocaleString()}
           </span>
           {l.isNew && <Chip label="NEW" cls="yes" />}
@@ -163,7 +163,7 @@ export default function FlatCard({
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded text-xs text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                className="rounded text-xs text-[var(--accent)] hover:underline"
               >
                 {s.platform}
                 {s.agent ? ` · ${s.agent}` : ""}
@@ -174,7 +174,7 @@ export default function FlatCard({
             onClick={() => onPref(l.id, rejected ? null : "reject")}
             aria-label={rejected ? `Unhide ${l.building}` : `Hide ${l.building}`}
             aria-pressed={rejected}
-            className="shrink-0 rounded px-1.5 py-0.5 text-xs text-[var(--text-secondary)] hover:text-[var(--status-no)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="shrink-0 rounded px-1.5 py-0.5 text-xs text-[var(--text-secondary)] hover:text-[var(--status-no)]"
           >
             {rejected ? "Undo" : "Hide"}
           </button>

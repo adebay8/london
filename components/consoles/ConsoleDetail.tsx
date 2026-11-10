@@ -65,7 +65,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <button onClick={onClose} aria-label="Close details" className="absolute inset-0 bg-black/50 backdrop-blur-[1px]" />
+      <button onClick={onClose} aria-label="Close details" className="absolute inset-0 bg-black/50-[1px]" />
       <aside
         role="dialog"
         aria-modal="true"
@@ -74,7 +74,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--text-muted)]">{c.retailer}</div>
+            <div className="text-xs font-medium text-[var(--text-muted)]">{c.retailer}</div>
             <h2 className="text-lg font-bold text-[var(--text-primary)]">{c.model}</h2>
             <div className="text-sm text-[var(--text-secondary)]">{c.brand}</div>
           </div>
@@ -91,12 +91,12 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
           href={c.productUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 rounded-lg bg-[var(--accent)] px-3 py-2 text-center text-sm font-semibold text-white hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="mt-3 rounded-lg bg-[var(--action)] px-3 py-2 text-center text-sm font-semibold text-[var(--on-action)] hover:opacity-90"
         >
           View at {c.retailer} ↗
         </a>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Does your kit fit?
         </h3>
         <div className="mt-2 rounded-xl bg-[var(--bg-secondary)] p-3">
@@ -114,21 +114,21 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
         {c.fit.notes.length > 0 && (
           <ul className="mt-2 space-y-1">
             {c.fit.notes.map((n) => (
-              <li key={n} className="text-[11px] leading-snug text-[var(--text-secondary)]">
+              <li key={n} className="text-xs leading-snug text-[var(--text-secondary)]">
                 · {n}
               </li>
             ))}
           </ul>
         )}
         {c.fit.overall === "unknown" && (
-          <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+          <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
             Unconfirmed means the retailer hasn&apos;t published the measurement — not that the unit is too small. Check
             the assembly manual or ask the retailer before ruling it out.
           </p>
         )}
         {/* A property of the TV and the soundbar, not of any console — so it is
             stated once, everywhere, rather than scored per unit. */}
-        <p className="mt-2 rounded-lg bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+        <p className="mt-2 rounded-lg bg-[var(--bg-tertiary)] p-2 text-xs leading-snug text-[var(--text-secondary)]">
           <span className="font-medium">Applies to every unit:</span> the gap under your TV&apos;s screen is about{" "}
           {TV_SCREEN_CLEARANCE_CM}cm and the S80TR is {SOUNDBAR_HEIGHT_CM}cm tall, so the bar will sit flush with the
           bottom bezel. That figure is derived from LG&apos;s published heights, not published directly — worth a tape
@@ -137,7 +137,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
 
         <div className="mt-5 rounded-xl bg-[var(--bg-secondary)] p-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold [font-variant-numeric:tabular-nums]">
+            <span className="text-2xl font-bold tracking-[-0.02em]">
               £{Math.round(c.landedCostGbp).toLocaleString()}
             </span>
             <span className="text-xs text-[var(--text-muted)]">landed cost</span>
@@ -157,7 +157,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
 
         {(c.finance.available || fin.blockedBy) && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
               Finance
             </h3>
             {fin.eligible ? (
@@ -196,26 +196,26 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
           </>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Why it ranks {Math.round(c.score)}/100
         </h3>
         <div className="mt-2 flex gap-4 rounded-lg bg-[var(--bg-secondary)] p-2.5 text-xs">
           <div>
             <div className="font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">{c.rawScore}</div>
-            <div className="text-[10px] text-[var(--text-muted)]">on measured specs</div>
+            <div className="text-xs text-[var(--text-muted)]">on measured specs</div>
           </div>
           <div>
             <div className="font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
               {Math.round(c.confidence * 100)}%
             </div>
-            <div className="text-[10px] text-[var(--text-muted)]">of criteria known</div>
+            <div className="text-xs text-[var(--text-muted)]">of criteria known</div>
           </div>
           <div>
             <div className="font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">{c.score}</div>
-            <div className="text-[10px] text-[var(--text-muted)]">after shrinkage</div>
+            <div className="text-xs text-[var(--text-muted)]">after shrinkage</div>
           </div>
         </div>
-        <p className="mt-1.5 text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="mt-1.5 text-xs leading-snug text-[var(--text-muted)]">
           Unpublished specs are excluded from the average, never scored as zero. Where evidence is thin the score is
           pulled toward the typical unit, so missing data moves a console toward average — not toward bad.
         </p>
@@ -230,12 +230,12 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
         </ul>
 
         {c.gaps.length > 0 && (
-          <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+          <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
             <span className="font-medium">Not published by the retailer:</span> {c.gaps.join(", ")}.
           </p>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Dimensions
         </h3>
         <dl className="mt-1">
@@ -254,7 +254,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
 
         {c.bays.length > 0 && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
               Compartments
             </h3>
             <dl className="mt-1">
@@ -273,7 +273,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
           </>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Build, look &amp; cover
         </h3>
         <dl className="mt-1">
@@ -295,7 +295,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
 
         {c.notes && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
               Research notes
             </h3>
             <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-[var(--text-secondary)]">{c.notes}</p>
@@ -304,7 +304,7 @@ export default function ConsoleDetail({ console: item, onClose }: { console: Sco
 
         {Object.keys(c.extra).length > 0 && (
           <details className="mt-5">
-            <summary className="cursor-pointer text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <summary className="cursor-pointer text-xs font-semibold text-[var(--text-secondary)]">
               Everything else ({Object.keys(c.extra).length})
             </summary>
             <dl className="mt-1">

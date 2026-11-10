@@ -57,14 +57,14 @@ function FirmnessScale({ value, label, source }: { value: Firmness | null; label
                     : inBand ? "bg-[var(--bg-tertiary)] ring-1 ring-inset ring-[var(--status-yes)]" : "bg-[var(--bg-tertiary)]"
                 }`}
               />
-              <div className={`mt-1 text-center text-[9px] leading-tight ${isThis ? "font-bold text-[var(--text-primary)]" : "text-[var(--text-muted)]"}`}>
+              <div className={`mt-1 text-center text-xs leading-tight ${isThis ? "font-bold text-[var(--text-primary)]" : "text-[var(--text-muted)]"}`}>
                 {f.replace("-", "‑")}
               </div>
             </div>
           );
         })}
       </div>
-      <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+      <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
         The outlined pair is the band that serves both side and back nights.
         {label ? (
           <>
@@ -99,7 +99,7 @@ export default function MattressDetail({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <button onClick={onClose} aria-label="Close details" className="absolute inset-0 bg-black/50 backdrop-blur-[1px]" />
+      <button onClick={onClose} aria-label="Close details" className="absolute inset-0 bg-black/50-[1px]" />
       <aside
         role="dialog"
         aria-modal="true"
@@ -108,7 +108,7 @@ export default function MattressDetail({
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--text-muted)]">{m.retailer}</div>
+            <div className="text-xs font-medium text-[var(--text-muted)]">{m.retailer}</div>
             <h2 className="text-lg font-bold text-[var(--text-primary)]">{m.model}</h2>
             <div className="text-sm text-[var(--text-secondary)]">{m.brand}</div>
           </div>
@@ -126,22 +126,22 @@ export default function MattressDetail({
           href={m.productUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 rounded-lg bg-[var(--accent)] px-3 py-2 text-center text-sm font-semibold text-white hover:opacity-90"
+          className="mt-3 rounded-lg bg-[var(--action)] px-3 py-2 text-center text-sm font-semibold text-[var(--on-action)] hover:opacity-90"
         >
           View at {m.retailer} ↗
         </a>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Firmness</h3>
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Firmness</h3>
         <div className="mt-2 rounded-xl bg-[var(--bg-secondary)] p-3">
           <FirmnessScale value={m.fit.firmnessRead.value} label={m.firmnessLabel} source={m.fit.firmnessRead.source} />
         </div>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           The price, and what the “was” is worth
         </h3>
         <div className="mt-2 rounded-xl bg-[var(--bg-secondary)] p-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold [font-variant-numeric:tabular-nums]">
+            <span className="text-2xl font-bold tracking-[-0.02em]">
               £{Math.round(m.landedCostGbp).toLocaleString()}
             </span>
             <span className="text-xs text-[var(--text-muted)]">landed</span>
@@ -150,12 +150,12 @@ export default function MattressDetail({
             {deal.headline}
           </p>
           {deal.caution && (
-            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+            <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-xs leading-snug text-[var(--text-secondary)]">
               {deal.caution}
             </p>
           )}
           {deal.floorGbp != null && deal.floorGbp < m.priceGbp && (
-            <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+            <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
               Seen as low as £{Math.round(deal.floorGbp).toLocaleString()} on a previous check — today is not its best price.
             </p>
           )}
@@ -166,13 +166,13 @@ export default function MattressDetail({
             <Row label="Old mattress taken" value={m.disposalCostGbp != null ? `£${m.disposalCostGbp}` : null} />
             <Row label="Condition" value={m.condition} />
           </dl>
-          <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+          <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
             The discount is shown but never scored. Ranking on percentage-off would put whichever retailer inflates its
             own RRP hardest at the top of the page.
           </p>
         </div>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Meets the brief?</h3>
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Meets the brief?</h3>
         <div className="mt-1">
           <VerdictRow label="A 135 × 190 double" verdict={m.fit.size} />
           <VerdictRow label="Firmness suits how you sleep" verdict={m.fit.firmness} />
@@ -181,14 +181,14 @@ export default function MattressDetail({
         {m.fit.notes.length > 0 && (
           <ul className="mt-2 space-y-1">
             {m.fit.notes.map((n) => (
-              <li key={n} className="text-[11px] leading-snug text-[var(--text-secondary)]">· {n}</li>
+              <li key={n} className="text-xs leading-snug text-[var(--text-secondary)]">· {n}</li>
             ))}
           </ul>
         )}
 
         {compat.total > 0 && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
               In your shortlisted beds
             </h3>
             <div className="mt-1">
@@ -207,11 +207,11 @@ export default function MattressDetail({
                       {c.verdict === "fits" ? "✓ works" : c.verdict === "unknown" ? "? can't tell" : `✕ ${c.verdict.replace("-", " ")}`}
                     </span>
                   </div>
-                  {c.reason && <p className="mt-0.5 text-[11px] leading-snug text-[var(--text-muted)]">{c.reason}</p>}
+                  {c.reason && <p className="mt-0.5 text-xs leading-snug text-[var(--text-muted)]">{c.reason}</p>}
                 </div>
               ))}
             </div>
-            <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+            <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
               Two things can go wrong: the mattress is heavier than the ottoman&apos;s gas struts are rated to lift, or
               it is all foam sitting on a solid base with no slats, which traps moisture underneath. This check never
               affects the score — most listings do not publish a weight, and ranking on that would just reward chatty
@@ -220,20 +220,20 @@ export default function MattressDetail({
           </>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Why it ranks {Math.round(m.score)}/100
         </h3>
         <div className="mt-2 flex gap-4 rounded-lg bg-[var(--bg-secondary)] p-2.5 text-xs">
           <div>
             <div className="font-bold [font-variant-numeric:tabular-nums]">{m.rawScore}</div>
-            <div className="text-[10px] text-[var(--text-muted)]">on measured specs</div>
+            <div className="text-xs text-[var(--text-muted)]">on measured specs</div>
           </div>
           <div>
             <div className="font-bold [font-variant-numeric:tabular-nums]">{Math.round(m.confidence * 100)}%</div>
-            <div className="text-[10px] text-[var(--text-muted)]">of criteria known</div>
+            <div className="text-xs text-[var(--text-muted)]">of criteria known</div>
           </div>
         </div>
-        <p className="mt-1.5 text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="mt-1.5 text-xs leading-snug text-[var(--text-muted)]">
           Unpublished specs are excluded from the average, never scored as zero. Firmness carries the most weight;
           spring count carries the least, and stops counting past 2,000 — in a 135cm-wide double, more springs means
           thinner ones.
@@ -248,12 +248,12 @@ export default function MattressDetail({
           ))}
         </ul>
         {m.gaps.length > 0 && (
-          <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+          <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
             <span className="font-medium">Not published:</span> {m.gaps.join(", ")}.
           </p>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Specification</h3>
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Specification</h3>
         <dl className="mt-1">
           <Row label="Size" value={m.widthCm != null ? `${m.widthCm} × ${m.lengthCm ?? "?"} cm` : m.size} />
           <Row label="Depth" value={depth != null ? `${depth}cm` : null} />
@@ -275,7 +275,7 @@ export default function MattressDetail({
           <Row label="Independent test" value={m.testedBy && m.testScore != null ? `${m.testedBy}: ${m.testScore}%` : null} />
         </dl>
         {hasSuspectDepth(m) && (
-          <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-[11px] leading-snug text-[var(--text-secondary)]">
+          <p className="mt-2 rounded bg-[var(--bg-tertiary)] p-2 text-xs leading-snug text-[var(--text-secondary)]">
             The listing says {m.depthCm}cm, which is the shipping carton rather than the mattress — bed-in-a-box
             listings mix the two constantly. Treated as unpublished rather than as an unusually deep mattress.
           </p>
@@ -283,7 +283,7 @@ export default function MattressDetail({
 
         {m.notes && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">Research notes</h3>
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">Research notes</h3>
             <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-[var(--text-secondary)]">{m.notes}</p>
           </>
         )}

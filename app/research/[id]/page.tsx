@@ -18,7 +18,7 @@ function SourceList({ sources }: { sources: string[] }) {
   return (
     <ul className="mt-2 space-y-0.5">
       {sources.map((src, i) => (
-        <li key={i} className="truncate text-[11px] text-[var(--status-info)] underline underline-offset-2">
+        <li key={i} className="truncate text-xs text-[var(--status-info)] underline underline-offset-2">
           <a href={src} target="_blank" rel="noopener noreferrer">{src}</a>
         </li>
       ))}
@@ -137,13 +137,13 @@ export default function ResearchProfilePage() {
 
       {/* Overview */}
       <section className="mb-8 rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-5">
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)]">Overview</h2>
+        <h2 className="mb-2 text-sm font-semibold text-[var(--text-muted)]">Overview</h2>
         <p className="leading-relaxed text-[var(--text-secondary)]">{profile.overview}</p>
       </section>
 
       {/* Score detail panels — 2-col grid */}
       <section className="mb-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)]">Score Breakdown</h2>
+        <h2 className="mb-3 text-sm font-semibold text-[var(--text-muted)]">Score breakdown</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 
           {/* Transport */}
@@ -183,7 +183,7 @@ export default function ResearchProfilePage() {
 
           {/* Rent */}
           <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-5">
-            <h3 className="mb-3 font-semibold text-[var(--text-primary)]">Rent Value</h3>
+            <h3 className="mb-3 font-semibold text-[var(--text-primary)]">Rent value</h3>
             <ScoreBar
               label="Rent value score"
               score={profile.rentValue.score}
@@ -201,7 +201,7 @@ export default function ResearchProfilePage() {
 
           {/* New Builds */}
           <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-5">
-            <h3 className="mb-3 font-semibold text-[var(--text-primary)]">New Builds</h3>
+            <h3 className="mb-3 font-semibold text-[var(--text-primary)]">New builds</h3>
             <ScoreBar
               label="New builds score"
               score={profile.newBuilds.score}
@@ -241,7 +241,7 @@ export default function ResearchProfilePage() {
 
           {/* Area Quality */}
           <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-5">
-            <h3 className="mb-3 font-semibold text-[var(--text-primary)]">Area Quality</h3>
+            <h3 className="mb-3 font-semibold text-[var(--text-primary)]">Area quality</h3>
             <ScoreBar
               label="Area quality score"
               score={profile.areaQuality.score}
@@ -256,7 +256,7 @@ export default function ResearchProfilePage() {
 
       {/* Pros / Cons */}
       <section className="mb-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)]">Pros &amp; Cons</h2>
+        <h2 className="mb-3 text-sm font-semibold text-[var(--text-muted)]">Pros &amp; cons</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="rounded-xl border border-[var(--status-yes)] bg-[var(--status-yes-bg)] p-5">
             <h3 className="mb-3 font-semibold text-[var(--status-yes)]">Pros</h3>

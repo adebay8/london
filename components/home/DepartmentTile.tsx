@@ -4,10 +4,14 @@ import Link from "next/link";
 
 // A department entrance. One number worth knowing, one line of what's inside,
 // and a door. Not a stat readout — the detail lives inside the department.
+//
+// Drawn as a hairline-topped column, not a boxed card: a row of identical
+// boxes reads as decoration, and a whole tile as the click target means the
+// title, number and line all lead to the same place (NN/g, "Clickable
+// elements"). `accent` marks a department with something new in focus blue.
 
 export default function DepartmentTile({
   href,
-  icon,
   title,
   count,
   countLabel,
@@ -15,7 +19,6 @@ export default function DepartmentTile({
   accent = false,
 }: {
   href: string;
-  icon: string;
   title: string;
   count?: number | string;
   countLabel: string;
@@ -25,24 +28,21 @@ export default function DepartmentTile({
   return (
     <Link
       href={href}
-      className={`group flex flex-col gap-1 rounded-xl border p-3 transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-        accent
-          ? "border-[var(--accent)] bg-[var(--status-info-bg)]"
-          : "border-[var(--border-primary)] bg-[var(--bg-primary)]"
+      className={`group flex flex-col gap-1 border-t-2 pt-3 pb-1 transition-colors ${
+        accent ? "border-[var(--focus)]" : "border-[var(--line)] hover:border-[var(--ink)]"
       }`}
     >
-      <div className="flex items-center gap-2">
-        <span className="text-base" aria-hidden>{icon}</span>
-        <span className="text-xs font-semibold text-[var(--text-primary)]">{title}</span>
-        <span className="ml-auto text-[var(--text-muted)] transition-transform group-hover:translate-x-0.5">→</span>
-      </div>
-      <div className="flex items-baseline gap-1.5">
-        <span className="text-2xl font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
-          {count ?? "—"}
+      <span className="flex items-center gap-1 text-sm font-semibold text-[var(--ink)] group-hover:underline">
+        {title}
+        <span aria-hidden className="text-[var(--ink-3)] transition-transform group-hover:translate-x-0.5">
+          →
         </span>
-        <span className="text-[11px] text-[var(--text-muted)]">{countLabel}</span>
-      </div>
-      {line && <p className="text-[11px] leading-snug text-[var(--text-secondary)]">{line}</p>}
+      </span>
+      <span className="flex items-baseline gap-1.5">
+        <span className="text-3xl font-bold tracking-[-0.03em] text-[var(--ink)]">{count ?? "—"}</span>
+        <span className="text-xs text-[var(--ink-3)]">{countLabel}</span>
+      </span>
+      {line && <span className="text-xs leading-snug text-[var(--ink-2)]">{line}</span>}
     </Link>
   );
 }

@@ -46,7 +46,7 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
       <button
         onClick={onClose}
         aria-label="Close details"
-        className="absolute inset-0 bg-black/50 backdrop-blur-[1px]"
+        className="absolute inset-0 bg-black/50-[1px]"
       />
       <aside
         role="dialog"
@@ -56,7 +56,7 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--text-muted)]">{b.retailer}</div>
+            <div className="text-xs font-medium text-[var(--text-muted)]">{b.retailer}</div>
             <h2 className="text-lg font-bold text-[var(--text-primary)]">{b.model}</h2>
             <div className="text-sm text-[var(--text-secondary)]">{b.brand}</div>
           </div>
@@ -73,14 +73,14 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
           href={b.productUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 rounded-lg bg-[var(--accent)] px-3 py-2 text-center text-sm font-semibold text-white hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="mt-3 rounded-lg bg-[var(--action)] px-3 py-2 text-center text-sm font-semibold text-[var(--on-action)] hover:opacity-90"
         >
           View at {b.retailer} ↗
         </a>
 
         <div className="mt-4 rounded-xl bg-[var(--bg-secondary)] p-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold [font-variant-numeric:tabular-nums]">
+            <span className="text-2xl font-bold tracking-[-0.02em]">
               £{Math.round(b.landedCostGbp).toLocaleString()}
             </span>
             <span className="text-xs text-[var(--text-muted)]">landed cost</span>
@@ -95,7 +95,7 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
 
         {(b.finance.available || fin.blockedBy) && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
               Finance
             </h3>
             {fin.eligible ? (
@@ -142,26 +142,26 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
           </>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Why it ranks {Math.round(b.score)}/100
         </h3>
         <div className="mt-2 flex gap-4 rounded-lg bg-[var(--bg-secondary)] p-2.5 text-xs">
           <div>
             <div className="font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">{b.rawScore}</div>
-            <div className="text-[10px] text-[var(--text-muted)]">on measured specs</div>
+            <div className="text-xs text-[var(--text-muted)]">on measured specs</div>
           </div>
           <div>
             <div className="font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">
               {Math.round(b.confidence * 100)}%
             </div>
-            <div className="text-[10px] text-[var(--text-muted)]">of criteria known</div>
+            <div className="text-xs text-[var(--text-muted)]">of criteria known</div>
           </div>
           <div>
             <div className="font-bold text-[var(--text-primary)] [font-variant-numeric:tabular-nums]">{b.score}</div>
-            <div className="text-[10px] text-[var(--text-muted)]">after shrinkage</div>
+            <div className="text-xs text-[var(--text-muted)]">after shrinkage</div>
           </div>
         </div>
-        <p className="mt-1.5 text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="mt-1.5 text-xs leading-snug text-[var(--text-muted)]">
           Unpublished specs are excluded from the average, never scored as zero. Where evidence is thin the score is
           pulled toward the typical bed, so missing data moves a bed toward average — not toward bad.
         </p>
@@ -176,12 +176,12 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
         </ul>
 
         {b.gaps.length > 0 && (
-          <p className="mt-2 text-[11px] leading-snug text-[var(--text-muted)]">
+          <p className="mt-2 text-xs leading-snug text-[var(--text-muted)]">
             <span className="font-medium">Not published by the retailer:</span> {b.gaps.join(", ")}.
           </p>
         )}
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Mechanism &amp; build
         </h3>
         <dl className="mt-1">
@@ -196,7 +196,7 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
           <Row label="Min mattress" value={b.minMattressWeightKg != null ? `${b.minMattressWeightKg}kg` : null} />
         </dl>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Storage &amp; footprint
         </h3>
         <dl className="mt-1">
@@ -214,7 +214,7 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
           <Row label="Longest box" value={b.longestBoxCm != null ? `${b.longestBoxCm}cm` : null} />
         </dl>
 
-        <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
           Look, service &amp; cover
         </h3>
         <dl className="mt-1">
@@ -234,7 +234,7 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
 
         {b.notes && (
           <>
-            <h3 className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <h3 className="mt-5 text-xs font-semibold text-[var(--text-secondary)]">
               Research notes
             </h3>
             <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-[var(--text-secondary)]">{b.notes}</p>
@@ -243,7 +243,7 @@ export default function BedDetail({ bed, onClose }: { bed: ScoredBed | null; onC
 
         {Object.keys(b.extra).length > 0 && (
           <details className="mt-5">
-            <summary className="cursor-pointer text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+            <summary className="cursor-pointer text-xs font-semibold text-[var(--text-secondary)]">
               Everything else ({Object.keys(b.extra).length})
             </summary>
             <dl className="mt-1">

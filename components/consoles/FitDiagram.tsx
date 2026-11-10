@@ -29,7 +29,7 @@ const MUTED = "var(--text-muted)";
 
 function Empty({ label }: { label: string }) {
   return (
-    <div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-[var(--border-primary)] px-3 text-center text-[11px] text-[var(--text-muted)]">
+    <div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-[var(--border-primary)] px-3 text-center text-xs text-[var(--text-muted)]">
       {label}
     </div>
   );
@@ -194,13 +194,13 @@ export default function FitDiagram({ console: c }: { console: TvConsole }) {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <div>
-        <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <div className="mb-1 text-xs font-semibold text-[var(--text-secondary)]">
           Top surface, from above
         </div>
         <TopSurface c={c} />
       </div>
       <div>
-        <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+        <div className="mb-1 text-xs font-semibold text-[var(--text-secondary)]">
           Largest open bay, from the front
         </div>
         <Ps5Bay c={c} />

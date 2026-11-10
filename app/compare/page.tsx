@@ -1,5 +1,6 @@
 "use client";
 
+import AreaTabs from "@/components/AreaTabs";
 import { useState, useEffect } from "react";
 import CompareTable from "@/components/CompareTable";
 import type { ResearchProfileRow } from "@/lib/types";
@@ -31,8 +32,9 @@ export default function ComparePage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="mb-4 text-xl font-bold text-[var(--text-primary)]">Compare Neighbourhoods</h1>
+    <>
+    <AreaTabs blurb="Pick up to a few neighbourhoods and see them side by side." />
+    <div className="p-4 sm:p-6">
       <div className="mb-6">
         <p className="mb-2 text-sm text-[var(--text-secondary)]">Select 2-3 researched neighbourhoods to compare:</p>
         <div className="flex flex-wrap gap-2">
@@ -111,5 +113,6 @@ export default function ComparePage() {
         <p className="text-sm text-[var(--text-muted)]">{allProfiles.length < 2 ? "Research at least 2 neighbourhoods to start comparing." : "Select at least 2 neighbourhoods above."}</p>
       )}
     </div>
+    </>
   );
 }

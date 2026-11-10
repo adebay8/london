@@ -1,5 +1,6 @@
 "use client";
 
+import AreaTabs from "@/components/AreaTabs";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import NeighbourhoodSelector from "@/components/NeighbourhoodSelector";
@@ -178,7 +179,9 @@ export default function MapPage() {
   }));
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full flex-col">
+      <AreaTabs />
+      <div className="flex min-h-0 flex-1">
       <NeighbourhoodSelector neighbourhoods={neighbourhoods} onStatusChange={handleStatusChange} onBulkStatusChange={handleBulkStatusChange} onResearch={handleResearch} />
       <div className="relative flex-1">
         <LondonMap selectedOptions={selectedOptions} districts={districts} apartments={filteredApartments} stations={showStations ? STATIONS : []} onScanApartment={handleScanApartment} scanningApartmentId={scanningApartmentId} />
@@ -188,7 +191,7 @@ export default function MapPage() {
               type="checkbox"
               checked={showStations}
               onChange={(e) => setShowStations(e.target.checked)}
-              className="accent-[#a855f7]"
+              className="accent-[var(--cat-4)]"
             />
             Stations ({STATIONS.length})
           </label>
@@ -203,10 +206,10 @@ export default function MapPage() {
                   checked={allApartmentNeighbourhoodsVisible}
                   onChange={(e) => { e.stopPropagation(); toggleAllApartmentNeighbourhoods(); }}
                   onClick={(e) => e.stopPropagation()}
-                  className="accent-[#3b82f6]"
+                  className="accent-[var(--focus)]"
                 />
                 <span className="flex-1 text-left">Apartments ({filteredApartments.length})</span>
-                <span className={`text-[10px] transition-transform ${apartmentsPanelOpen ? "rotate-90" : ""}`}>▶</span>
+                <span className={`text-xs transition-transform ${apartmentsPanelOpen ? "rotate-90" : ""}`}>▶</span>
               </button>
               {apartmentsPanelOpen && (
                 <div className="max-h-48 overflow-y-auto border-t border-[var(--border-primary)] px-1 py-1">
@@ -221,7 +224,7 @@ export default function MapPage() {
                           type="checkbox"
                           checked={visibleApartmentNeighbourhoods.has(name)}
                           onChange={() => toggleApartmentNeighbourhood(name)}
-                          className="accent-[#3b82f6]"
+                          className="accent-[var(--focus)]"
                         />
                         <span className="flex-1">{name}</span>
                         <span className="text-[var(--text-muted)]">{items.length}</span>
@@ -232,6 +235,7 @@ export default function MapPage() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ export default function ScoreBar({ label, score, weight }: Props) {
       <div className="h-1.5 rounded-full bg-[var(--bg-tertiary)]">
         <div className={`h-full rounded-full ${scoreBarColor(score)}`} style={{ width: `${score * 10}%` }} />
       </div>
-      {weight && <div className="mt-0.5 text-right text-[10px] text-[var(--text-muted)]">{weight}</div>}
+      {weight && <div className="mt-0.5 text-right text-xs text-[var(--text-muted)]">{weight}</div>}
     </div>
   );
 }

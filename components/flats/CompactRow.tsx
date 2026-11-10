@@ -25,7 +25,7 @@ const CHIP: Record<string, string> = {
 };
 function Chip({ label, cls }: { label: string; cls: string }) {
   return (
-    <span className={`whitespace-nowrap rounded px-1.5 py-0.5 text-[10px] font-medium ${CHIP[cls] ?? CHIP.muted}`}>
+    <span className={`whitespace-nowrap rounded px-1.5 py-0.5 text-xs font-medium ${CHIP[cls] ?? CHIP.muted}`}>
       {label}
     </span>
   );
@@ -76,7 +76,7 @@ export default function CompactRow({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-secondary)] text-sm font-bold text-[var(--text-muted)]">
+          <div className="flex h-full w-full items-center justify-center bg-[var(--sunk)] text-sm font-bold text-[var(--text-muted)]">
             {l.building.charAt(0)}
           </div>
         )}
@@ -91,7 +91,7 @@ export default function CompactRow({
       <div className="min-w-0 flex-1">
         <div className={`truncate text-sm font-medium text-[var(--text-primary)] ${rejected ? "line-through" : ""}`}>
           {l.building}
-          {l.isNew && <span className="ml-1.5 align-middle text-[10px] font-semibold text-[var(--status-yes)]">NEW</span>}
+          {l.isNew && <span className="ml-1.5 align-middle text-xs font-semibold text-[var(--status-yes)]">NEW</span>}
         </div>
         <div className="truncate text-xs text-[var(--text-secondary)]">
           {l.scheme === "btr" ? (l.operator ? `BTR · ${l.operator}` : "BTR") : "Private"}
@@ -105,7 +105,7 @@ export default function CompactRow({
         <Chip {...budget} />
       </div>
       <div className="hidden w-28 shrink-0 md:block">
-        {timing ? <Chip {...timing} /> : <span className="text-[10px] text-[var(--text-muted)]">—</span>}
+        {timing ? <Chip {...timing} /> : <span className="text-xs text-[var(--text-muted)]">—</span>}
       </div>
       <div className="hidden w-32 shrink-0 truncate text-xs text-[var(--text-secondary)] lg:block">{avail}</div>
 
@@ -115,8 +115,8 @@ export default function CompactRow({
           onClick={() => onPref(l.id, wanted ? null : "want")}
           aria-label={wanted ? `Unsave ${l.building}` : `Save ${l.building}`}
           aria-pressed={wanted}
-          className={`flex h-7 w-7 items-center justify-center rounded-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-            wanted ? "bg-[var(--accent)] text-white" : "text-[var(--accent)] hover:bg-[var(--bg-hover)]"
+          className={`flex h-7 w-7 items-center justify-center rounded-full text-sm transition-colors ${
+            wanted ? "bg-[var(--action)] text-[var(--on-action)]" : "text-[var(--accent)] hover:bg-[var(--bg-hover)]"
           }`}
         >
           {wanted ? "♥" : "♡"}
@@ -125,7 +125,7 @@ export default function CompactRow({
           onClick={() => onPref(l.id, rejected ? null : "reject")}
           aria-label={rejected ? `Unhide ${l.building}` : `Hide ${l.building}`}
           aria-pressed={rejected}
-          className="rounded px-1.5 py-0.5 text-xs text-[var(--text-secondary)] hover:text-[var(--status-no)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="rounded px-1.5 py-0.5 text-xs text-[var(--text-secondary)] hover:text-[var(--status-no)]"
         >
           {rejected ? "Undo" : "Hide"}
         </button>
