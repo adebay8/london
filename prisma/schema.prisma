@@ -759,6 +759,13 @@ model HomeListing {
   distanceMiles Float?
   distanceNote  String?
 
+  /// Outside space and parking as the listing states them; null = not stated.
+  garden  Boolean?
+  parking String?
+  /// Map position, from the portal.
+  lat     Float?
+  lng     Float?
+
   keyFeatures String @default("[]") // JSON string[]
   photos      String @default("[]") // JSON string[]
 

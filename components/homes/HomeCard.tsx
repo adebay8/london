@@ -29,11 +29,19 @@ export default function HomeCard({
   townName,
   commute,
   flags,
+  isNew = false,
+  score = null,
+  why,
   onPref,
 }: {
   home: HomeListing;
   townName: string;
   commute: string | null;
+  isNew?: boolean;
+  /** 0–100 by the user's weights; null when nothing is weighted. */
+  score?: number | null;
+  /** What helps and hurts this home's score, in words. */
+  why?: string;
   flags: Flag[];
   onPref: (id: string, pref: Pref | null) => void;
 }) {
@@ -45,6 +53,8 @@ export default function HomeCard({
     home.propertyType?.replace(/\s*\(.*\)$/, ""),
     home.floorAreaSqFt && home.floorAreaSqFt >= 200 ? `${home.floorAreaSqFt.toLocaleString()} sq ft` : null,
     home.newBuild ? "New build" : null,
+    home.garden ? "Garden" : null,
+    home.parking ? `Parking: ${home.parking.toLowerCase()}` : null,
   ].filter(Boolean);
   const verify = flags.find((f) => f.id === "verify");
   const others = flags.filter((f) => f.id !== "verify");
@@ -62,9 +72,14 @@ export default function HomeCard({
         ) : (
           <NoPhoto label="The portal page showed no photo" />
         )}
-        {home.photos.length > 1 && (
+        {(home.photoCount ?? home.photos.length) > 1 && (
           <span className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-xs font-medium text-white">
-            {home.photos.length} photos
+            {home.photoCount ?? home.photos.length} photos
+          </span>
+        )}
+        {isNew && home.status !== "coming-soon" && (
+          <span className="absolute left-2 top-2 rounded-full bg-[var(--focus)] px-2.5 py-0.5 text-xs font-semibold text-[var(--on-action)]">
+            New this pass
           </span>
         )}
         {home.status === "coming-soon" && (
@@ -100,6 +115,19 @@ export default function HomeCard({
           </p>
           {commute && <p className="text-xs text-[var(--ink-2)]">Train: {commute}</p>}
         </div>
+
+        {score != null && (
+          <p className="flex items-start gap-2 text-xs text-[var(--ink-2)]">
+            <span
+              title="How well this home fits your weights, 0–100"
+              className="shrink-0 rounded bg-[var(--sunk)] px-1.5 py-0.5 font-semibold tabular text-[var(--ink)]"
+            >
+              {score}
+              <span className="sr-only"> out of 100 for your weights</span>
+            </span>
+            {why && <span className="pt-0.5 leading-snug">{why}</span>}
+          </p>
+        )}
 
         <p className="text-xs text-[var(--ink-2)]">
           {facts.join(" · ")}

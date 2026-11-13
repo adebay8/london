@@ -11,7 +11,7 @@ const PROMOTED = new Set([
   "property_type", "new_build", "tenure", "lease_years_remaining", "service_charge_pa",
   "ground_rent_pa", "beds", "baths", "floor_area", "council_tax", "epc",
   "date_listed_or_changed", "distance_to_station", "key_features",
-  "photo_1", "photo_2", "photo_3", "checked",
+  "photo_1", "photo_2", "photo_3", "checked", "garden", "parking", "lat", "lng",
 ]);
 
 /** "n/c", "n/a", blank and friends mean "we don't know". */
@@ -141,6 +141,10 @@ export function rowToListing(r: ListingRow): Omit<HomeListing, "pref" | "priceHi
     listedOn: listed.date,
     distanceMiles: parseMiles(r.distance_to_station),
     distanceNote: (r.distance_to_station ?? "").trim() || null,
+    garden: /^y/i.test(r.garden ?? "") ? true : /^n(o|$)/i.test((r.garden ?? "").trim()) ? false : null,
+    parking: str(r.parking),
+    lat: num(r.lat),
+    lng: num(r.lng),
     keyFeatures: splitFeatures(r.key_features),
     photos: [r.photo_1, r.photo_2, r.photo_3].map((p) => (p ?? "").trim()).filter((p) => p.startsWith("http")),
     status: parseStatus(qualifier, r.key_features ?? ""),

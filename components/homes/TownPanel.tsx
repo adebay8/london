@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { BuyTown } from "@/lib/homes/types";
 
 // The research state of one town: what was searched, why coverage is thin,
@@ -8,7 +9,20 @@ import type { BuyTown } from "@/lib/homes/types";
 
 const k = (p: number) => `£${Math.round(p / 1000)}k`;
 
-export default function TownPanel({ town, count, onClear }: { town: BuyTown; count: number; onClear: () => void }) {
+export default function TownPanel({
+  town,
+  count,
+  onClear,
+  clearLabel = "Show all towns",
+  homesHref,
+}: {
+  town: BuyTown;
+  count: number;
+  onClear: () => void;
+  clearLabel?: string;
+  /** On the Towns page: a link through to this town's homes. */
+  homesHref?: string;
+}) {
   return (
     <section aria-labelledby="town-heading" className="rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5">
       <div className="flex flex-wrap items-start gap-3">
@@ -21,13 +35,20 @@ export default function TownPanel({ town, count, onClear }: { town: BuyTown; cou
             {town.lastSearchedAt && ` · searched ${town.lastSearchedAt.split("-").reverse().join("/")}`}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onClear}
-          className="h-9 rounded-full border border-[var(--line-control)] px-4 text-sm font-semibold text-[var(--ink)]"
-        >
-          Show all towns
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {homesHref && count > 0 && (
+            <Link href={homesHref} className="flex h-9 items-center rounded-full bg-[var(--action)] px-4 text-sm font-semibold text-[var(--on-action)]">
+              See its {count} homes
+            </Link>
+          )}
+          <button
+            type="button"
+            onClick={onClear}
+            className="h-9 rounded-full border border-[var(--line-control)] px-4 text-sm font-semibold text-[var(--ink)]"
+          >
+            {clearLabel}
+          </button>
+        </div>
       </div>
 
       {town.policy && (

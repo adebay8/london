@@ -167,6 +167,7 @@ export default function Home() {
   const tiles: Record<string, { count: number; countLabel: string; line: string; accent?: boolean }> = d
     ? {
         "/flats": { count: d.flats.count, countLabel: "on the board", line: `${d.flats.isNew} new · ${d.flats.saved} saved · ${d.flats.areas} areas`, accent: d.flats.isNew > 0 },
+        "/buying/towns": { count: d.buying.towns, countLabel: "station towns", line: `${d.buying.townsWithStock} with homes for sale, ranked your way` },
         "/buying": { count: d.buying.count, countLabel: "homes for sale", line: `near ${d.buying.townsWithStock} of ${d.buying.towns} stations · ${d.buying.saved} saved` },
         "/apartments": { count: d.areas.apartments, countLabel: "buildings tracked", line: "Developments near your shortlisted areas" },
         "/map": { count: d.areas.undecided, countLabel: "still undecided", line: `${d.areas.yes} yes · ${d.areas.maybe} maybe · ${d.areas.ranked} ranked` },

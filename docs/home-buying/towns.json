@@ -1,154 +1,309 @@
 [
   {
-    "id": "st-albans", "town": "St Albans", "station": "St Albans City",
-    "searched": "Rightmove 0.5-mile station page (page 2, sorted by price); Hamptons snippets",
+    "id": "st-albans",
+    "town": "St Albans",
+    "station": "St Albans City",
+    "searched": "Scraped 11/11/2026: Rightmove 122, OnTheMarket 99 within 1 mi of St Albans City, 2–3 bed, £200k–£500k",
     "gap": "Hamptons Charrington Place at £400k found but no URL captured",
     "nextAction": "Capture the Hamptons Charrington Place listing",
-    "leads": [{ "label": "Charrington Place (Hamptons)", "priceGbp": 400000 }]
+    "leads": [
+      {
+        "label": "Charrington Place (Hamptons)",
+        "priceGbp": 400000
+      }
+    ],
+    "onthemarketSlug": "st-albans-city-station",
+    "rightmoveStationId": "8573"
   },
   {
-    "id": "luton", "town": "Luton", "station": "Luton",
-    "searched": "Rightmove area pages (snippets only)",
+    "id": "luton",
+    "town": "Luton",
+    "station": "Luton",
+    "searched": "Scraped 11/11/2026: Rightmove 210, OnTheMarket 217 within 1 mi of Luton, 2–3 bed, £200k–£500k",
     "gap": "Station-radius page not reached before the search budget ran out. Several results are investor yield listings or Kimpton Road blocks nearer Luton Airport Parkway.",
     "nextAction": "Fetch the Rightmove station-radius page",
     "leads": [
-      { "label": "Castle Street flat, close to the station", "priceGbp": 270000 },
-      { "label": "Cambridge Street terrace, LU1 3QT (guide)", "priceGbp": 250000 },
-      { "label": "Ashton Road terrace, LU1 (guide)", "priceGbp": 250000 }
-    ]
+      {
+        "label": "Castle Street flat, close to the station",
+        "priceGbp": 270000
+      },
+      {
+        "label": "Cambridge Street terrace, LU1 3QT (guide)",
+        "priceGbp": 250000
+      },
+      {
+        "label": "Ashton Road terrace, LU1 (guide)",
+        "priceGbp": 250000
+      }
+    ],
+    "rightmoveStationId": "5894",
+    "onthemarketSlug": "luton-station"
   },
   {
-    "id": "bedford", "town": "Bedford", "station": "Bedford (Midland)",
-    "searched": "Rightmove 0.5-mile station page (119 results)",
+    "id": "bedford",
+    "town": "Bedford",
+    "station": "Bedford (Midland)",
+    "searched": "Scraped 11/11/2026: Rightmove 113, OnTheMarket 97 within 1 mi of Bedford, 2–3 bed, £200k–£500k",
     "gap": "Near-station 2-beds were under the £200k floor, shared ownership, retirement or auction lots.",
     "policy": "Either lower the floor to about £150k, or allow up to about 0.75 miles to bring in £255k–£270k houses.",
     "nextAction": "Decide on a floor or radius policy",
     "leads": [
-      { "label": "Milton Road coach house, MK40 (freehold)", "priceGbp": 255000 },
-      { "label": "Palmerston Street terrace", "priceGbp": 270000 }
-    ]
+      {
+        "label": "Milton Road coach house, MK40 (freehold)",
+        "priceGbp": 255000
+      },
+      {
+        "label": "Palmerston Street terrace",
+        "priceGbp": 270000
+      }
+    ],
+    "rightmoveStationId": "776",
+    "onthemarketSlug": "bedford-station"
   },
   {
-    "id": "medway", "town": "Medway", "station": "Rochester (Chatham second)",
-    "searched": "Rightmove and Zoopla snippets",
+    "id": "medway",
+    "town": "Medway",
+    "station": "Rochester (Chatham second)",
+    "searched": "Scraped 11/11/2026: Rightmove 119, OnTheMarket 63 within 1 mi of Rochester, 2–3 bed, £200k–£500k",
     "gap": "Station pages not fetched. Rochester Riverside 2-beds on Zoopla are mostly shared ownership; Harriet Drive is modern method of auction.",
     "nextAction": "Fetch the Rochester and Chatham station-radius pages",
-    "leads": [{ "label": "Station Road / Crow Lane flat (guide £250k–£270k)", "priceGbp": 250000 }]
+    "leads": [
+      {
+        "label": "Station Road / Crow Lane flat (guide £250k–£270k)",
+        "priceGbp": 250000
+      }
+    ],
+    "rightmoveStationId": "7742",
+    "onthemarketSlug": "rochester-station"
   },
   {
-    "id": "stevenage", "town": "Stevenage", "station": "Stevenage",
-    "searched": "Rightmove 0.5-mile page (lowest-price page); PrimeLocation snippets",
+    "id": "stevenage",
+    "town": "Stevenage",
+    "station": "Stevenage",
+    "searched": "Scraped 11/11/2026: Rightmove 73, OnTheMarket 71 within 1 mi of Stevenage, 2–3 bed, £200k–£500k",
     "gap": "Lowest-price page was sub-£200k 1-beds, shared ownership, retirement or auction. Qualifying new builds seen only as snippets.",
     "nextAction": "Capture the Nexus and Claxton House listings",
     "leads": [
-      { "label": "Nexus, Lytton Way", "priceGbp": 338500 },
-      { "label": "Nexus, Lytton Way", "priceGbp": 355000 },
-      { "label": "Nexus, Lytton Way", "priceGbp": 360000 },
-      { "label": "Claxton House", "priceGbp": 310000 }
-    ]
+      {
+        "label": "Nexus, Lytton Way",
+        "priceGbp": 338500
+      },
+      {
+        "label": "Nexus, Lytton Way",
+        "priceGbp": 355000
+      },
+      {
+        "label": "Nexus, Lytton Way",
+        "priceGbp": 360000
+      },
+      {
+        "label": "Claxton House",
+        "priceGbp": 310000
+      }
+    ],
+    "rightmoveStationId": "8732",
+    "onthemarketSlug": "stevenage-station"
   },
   {
-    "id": "milton-keynes", "town": "Milton Keynes", "station": "Milton Keynes Central",
-    "searched": "Rightmove 0.5-mile station page (page 1 of 4)",
+    "id": "milton-keynes",
+    "town": "Milton Keynes",
+    "station": "Milton Keynes Central",
+    "searched": "Scraped 11/11/2026: Rightmove 83, OnTheMarket 73 within 1 mi of Milton Keynes Central, 2–3 bed, £200k–£500k",
     "gap": "Pages 2–4 not read",
     "nextAction": "Read result pages 2–4",
-    "leads": []
+    "leads": [],
+    "rightmoveStationId": "6263",
+    "onthemarketSlug": "milton-keynes-central-station"
   },
   {
-    "id": "reading", "town": "Reading", "station": "Reading",
-    "searched": "Zoopla station page; OnTheMarket listing and search pages",
+    "id": "reading",
+    "town": "Reading",
+    "station": "Reading",
+    "searched": "Scraped 11/11/2026: Rightmove 250, OnTheMarket 197 (town-wide page, filtered to 1 mi) within 1 mi of Reading, 2–3 bed, £200k–£500k",
     "gap": "Rightmove Reading station page was refused. OnTheMarket Sidmouth Street is Sold STC.",
     "nextAction": "Retry Rightmove with the STATION^ locationIdentifier form",
-    "leads": []
+    "leads": [],
+    "rightmoveStationId": "7610",
+    "onthemarketSlug": "reading"
   },
   {
-    "id": "chelmsford", "town": "Chelmsford", "station": "Chelmsford",
-    "searched": "Rightmove 0.5-mile page (page 1, highest first)",
+    "id": "chelmsford",
+    "town": "Chelmsford",
+    "station": "Chelmsford",
+    "searched": "Scraped 11/11/2026: Rightmove 225, OnTheMarket 211 within 1 mi of Chelmsford, 2–3 bed, £200k–£500k",
     "gap": "Later, cheaper pages not read",
     "nextAction": "Read the lowest-price pages",
-    "leads": []
+    "leads": [],
+    "rightmoveStationId": "1988",
+    "onthemarketSlug": "chelmsford-station"
   },
   {
-    "id": "basingstoke", "town": "Basingstoke", "station": "Basingstoke",
-    "searched": "Zoopla station page",
+    "id": "basingstoke",
+    "town": "Basingstoke",
+    "station": "Basingstoke",
+    "searched": "Scraped 11/11/2026: Rightmove 71, OnTheMarket 46 within 1 mi of Basingstoke, 2–3 bed, £200k–£500k",
     "gap": "Rightmove Basingstoke station page was refused; Zoopla gave no distances.",
     "nextAction": "Retry Rightmove for distances and photos",
-    "leads": []
+    "leads": [],
+    "rightmoveStationId": "674",
+    "onthemarketSlug": "basingstoke-station"
   },
   {
-    "id": "woking", "town": "Woking", "station": "Woking",
-    "searched": "Rightmove 0.5-mile page (page 2); Zoopla area pages",
+    "id": "woking",
+    "town": "Woking",
+    "station": "Woking",
+    "searched": "Scraped 11/11/2026: Rightmove 106, OnTheMarket 67 within 1 mi of Woking, 2–3 bed, £200k–£500k",
     "gap": "Capped at 15. Six more qualifying flats left out: 93829692, 94542858, 88297314, 173290352, 89460435, 95318730.",
     "nextAction": "Add the six over-cap Woking flats",
     "leads": [
-      { "label": "Park Heights, 990 sq ft (93829692)", "priceGbp": 325000 },
-      { "label": "Portugal Road (94542858)", "priceGbp": 325000 },
-      { "label": "Chertsey Road (88297314)", "priceGbp": 310000 },
-      { "label": "Park Heights (173290352)", "priceGbp": 300000 },
-      { "label": "Broomhall Road (89460435)", "priceGbp": 285000 },
-      { "label": "Goldsworth Road, private garden (95318730)", "priceGbp": 280000 }
-    ]
+      {
+        "label": "Park Heights, 990 sq ft (93829692)",
+        "priceGbp": 325000
+      },
+      {
+        "label": "Portugal Road (94542858)",
+        "priceGbp": 325000
+      },
+      {
+        "label": "Chertsey Road (88297314)",
+        "priceGbp": 310000
+      },
+      {
+        "label": "Park Heights (173290352)",
+        "priceGbp": 300000
+      },
+      {
+        "label": "Broomhall Road (89460435)",
+        "priceGbp": 285000
+      },
+      {
+        "label": "Goldsworth Road, private garden (95318730)",
+        "priceGbp": 280000
+      }
+    ],
+    "rightmoveStationId": "10202",
+    "onthemarketSlug": "woking-station"
   },
   {
-    "id": "guildford", "town": "Guildford", "station": "Guildford",
-    "searched": "Zoopla, PrimeLocation, Savills snippets",
+    "id": "guildford",
+    "town": "Guildford",
+    "station": "Guildford",
+    "searched": "Scraped 11/11/2026: Rightmove 74, OnTheMarket 53 within 1 mi of Guildford, 2–3 bed, £200k–£500k",
     "gap": "Station page not fetched. Near-station result was 35% shared ownership; most others £500k+.",
     "nextAction": "Fetch the Rightmove station-radius page",
-    "leads": [{ "label": "Wodeland Avenue, GU2, 2 bath (Bourne)", "priceGbp": 400000 }]
+    "leads": [
+      {
+        "label": "Wodeland Avenue, GU2, 2 bath (Bourne)",
+        "priceGbp": 400000
+      }
+    ],
+    "rightmoveStationId": "4037",
+    "onthemarketSlug": "guildford-station"
   },
   {
-    "id": "high-wycombe", "town": "High Wycombe", "station": "High Wycombe",
-    "searched": "Rightmove area snippets",
+    "id": "high-wycombe",
+    "town": "High Wycombe",
+    "station": "High Wycombe",
+    "searched": "Scraped 11/11/2026: Rightmove 141, OnTheMarket 141 within 1 mi of High Wycombe, 2–3 bed, £200k–£500k",
     "gap": "Station page not found",
     "nextAction": "Find and fetch the station-radius page",
     "leads": [
-      { "label": "Kaybridge Close", "priceGbp": 210000 },
-      { "label": "West Wycombe Road flat, five minutes' walk (Connells)", "priceGbp": null }
-    ]
+      {
+        "label": "Kaybridge Close",
+        "priceGbp": 210000
+      },
+      {
+        "label": "West Wycombe Road flat, five minutes' walk (Connells)",
+        "priceGbp": null
+      }
+    ],
+    "rightmoveStationId": "4571",
+    "onthemarketSlug": "high-wycombe-station"
   },
   {
-    "id": "hatfield", "town": "Hatfield", "station": "Hatfield",
-    "searched": "Rightmove 0.5-mile page (page 2)",
+    "id": "hatfield",
+    "town": "Hatfield",
+    "station": "Hatfield",
+    "searched": "Scraped 11/11/2026: Rightmove 75, OnTheMarket 62 within 1 mi of Hatfield, 2–3 bed, £200k–£500k",
     "gap": "Page 1 not read. All seven rows are one new-build scheme (Linkwood Green).",
     "nextAction": "Capture Endymion Mews and Great North Road resales",
     "leads": [
-      { "label": "Endymion Mews top floor, 900+ yr lease, two spaces (guide)", "priceGbp": 240000 },
-      { "label": "Great North Road, chain free, two minutes to station", "priceGbp": null }
-    ]
+      {
+        "label": "Endymion Mews top floor, 900+ yr lease, two spaces (guide)",
+        "priceGbp": 240000
+      },
+      {
+        "label": "Great North Road, chain free, two minutes to station",
+        "priceGbp": null
+      }
+    ],
+    "rightmoveStationId": "4325",
+    "onthemarketSlug": "hatfield"
   },
   {
-    "id": "harlow", "town": "Harlow", "station": "Harlow Town",
-    "searched": "Zoopla snippets",
+    "id": "harlow",
+    "town": "Harlow",
+    "station": "Harlow Town",
+    "searched": "Scraped 11/11/2026: Rightmove 51, OnTheMarket 42 within 1 mi of Harlow Town, 2–3 bed, £200k–£500k",
     "gap": "Station page not fetched",
     "nextAction": "Fetch the Rightmove station-radius page",
     "leads": [
-      { "label": "Moore House, two minutes' walk (guide £340k–£350k)", "priceGbp": 340000 },
-      { "label": "Magnolia House, Wych Elm (three years old)", "priceGbp": null }
-    ]
+      {
+        "label": "Moore House, two minutes' walk (guide £340k–£350k)",
+        "priceGbp": 340000
+      },
+      {
+        "label": "Magnolia House, Wych Elm (three years old)",
+        "priceGbp": null
+      }
+    ],
+    "rightmoveStationId": "4253",
+    "onthemarketSlug": "harlow-town-station"
   },
   {
-    "id": "slough", "town": "Slough", "station": "Slough",
-    "searched": "Rightmove 0.5-mile page (page 1, highest first)",
+    "id": "slough",
+    "town": "Slough",
+    "station": "Slough",
+    "searched": "Scraped 11/11/2026: Rightmove 244, OnTheMarket 253 within 1 mi of Slough, 2–3 bed, £200k–£500k",
     "gap": "Output cut off before cheaper listings",
     "nextAction": "Read the lowest-price pages",
-    "leads": []
+    "leads": [],
+    "rightmoveStationId": "8315",
+    "onthemarketSlug": "slough-station"
   },
   {
-    "id": "dartford", "town": "Dartford", "station": "Dartford",
-    "searched": "Rightmove 1-mile page (page 1 of 281, highest first); Zoopla and PrimeLocation snippets",
+    "id": "dartford",
+    "town": "Dartford",
+    "station": "Dartford",
+    "searched": "Scraped 11/11/2026: Rightmove 140, OnTheMarket 114 within 1 mi of Dartford, 2–3 bed, £200k–£500k",
     "gap": "Cheaper pages not read",
     "nextAction": "Capture Copperhouse Green, William Mundy Way and Brewers Square",
     "leads": [
-      { "label": "Copperhouse Green, 2 bath", "priceGbp": 347200 },
-      { "label": "William Mundy Way, 2 bath", "priceGbp": 340000 },
-      { "label": "Brewers Square (guide)", "priceGbp": 330000 }
-    ]
+      {
+        "label": "Copperhouse Green, 2 bath",
+        "priceGbp": 347200
+      },
+      {
+        "label": "William Mundy Way, 2 bath",
+        "priceGbp": 340000
+      },
+      {
+        "label": "Brewers Square (guide)",
+        "priceGbp": 330000
+      }
+    ],
+    "rightmoveStationId": "2645",
+    "onthemarketSlug": "dartford-station"
   },
   {
-    "id": "croydon", "town": "Croydon", "station": "East Croydon",
-    "searched": "Zoopla East Croydon station page",
+    "id": "croydon",
+    "town": "Croydon",
+    "station": "East Croydon",
+    "searched": "Scraped 11/11/2026: Rightmove 375, OnTheMarket 322 within 1 mi of East Croydon, 2–3 bed, £200k–£500k",
     "gap": "Zoopla exposed no photo URLs or distances",
     "nextAction": "Get distances and photos from Rightmove",
-    "leads": []
+    "leads": [],
+    "rightmoveStationId": "3056",
+    "onthemarketSlug": "east-croydon-station"
   }
 ]

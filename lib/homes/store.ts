@@ -34,7 +34,13 @@ export async function loadTowns(prisma: PC): Promise<BuyTown[]> {
 }
 
 export async function loadListings(prisma: PC): Promise<HomeListing[]> {
-  const rows = await prisma.homeListing.findMany({ include: { pref: true }, orderBy: { priceGbp: "asc" } });
+  // Two plain reads joined here. Prisma's `include: { pref: true }` on MongoDB
+  // took ~7 s for 4,600 homes; the prefs table is tiny, so this takes ~0.5 s.
+  const [rows, prefs] = await Promise.all([
+    prisma.homeListing.findMany({ orderBy: { priceGbp: "asc" } }),
+    prisma.homeListingPref.findMany({ select: { listingId: true, pref: true } }),
+  ]);
+  const prefOf = new Map(prefs.map((p) => [p.listingId, p.pref as Pref]));
   return rows.map((l) => ({
     id: l.id,
     townId: l.townId,
@@ -59,6 +65,10 @@ export async function loadListings(prisma: PC): Promise<HomeListing[]> {
     listedOn: day(l.listedOn),
     distanceMiles: l.distanceMiles,
     distanceNote: l.distanceNote,
+    garden: l.garden,
+    parking: l.parking,
+    lat: l.lat,
+    lng: l.lng,
     keyFeatures: parseJson<string[]>(l.keyFeatures, []),
     photos: parseJson<string[]>(l.photos, []),
     status: l.status as ListingStatus,
@@ -66,7 +76,7 @@ export async function loadListings(prisma: PC): Promise<HomeListing[]> {
     lastSeenAt: day(l.lastSeenAt)!,
     priceHistory: parseJson<PricePoint[]>(l.priceHistory, []),
     raw: parseJson<Record<string, string>>(l.raw, {}),
-    pref: (l.pref?.pref as Pref | undefined) ?? null,
+    pref: prefOf.get(l.id) ?? null,
   }));
 }
 
@@ -130,6 +140,10 @@ export async function trackListing(prisma: PC, l: IncomingListing): Promise<"new
     listedOn: asDate(l.listedOn),
     distanceMiles: l.distanceMiles,
     distanceNote: l.distanceNote,
+    garden: l.garden,
+    parking: l.parking,
+    lat: l.lat,
+    lng: l.lng,
     keyFeatures: JSON.stringify(l.keyFeatures),
     photos: JSON.stringify(l.photos),
     status: l.status,
@@ -152,4 +166,10 @@ export async function setListingPref(prisma: PC, listingId: string, pref: Pref |
     return;
   }
   await prisma.homeListingPref.upsert({ where: { listingId }, create: { listingId, pref }, update: { pref } });
+}
+
+/** Record what a re-check of a listing's own page found (sold, withdrawn…).
+ *  Only ever called with a definite answer; an inconclusive check changes nothing. */
+export async function setListingStatus(prisma: PC, id: string, status: ListingStatus, checkedOn: string): Promise<void> {
+  await prisma.homeListing.update({ where: { id }, data: { status, ...(status === "available" ? { lastSeenAt: asDate(checkedOn)! } : {}) } });
 }

@@ -1,7 +1,8 @@
-# Buying a home: 2-bed homes near commuter stations
+# Buying a home: 2–3 bed homes near commuter stations
 
-Tracks 2-bedroom homes for sale within walking distance of 17 commuter
-stations. It appears at `/buying` under the **Buying** project.
+Tracks 2–3 bedroom homes for sale within a mile of 17 commuter stations. It
+appears at `/buying` under the **Buying** project. To run a pass, use the
+`home-buying-search` skill ("run my buying search").
 
 ## The brief
 
@@ -9,9 +10,11 @@ Set in `lib/homes/types.ts` (`BRIEF`). Changing it re-flags every listing; nothi
 
 | | |
 |---|---|
-| Bedrooms | 2 |
-| Price | £200,000–£450,000 |
-| Distance | within 1.2 km walk of the station (about 0.75 mi) |
+| Bedrooms | 2–3 |
+| Price | £200,000–£500,000 (£500k is the hard cap) |
+| Distance | searched to 1 mi; "short walk" is 1.2 km (about 0.75 mi) |
+| Types | houses, maisonettes and flats; new-build blocks tagged and ranked lower |
+| Garden | optional, recorded when stated |
 | Lease | 90+ years, once known |
 | Service charge | flagged above £2,500 a year, once known |
 
@@ -35,9 +38,20 @@ add one to `towns.json`.
 
 ## Running a new pass
 
-1. Save the new CSV here as `YYYY-MM-DD-<name>.csv`, and update `towns.json`
-   (gaps, next steps, leads you've now captured).
-2. Import:
+The scraper does the searching (Rightmove and OnTheMarket; Zoopla blocks
+scripts):
+
+```bash
+npx tsx scripts/homes-scrape.ts            # all towns, ~30–40 min
+npx tsx scripts/homes-scrape.ts --towns woking,reading
+```
+
+It writes `YYYY-MM-DD-scrape.csv` here, caches each town's portal ids in
+`towns.json`, and re-checks homes that dropped out (withdrawn, sold STC).
+A hand-researched pass works too: save it as `YYYY-MM-DD-<name>.csv` with
+the same header.
+
+Then import:
 
    ```bash
    npx tsx scripts/homes-import.ts

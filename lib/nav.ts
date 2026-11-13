@@ -22,6 +22,8 @@ export interface NavPage {
   label: string;
   /** Other routes that count as being "on" this page (e.g. the Areas tabs). */
   also?: string[];
+  /** Active only on this exact path, not its sub-pages (/buying vs /buying/towns). */
+  exact?: boolean;
 }
 
 export interface NavProject {
@@ -45,8 +47,11 @@ export const PROJECTS: NavProject[] = [
   {
     id: "buying",
     label: "Buying",
-    question: "Where a 2-bed near a good station is affordable",
-    pages: [{ href: "/buying", label: "Homes for sale" }],
+    question: "Where a 2–3 bed near a good station is affordable",
+    pages: [
+      { href: "/buying/towns", label: "Towns" },
+      { href: "/buying", label: "Homes for sale", exact: true },
+    ],
   },
   {
     id: "furnishing",
@@ -83,6 +88,7 @@ function matches(pathname: string, href: string) {
 }
 
 export function isPageActive(pathname: string, page: NavPage) {
+  if (page.exact) return pathname === page.href;
   return [page.href, ...(page.also ?? [])].some((h) => matches(pathname, h));
 }
 

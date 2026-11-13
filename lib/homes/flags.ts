@@ -5,7 +5,7 @@
 //   "verify"  — information is missing; open the listing to fill it in
 //   "warn"    — something that could rule it out or cost money
 //   "info"    — worth knowing, not a problem by itself
-import { BRIEF, type HomeListing } from "./types";
+import { BRIEF, isNewBuildBlock, type HomeListing } from "./types";
 
 export type FlagTone = "verify" | "warn" | "info";
 
@@ -20,7 +20,8 @@ type L = Pick<
   HomeListing,
   | "id" | "townId" | "priceGbp" | "priceQualifier" | "address" | "tenure" | "leaseYears"
   | "serviceChargePa" | "councilTax" | "epc" | "distanceMiles" | "distanceNote" | "listedOn"
-  | "status" | "keyFeatures" | "floorAreaSqFt" | "raw"
+  | "status" | "keyFeatures" | "floorAreaSqFt" | "raw" | "beds" | "lat" | "lng" | "source"
+  | "propertyType" | "newBuild"
 >;
 
 /** The upper end of a guide range written as "£425k–£475k", if any. */
@@ -75,6 +76,30 @@ export function duplicateGroups(listings: L[]): Map<string, string[]> {
     if (ids.length < 2) continue;
     for (const id of ids) out.set(id, ids.filter((x) => x !== id));
   }
+  // The same home on two portals: same price and bedrooms, pinned within
+  // about 40 m of each other. Two listings on one portal are never merged
+  // this way — a block can have identical flats for sale. Bucketed by price
+  // and beds so a pass of thousands stays fast.
+  const buckets = new Map<string, L[]>();
+  for (const l of listings) {
+    if (l.lat == null || l.lng == null) continue;
+    const key = `${l.priceGbp}|${l.beds}`;
+    buckets.set(key, [...(buckets.get(key) ?? []), l]);
+  }
+  for (const group of buckets.values()) {
+    for (let i = 0; i < group.length; i++) {
+      for (let j = i + 1; j < group.length; j++) {
+        const a = group[i];
+        const b = group[j];
+        if (a.source === b.source) continue;
+        const dLat = (a.lat! - b.lat!) * 111_000;
+        const dLng = (a.lng! - b.lng!) * 69_000;
+        if (Math.hypot(dLat, dLng) > 40) continue;
+        out.set(a.id, [...new Set([...(out.get(a.id) ?? []), b.id])]);
+        out.set(b.id, [...new Set([...(out.get(b.id) ?? []), a.id])]);
+      }
+    }
+  }
   // The researcher may also have named a duplicate outright.
   for (const l of listings) {
     for (const f of l.keyFeatures) {
@@ -118,7 +143,7 @@ export function flagsFor(l: L, opts: { duplicates?: string[]; today?: Date } = {
     flags.push({
       id: "over-budget",
       tone: "warn",
-      label: "Guide runs over budget",
+      label: `Over the £${BRIEF.maxPriceGbp / 1000}k cap`,
       detail: ceiling ? `Guide range goes up to £${ceiling.toLocaleString()}.` : `Above £${BRIEF.maxPriceGbp.toLocaleString()}.`,
     });
   }
@@ -153,6 +178,10 @@ export function flagsFor(l: L, opts: { duplicates?: string[]; today?: Date } = {
       label: "Possible duplicate",
       detail: `Looks like the same home as ${opts.duplicates.map((d) => d.replace(/^[a-z]+-/, "#")).join(", ")}.`,
     });
+  }
+
+  if (isNewBuildBlock(l)) {
+    flags.push({ id: "block", tone: "info", label: "New-build block", detail: "A flat in a modern block: the kind you're leaning away from. Ranked below houses and low-rise homes." });
   }
 
   const dataIssue =

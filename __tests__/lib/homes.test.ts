@@ -1,4 +1,6 @@
 import { mergeSeen, normaliseHistory, priceChange } from "@/lib/homes/track";
+import { homeKind, isNewBuildBlock } from "@/lib/homes/types";
+import { explain, homeFactors, PRESETS, presetOf, readWeights, scoreFactors, scoreHome, townFactors, ZERO } from "@/lib/homes/score";
 import { addressKey, duplicateGroups, flagsFor, guideCeiling, missingChecks } from "@/lib/homes/flags";
 import {
   listingId, parseListed, parseMiles, parseNewBuild, parseStatus, parseTenure, rowToListing, ukDate,
@@ -92,7 +94,8 @@ describe("flags", () => {
   });
 
   it("flags a guide range that runs past the budget", () => {
-    const ids = flagsFor({ ...base, priceGbp: 425_000, priceQualifier: "Guide Price (range £425k–£475k)" }).map((f) => f.id);
+    expect(flagsFor({ ...base, priceGbp: 425_000, priceQualifier: "Guide Price (range £425k–£475k)" }).map((f) => f.id)).not.toContain("over-budget");
+    const ids = flagsFor({ ...base, priceGbp: 480_000, priceQualifier: "Guide Price (range £480k–£525k)" }).map((f) => f.id);
     expect(ids).toContain("over-budget");
   });
 
@@ -168,5 +171,106 @@ describe("tracking across passes", () => {
     const once = mergeSeen(null, "2026-11-10", 300_000);
     expect(mergeSeen(once, "2026-11-10", 300_000).priceHistory).toEqual(once.priceHistory);
     expect(normaliseHistory([{ date: "a", priceGbp: 1 }, { date: "a", priceGbp: 1 }])).toHaveLength(1);
+  });
+});
+
+describe("the buying brief", () => {
+  const base = { ...rowToListing(ROW)! };
+
+  it("sorts homes into house, maisonette and flat", () => {
+    expect(homeKind({ propertyType: "Mid-terrace house" })).toBe("house");
+    expect(homeKind({ propertyType: "Semi-Detached" })).toBe("house");
+    expect(homeKind({ propertyType: "Terraced" })).toBe("house");
+    expect(homeKind({ propertyType: "Ground-floor maisonette" })).toBe("maisonette");
+    expect(homeKind({ propertyType: "Apartment (Leon House)" })).toBe("flat");
+  });
+
+  it("tags new-build and tall-block flats, but not houses or period flats", () => {
+    expect(isNewBuildBlock({ propertyType: "Flat", newBuild: true, keyFeatures: [] })).toBe(true);
+    expect(isNewBuildBlock({ propertyType: "Apartment", newBuild: false, keyFeatures: ["Second floor apartment with lift access"] })).toBe(true);
+    expect(isNewBuildBlock({ propertyType: "Flat", newBuild: false, keyFeatures: ["Victorian conversion", "Garden"] })).toBe(false);
+    expect(isNewBuildBlock({ propertyType: "Terraced", newBuild: true, keyFeatures: [] })).toBe(false);
+  });
+
+  it("reads garden, parking and position from a scraped row", () => {
+    const l = rowToListing({ ...ROW, garden: "yes", parking: "Allocated", lat: "51.31", lng: "-0.55" })!;
+    expect(l.garden).toBe(true);
+    expect(l.parking).toBe("Allocated");
+    expect([l.lat, l.lng]).toEqual([51.31, -0.55]);
+    expect(rowToListing({ ...ROW, garden: "no" })!.garden).toBe(false);
+    expect(rowToListing(ROW)!.garden).toBeNull();
+  });
+
+  it("merges the same home across two portals, never two flats on one", () => {
+    const rm = { ...base, id: "rightmove-1", source: "Rightmove", beds: 2, priceGbp: 300_000, lat: 51.3151, lng: -0.5551, keyFeatures: [] };
+    const otm = { ...rm, id: "onthemarket-9", source: "OnTheMarket", lat: 51.3152, lng: -0.5552 };
+    const twin = { ...rm, id: "rightmove-2" };
+    const d = duplicateGroups([rm, otm, twin]);
+    expect(d.get("onthemarket-9")).toEqual(expect.arrayContaining(["rightmove-1", "rightmove-2"]));
+    expect(d.get("rightmove-1")).toEqual(["onthemarket-9"]);
+  });
+});
+
+describe("weighted ranking", () => {
+  const base = { ...rowToListing(ROW)!, townId: "croydon" };
+  const house = { ...base, propertyType: "Terraced house", priceGbp: 200_000, beds: 3, baths: 2, distanceMiles: 0.25, garden: true, newBuild: false, keyFeatures: [] };
+  const balanced = PRESETS.find((p) => p.id === "balanced")!.weights;
+
+  it("scores each factor on a fixed scale from the brief", () => {
+    const f = homeFactors(house);
+    expect(f.price).toBe(1);
+    expect(f.kind).toBe(1);
+    expect(f.beds).toBe(1);
+    expect(f.walk).toBe(1);
+    expect(f.trainTime).toBe(1); // Croydon, 15 min
+    expect(homeFactors({ ...house, priceGbp: 500_000 }).price).toBe(0);
+    expect(homeFactors({ ...house, distanceMiles: 1 }).walk).toBe(0);
+  });
+
+  it("puts new-build blocks at the bottom of home type", () => {
+    const block = { ...base, propertyType: "Apartment", newBuild: true, keyFeatures: ["lift"] };
+    expect(homeFactors(block).kind).toBe(0);
+  });
+
+  it("treats an unknown as neutral, not bad", () => {
+    const w = { ...ZERO, garden: 3 as const };
+    expect(scoreFactors({ ...homeFactors(house), garden: null }, w)).toBe(50);
+    expect(scoreFactors(homeFactors(house), w)).toBe(100);
+  });
+
+  it("has no score when nothing is weighted", () => {
+    expect(scoreHome(house, ZERO)).toBeNull();
+  });
+
+  it("gives a home the same score whatever else is on screen", () => {
+    expect(scoreHome(house, balanced)).toBe(scoreHome({ ...house }, balanced));
+  });
+
+  it("recognises each preset", () => {
+    for (const p of PRESETS) expect(presetOf(p.weights)).toBe(p.id);
+    expect(presetOf({ ...balanced, garden: 3 })).toBeNull();
+  });
+
+  it("falls back to Balanced on stored garbage", () => {
+    expect(readWeights("garbage")).toEqual(balanced);
+    expect(readWeights(null)).toEqual(balanced);
+    expect(readWeights(JSON.stringify({ ...balanced, price: 9 }))).toEqual(balanced);
+    expect(readWeights(JSON.stringify({ ...balanced, garden: 3 }))).toEqual({ ...balanced, garden: 3 });
+  });
+
+  it("explains a score in words, naming unknowns that matter", () => {
+    const w = { ...ZERO, trainTime: 3 as const, garden: 2 as const, walk: 1 as const };
+    const why = explain(homeFactors({ ...house, garden: null, distanceMiles: 0.95 }), w, { ...house, distanceMiles: 0.95 });
+    expect(why.pros[0]).toMatch(/15 min/);
+    expect(why.cons[0]).toMatch(/0\.95 mi/);
+    expect(why.unknown).toContain("garden unknown");
+  });
+
+  it("scores a town from its station and the typical home there", () => {
+    const f = townFactors("croydon", [house, { ...house, garden: false }]);
+    expect(f.trainTime).toBe(1);
+    expect(f.garden).toBe(1); // half list a garden
+    expect(townFactors("croydon", [{ ...house, garden: null }]).garden).toBe(0);
+    expect(townFactors("croydon", []).price).toBeNull();
   });
 });

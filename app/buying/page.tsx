@@ -1,22 +1,28 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import HomeCard from "@/components/homes/HomeCard";
 import TownPanel from "@/components/homes/TownPanel";
-import WhereToBuy, { townStats } from "@/components/homes/WhereToBuy";
-import { duplicateGroups, flagsFor, type Flag } from "@/lib/homes/flags";
+import WeightsPanel, { presetLabel } from "@/components/homes/WeightsPanel";
+import { flagsFor, type Flag } from "@/lib/homes/flags";
+import { CRITERIA, explain, homeFactors, scoreFactors, whyLine, type CriterionId } from "@/lib/homes/score";
 import { STATIONS } from "@/lib/homes/stations";
-import { BRIEF, type BuyTown, type HomeListing, type Pref } from "@/lib/homes/types";
+import { BRIEF, homeKind, isNewBuildBlock, type HomeKind, type HomeListing } from "@/lib/homes/types";
+import { useHomes } from "@/lib/homes/useHomes";
+import { useWeights } from "@/lib/homes/useWeights";
 
-// Buying a home: 2-bed homes for sale near commuter stations.
+// Buying a home: 2–3 bed homes for sale near commuter stations.
 //
-// The page answers, in order: what are the standout options (three answers),
-// where are they and how long is the train (the map and ranked list), and
-// which homes fit me (search, sort and filters in plain sight above the
-// cards — not tucked in a drawer). Research gaps stay visible but out of the way.
+// The working list: every home, ranked by the user's weights (shared with the
+// Towns page, which holds the map, the standout answers and the research
+// notes). Search, sort and filters sit in plain sight above the cards, and
+// the whole view is remembered between visits.
 
-type Sort = "price" | "price-desc" | "commute" | "distance" | "size" | "recent";
+type Sort = "recommended" | "match" | "price" | "price-desc" | "commute" | "distance" | "size" | "recent";
 const SORTS: Record<Sort, string> = {
+  recommended: "Recommended (your weights)",
+  match: "Best match (houses first)",
   price: "Cheapest first",
   "price-desc": "Most expensive first",
   commute: "Shortest train to London",
@@ -25,7 +31,7 @@ const SORTS: Record<Sort, string> = {
   recent: "Newest listing",
 };
 
-type Kind = "any" | "flat" | "house";
+type Kind = "any" | "house" | "house-maisonette" | "flat";
 type Build = "any" | "new" | "resale";
 
 interface Filters {
@@ -34,6 +40,10 @@ interface Filters {
   maxPrice: number | null;
   maxMins: number | null;
   kind: Kind;
+  beds: number | null;
+  garden: boolean;
+  hideBlocks: boolean;
+  newOnly: boolean;
   twoBaths: boolean;
   build: Build;
   walkableOnly: boolean;
@@ -50,6 +60,10 @@ const DEFAULTS: Filters = {
   maxPrice: null,
   maxMins: null,
   kind: "any",
+  beds: null,
+  garden: false,
+  hideBlocks: false,
+  newOnly: false,
   twoBaths: false,
   build: "any",
   walkableOnly: false,
@@ -57,13 +71,18 @@ const DEFAULTS: Filters = {
   hideComingSoon: false,
   hideHidden: true,
   savedOnly: false,
-  sort: "price",
+  sort: "recommended",
 };
 
-const PRICE_STEPS = [250_000, 300_000, 350_000, 400_000];
+const VIEW_KEY = "buying.view";
+const KINDS: Kind[] = ["any", "house", "house-maisonette", "flat"];
+
+const PRICE_STEPS = [250_000, 300_000, 350_000, 400_000, 450_000];
 const MIN_STEPS = [20, 25, 30, 35, 40];
-// Building names ("Apartment (Leon House)") sit in brackets, so drop them first.
-const isHouse = (l: HomeListing) => /\bhouse\b|terrace|bungalow|cottage/i.test((l.propertyType ?? "").replace(/\(.*\)/g, ""));
+// Houses first, then maisonettes and conversions, then low-rise flats, then
+// new-build blocks: the order the user leans, without hiding anything.
+const KIND_RANK: Record<HomeKind, number> = { house: 0, maisonette: 1, flat: 2 };
+const matchRank = (l: HomeListing) => KIND_RANK[homeKind(l)] + (isNewBuildBlock(l) ? 1 : 0);
 const k = (p: number) => `£${Math.round(p / 1000)}k`;
 const shortDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 
@@ -74,98 +93,64 @@ const pill = (active: boolean) =>
       : "border-[var(--line-control)] bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--sunk)]"
   }`;
 
-function Pick({ label, title, detail, onClick }: { label: string; title: string; detail: string; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group flex flex-col items-start rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-left transition-colors hover:border-[var(--line-control)]"
-    >
-      <span className="text-xs font-medium text-[var(--ink-3)]">{label}</span>
-      <span className="mt-1 text-xl font-bold tracking-[-0.015em] text-[var(--ink)]">{title}</span>
-      <span className="mt-0.5 text-sm text-[var(--ink-2)]">{detail}</span>
-      <span className="mt-2 text-xs font-medium text-[var(--focus)] group-hover:underline">See these homes</span>
-    </button>
-  );
-}
-
 export default function BuyingPage() {
-  const [towns, setTowns] = useState<BuyTown[] | null>(null);
-  const [listings, setListings] = useState<HomeListing[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [attempt, setAttempt] = useState(0);
+  const { towns, listings, error, retry, setPref, all, townById, dupes, hiddenDupes, live, stats, checked } = useHomes();
+  const [weights, setWeights] = useWeights();
   const [f, setF] = useState<Filters>(DEFAULTS);
-  const scroller = useRef<HTMLDivElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
-  // Choosing a town from the chart brings its panel into view — otherwise the
-  // response to the click can land below the fold and look like nothing happened.
-  function chooseTown(town: string | null) {
-    setF((prev) => ({ ...prev, town }));
-    if (!town) return;
-    requestAnimationFrame(() => {
-      const box = scroller.current;
-      const target = panel.current;
-      if (!box || !target) return;
-      const top = target.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 16;
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      box.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
-    });
-  }
-
+  // Restore the last view, then let a link (?town=…&kind=…) override it.
   useEffect(() => {
-    let cancelled = false;
-    fetch("/api/homes")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-      .then((d: { towns: BuyTown[]; listings: HomeListing[] }) => {
-        if (cancelled) return;
-        setTowns(d.towns);
-        setListings(d.listings);
-      })
-      .catch((e: Error) => !cancelled && setError(e.message));
-    return () => {
-      cancelled = true;
-    };
-  }, [attempt]);
-
-  const setPref = useCallback(async (id: string, pref: Pref | null) => {
-    setListings((prev) => prev?.map((l) => (l.id === id ? { ...l, pref } : l)) ?? prev);
+    let view: Filters = DEFAULTS;
     try {
-      await fetch("/api/homes/pref", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ listingId: id, pref }),
-      });
+      const stored = JSON.parse(localStorage.getItem(VIEW_KEY) ?? "null") as Partial<Filters> | null;
+      if (stored && typeof stored === "object") view = { ...DEFAULTS, ...stored, sort: stored.sort && stored.sort in SORTS ? stored.sort : DEFAULTS.sort };
     } catch {
-      // the optimistic value stands until reload
+      // a garbled view just means starting fresh
     }
+    const q = new URLSearchParams(window.location.search);
+    if (q.has("town")) view = { ...view, town: q.get("town") || null };
+    const kind = q.get("kind") as Kind | null;
+    if (kind && KINDS.includes(kind)) view = { ...view, kind };
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reading browser storage once after mount
+    setF(view);
+    setLoaded(true);
   }, []);
+  useEffect(() => {
+    if (loaded) localStorage.setItem(VIEW_KEY, JSON.stringify(f));
+  }, [f, loaded]);
 
-  const all = useMemo(() => listings ?? [], [listings]);
-  const townById = useMemo(() => new Map((towns ?? []).map((t) => [t.id, t])), [towns]);
-  const dupes = useMemo(() => duplicateGroups(all), [all]);
+  const factors = useMemo(() => new Map(all.map((l) => [l.id, homeFactors(l)])), [all]);
+  const scoreOf = useMemo(() => {
+    const m = new Map<string, number | null>();
+    for (const [id, fs] of factors) m.set(id, scoreFactors(fs, weights));
+    return m;
+  }, [factors, weights]);
+  const coverage = useMemo(() => {
+    const out: Partial<Record<CriterionId, number>> = {};
+    if (!live.length) return out;
+    for (const c of CRITERIA) out[c.id] = live.filter((l) => factors.get(l.id)?.[c.id] != null).length / live.length;
+    return out;
+  }, [live, factors]);
+
   const flags = useMemo(() => {
     const m = new Map<string, Flag[]>();
     for (const l of all) m.set(l.id, flagsFor(l, { duplicates: dupes.get(l.id) }));
     return m;
   }, [all, dupes]);
 
-  // A duplicate group shows one card: the one with the most photos, then the lowest id.
-  const hiddenDupes = useMemo(() => {
-    const hide = new Set<string>();
-    for (const [id, others] of dupes) {
-      const group = [id, ...others].map((x) => all.find((l) => l.id === x)!).filter(Boolean);
-      group.sort((a, b) => b.photos.length - a.photos.length || a.id.localeCompare(b.id));
-      group.slice(1).forEach((l) => hide.add(l.id));
-    }
-    return hide;
-  }, [dupes, all]);
-
-
-  // Homes that are "live" for the overview: not hidden, not a duplicate copy.
-  const live = useMemo(() => all.filter((l) => l.pref !== "reject" && !hiddenDupes.has(l.id)), [all, hiddenDupes]);
-  const stats = useMemo(() => townStats(towns ?? [], live), [towns, live]);
   const minsOf = useCallback((l: HomeListing) => STATIONS[l.townId]?.mins ?? null, []);
+
+  // "New this pass" = first seen on the latest pass, as long as there was an
+  // earlier one to compare against.
+  const latestPass = useMemo(() => all.reduce<string | null>((m, l) => (!m || l.lastSeenAt > m ? l.lastSeenAt : m), null), [all]);
+  const firstPass = useMemo(() => all.reduce<string | null>((m, l) => (!m || l.firstSeenAt < m ? l.firstSeenAt : m), null), [all]);
+  const rawNew = useCallback((l: HomeListing) => latestPass != null && l.firstSeenAt === latestPass && l.firstSeenAt !== firstPass, [latestPass, firstPass]);
+  // When a pass widens the search, nearly everything is "new" and the badge
+  // says nothing. Show it only when new homes are the minority.
+  const newIsSignal = useMemo(() => live.filter(rawNew).length < live.length / 2, [live, rawNew]);
+  const isNew = useCallback((l: HomeListing) => newIsSignal && rawNew(l), [newIsSignal, rawNew]);
+  const newCount = useMemo(() => live.filter(isNew).length, [live, isNew]);
 
   const visible = useMemo(() => {
     const q = f.q.trim().toLowerCase();
@@ -180,8 +165,14 @@ export default function BuyingPage() {
         const m = minsOf(l);
         if (m == null || m > f.maxMins) return false;
       }
-      if (f.kind === "house" && !isHouse(l)) return false;
-      if (f.kind === "flat" && isHouse(l)) return false;
+      const kind = homeKind(l);
+      if (f.kind === "house" && kind !== "house") return false;
+      if (f.kind === "house-maisonette" && kind === "flat") return false;
+      if (f.kind === "flat" && kind !== "flat") return false;
+      if (f.beds && l.beds !== f.beds) return false;
+      if (f.garden && l.garden !== true) return false;
+      if (f.hideBlocks && isNewBuildBlock(l)) return false;
+      if (f.newOnly && !(latestPass && l.firstSeenAt === latestPass && l.firstSeenAt !== firstPass)) return false;
       if (f.twoBaths && (l.baths ?? 0) < 2) return false;
       if (f.build === "new" && l.newBuild !== true) return false;
       if (f.build === "resale" && l.newBuild !== false) return false;
@@ -193,7 +184,11 @@ export default function BuyingPage() {
       }
       return true;
     });
+    const byMatch = (a: HomeListing, b: HomeListing) => matchRank(a) - matchRank(b) || (a.distanceMiles ?? 9) - (b.distanceMiles ?? 9) || a.priceGbp - b.priceGbp;
     const by: Record<Sort, (a: HomeListing, b: HomeListing) => number> = {
+      // Nothing weighted → no scores, so this falls back to the match order.
+      recommended: (a, b) => (scoreOf.get(b.id) ?? -1) - (scoreOf.get(a.id) ?? -1) || byMatch(a, b),
+      match: (a, b) => matchRank(a) - matchRank(b) || (a.distanceMiles ?? 9) - (b.distanceMiles ?? 9) || a.priceGbp - b.priceGbp,
       price: (a, b) => a.priceGbp - b.priceGbp,
       "price-desc": (a, b) => b.priceGbp - a.priceGbp,
       commute: (a, b) => (minsOf(a) ?? 99) - (minsOf(b) ?? 99) || a.priceGbp - b.priceGbp,
@@ -202,29 +197,31 @@ export default function BuyingPage() {
       recent: (a, b) => (b.listedOn ?? "").localeCompare(a.listedOn ?? ""),
     };
     return out.sort(by[f.sort]);
-  }, [all, f, hiddenDupes, minsOf, townById]);
+  }, [all, f, hiddenDupes, minsOf, townById, latestPass, firstPass, scoreOf]);
+
+  // Thousands of homes: render a page of cards at a time. The count resets
+  // whenever the filters change (keyed on them, so no effect is needed).
+  const PAGE = 48;
+  const sig = JSON.stringify(f);
+  const [shown, setShown] = useState({ sig: "", n: PAGE });
+  const limit = shown.sig === sig ? shown.n : PAGE;
 
   const withStock = stats.filter((s) => s.homes.length > 0);
-  const quickest = [...withStock].sort((a, b) => (a.mins ?? 99) - (b.mins ?? 99) || a.from! - b.from!)[0];
-  const cheapest = [...withStock].sort((a, b) => a.from! - b.from!)[0];
-  const most = [...withStock].sort((a, b) => b.homes.length - a.homes.length)[0];
-  const checked = all.reduce<string | null>((m, l) => (!m || l.lastSeenAt > m ? l.lastSeenAt : m), null);
   const saved = all.filter((l) => l.pref === "want").length;
   const selectedTown = f.town ? townById.get(f.town) : undefined;
-  const toDo = stats.filter((s) => s.town.nextAction).sort((a, b) => a.town.town.localeCompare(b.town.town));
   const baseCount = all.filter((l) => !(f.hideDuplicates && hiddenDupes.has(l.id)) && !(f.hideHidden && l.pref === "reject")).length;
   const narrowed =
-    !!f.q || !!f.town || !!f.maxPrice || !!f.maxMins || f.kind !== "any" || f.twoBaths || f.build !== "any" || f.walkableOnly || f.savedOnly || f.hideComingSoon;
+    !!f.q || !!f.town || !!f.maxPrice || !!f.maxMins || f.kind !== "any" || !!f.beds || f.garden || f.hideBlocks || f.newOnly || f.twoBaths || f.build !== "any" || f.walkableOnly || f.savedOnly || f.hideComingSoon;
   const set = (patch: Partial<Filters>) => setF((prev) => ({ ...prev, ...patch }));
   const clear = () => setF((prev) => ({ ...DEFAULTS, sort: prev.sort }));
 
   return (
-    <div ref={scroller} className="h-full overflow-y-auto">
+    <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-[1200px] px-4 pb-24 pt-6 sm:px-8 lg:pb-12">
         <header>
-          <p className="text-sm text-[var(--ink-3)]">Buying · 2-bed homes near commuter stations</p>
+          <p className="text-sm text-[var(--ink-3)]">Buying · Homes for sale</p>
           <h1 className="mt-1 max-w-[24ch] text-3xl font-bold leading-tight tracking-[-0.025em] text-[var(--ink)] sm:text-4xl">
-            Where a 2-bed near a good station is affordable
+            2–3 bed homes near commuter stations
           </h1>
           {listings && (
             <p className="mt-3 max-w-[68ch] font-serif text-lg leading-relaxed text-[var(--ink-2)]">
@@ -239,10 +236,7 @@ export default function BuyingPage() {
             <span className="mr-auto">Couldn&apos;t load the listings. ({error})</span>
             <button
               type="button"
-              onClick={() => {
-                setError(null);
-                setAttempt((n) => n + 1);
-              }}
+              onClick={retry}
               className="h-10 rounded-full border border-[var(--line-control)] bg-[var(--surface)] px-4 font-semibold"
             >
               Try again
@@ -263,37 +257,13 @@ export default function BuyingPage() {
 
         {listings && towns && (
           <>
-            {withStock.length > 0 && (
-              <section className="mt-6 grid gap-3 sm:grid-cols-3" aria-label="Standout options">
-                <Pick
-                  label="Quickest train"
-                  title={`${quickest.town.town}, ${quickest.mins} min`}
-                  detail={`To ${quickest.terminus}. ${quickest.homes.length} homes from ${k(quickest.from!)}`}
-                  onClick={() => chooseTown(quickest.town.id)}
-                />
-                <Pick
-                  label="Lowest prices"
-                  title={`${cheapest.town.town}, from ${k(cheapest.from!)}`}
-                  detail={`${cheapest.mins} min to ${cheapest.terminus}. Typical ${k(cheapest.median!)}`}
-                  onClick={() => chooseTown(cheapest.town.id)}
-                />
-                <Pick
-                  label="Most choice"
-                  title={`${most.town.town}, ${most.homes.length} homes`}
-                  detail={`${most.mins} min to ${most.terminus}. From ${k(most.from!)}`}
-                  onClick={() => chooseTown(most.town.id)}
-                />
-              </section>
-            )}
+            <p className="mt-4 text-sm text-[var(--ink-2)]">
+              Not sure which town?{" "}
+              <Link href="/buying/towns" className="font-medium text-[var(--focus)] hover:underline">
+                See the towns ranked by what matters to you →
+              </Link>
+            </p>
 
-            <section className="mt-8" aria-labelledby="where-heading">
-              <h2 id="where-heading" className="mb-3 text-lg font-semibold text-[var(--ink)]">
-                Price against train time
-              </h2>
-              <WhereToBuy stats={stats} selected={f.town} onSelect={chooseTown} />
-            </section>
-
-            <div ref={panel} />
             {selectedTown && (
               <div className="mt-6">
                 <TownPanel
@@ -306,8 +276,29 @@ export default function BuyingPage() {
 
             <section className="mt-10" aria-labelledby="homes-heading">
               <h2 id="homes-heading" className="text-lg font-semibold text-[var(--ink)]">
-                {selectedTown ? `Homes near ${selectedTown.station}` : "Homes for sale"}
+                {selectedTown ? `Homes near ${selectedTown.station}` : "All homes"}
               </h2>
+
+              <details className="group mt-3">
+                <summary className="inline-flex cursor-pointer list-none items-center gap-2 rounded-full border border-[var(--line-control)] bg-[var(--surface)] px-3 py-1.5 text-sm text-[var(--ink)] hover:bg-[var(--sunk)]">
+                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="text-[var(--ink-3)] transition-transform group-open:rotate-90">
+                    <path d="M4 2.5 7.5 6 4 9.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  Ranking by: <span className="font-semibold">{presetLabel(weights)}</span>
+                  <span className="text-[var(--ink-3)]">· change what matters</span>
+                </summary>
+                <div className="mt-2">
+                  <WeightsPanel weights={weights} onChange={setWeights} coverage={coverage} />
+                  {f.sort !== "recommended" && (
+                    <p className="mt-2 text-xs text-[var(--ink-3)]">
+                      Sorted by &ldquo;{SORTS[f.sort]}&rdquo; right now.{" "}
+                      <button type="button" onClick={() => set({ sort: "recommended" })} className="font-medium text-[var(--focus)] hover:underline">
+                        Sort by these weights
+                      </button>
+                    </p>
+                  )}
+                </div>
+              </details>
 
               {/* Search, sort and filters stay in view while scrolling the cards. */}
               <div className="sticky top-0 z-10 -mx-4 mt-2 border-b border-[var(--line)] bg-[var(--paper)]/95 px-4 py-3 backdrop-blur sm:-mx-8 sm:px-8">
@@ -380,15 +371,46 @@ export default function BuyingPage() {
                     ))}
                   </select>
                   <select aria-label="Type of home" value={f.kind} onChange={(e) => set({ kind: e.target.value as Kind })} className={pill(f.kind !== "any")}>
-                    <option value="any">Flats and houses</option>
-                    <option value="flat">Flats only</option>
+                    <option value="any">Houses and flats</option>
                     <option value="house">Houses only</option>
+                    <option value="house-maisonette">Houses and maisonettes</option>
+                    <option value="flat">Flats only</option>
+                  </select>
+                  <select
+                    aria-label="Bedrooms"
+                    value={f.beds ?? ""}
+                    onChange={(e) => set({ beds: e.target.value ? Number(e.target.value) : null })}
+                    className={pill(!!f.beds)}
+                  >
+                    <option value="">{BRIEF.minBeds}–{BRIEF.maxBeds} beds</option>
+                    {Array.from({ length: BRIEF.maxBeds - BRIEF.minBeds + 1 }, (_, i) => BRIEF.minBeds + i).map((b) => (
+                      <option key={b} value={b}>
+                        {b} beds only
+                      </option>
+                    ))}
                   </select>
                   <select aria-label="New build or resale" value={f.build} onChange={(e) => set({ build: e.target.value as Build })} className={pill(f.build !== "any")}>
                     <option value="any">New and resale</option>
                     <option value="new">New build only</option>
                     <option value="resale">Resale only</option>
                   </select>
+                  <button type="button" aria-pressed={f.garden} onClick={() => set({ garden: !f.garden })} title="Homes whose listing states a garden" className={pill(f.garden)}>
+                    Garden
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={f.hideBlocks}
+                    onClick={() => set({ hideBlocks: !f.hideBlocks })}
+                    title="Hide flats in modern blocks with lifts"
+                    className={pill(f.hideBlocks)}
+                  >
+                    No new-build blocks
+                  </button>
+                  {newCount > 0 && (
+                    <button type="button" aria-pressed={f.newOnly} onClick={() => set({ newOnly: !f.newOnly })} className={pill(f.newOnly)}>
+                      New this pass ({newCount})
+                    </button>
+                  )}
                   <button type="button" aria-pressed={f.twoBaths} onClick={() => set({ twoBaths: !f.twoBaths })} className={pill(f.twoBaths)}>
                     2 bathrooms
                   </button>
@@ -418,7 +440,7 @@ export default function BuyingPage() {
                       Clear filters
                     </button>
                   )}
-                  <span className="sm:ml-auto">All are 2-bedroom (the brief). Lease and service charge aren&apos;t captured yet: check each listing.</span>
+                  <span className="sm:ml-auto">{BRIEF.minBeds}–{BRIEF.maxBeds} bedrooms, up to £{BRIEF.maxPriceGbp / 1000}k. Lease and service charge come from the listing where stated.</span>
                 </div>
               </div>
 
@@ -435,16 +457,34 @@ export default function BuyingPage() {
                 </div>
               ) : (
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {visible.map((l) => (
+                  {visible.slice(0, limit).map((l) => (
                     <HomeCard
                       key={l.id}
                       home={l}
                       townName={townById.get(l.townId)?.town ?? l.townId}
                       commute={STATIONS[l.townId] ? `${STATIONS[l.townId].mins} min to ${STATIONS[l.townId].terminus}` : null}
                       flags={flags.get(l.id) ?? []}
+                      isNew={isNew(l)}
+                      score={scoreOf.get(l.id) ?? null}
+                      why={whyLine(explain(factors.get(l.id)!, weights, l))}
                       onPref={setPref}
                     />
                   ))}
+                </div>
+              )}
+
+              {visible.length > limit && (
+                <div className="mt-6 flex flex-col items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setShown({ sig, n: limit + PAGE })}
+                    className="h-10 rounded-full border border-[var(--line-control)] bg-[var(--surface)] px-5 text-sm font-semibold text-[var(--ink)] hover:bg-[var(--sunk)]"
+                  >
+                    Show {Math.min(PAGE, visible.length - limit)} more
+                  </button>
+                  <span className="text-xs text-[var(--ink-3)]">
+                    Showing {limit} of {visible.length}
+                  </span>
                 </div>
               )}
 
@@ -462,31 +502,6 @@ export default function BuyingPage() {
               )}
             </section>
 
-            {!selectedTown && toDo.length > 0 && (
-              <details className="group mt-12 rounded-xl bg-[var(--surface)] p-5">
-                <summary className="flex cursor-pointer list-none items-center gap-2 text-lg font-semibold text-[var(--ink)]">
-                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="text-[var(--ink-3)] transition-transform group-open:rotate-90">
-                    <path d="M4 2.5 7.5 6 4 9.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                  Research for the next pass
-                  <span className="text-sm font-normal text-[var(--ink-3)]">· {toDo.length} towns</span>
-                </summary>
-                <ul className="mt-3 divide-y divide-[var(--line)]">
-                  {toDo.map(({ town, homes }) => (
-                    <li key={town.id} className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-2 text-sm">
-                      <button type="button" onClick={() => chooseTown(town.id)} className="w-32 shrink-0 text-left font-semibold text-[var(--ink)] hover:underline">
-                        {town.town}
-                      </button>
-                      <span className="w-16 shrink-0 text-xs text-[var(--ink-3)]">{homes.length ? `${homes.length} homes` : "empty"}</span>
-                      <span className="min-w-0 flex-1 text-[var(--ink-2)]">
-                        {town.policy ? <span className="font-medium text-[var(--warn)]">Decide: </span> : null}
-                        {town.nextAction}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            )}
           </>
         )}
       </div>
