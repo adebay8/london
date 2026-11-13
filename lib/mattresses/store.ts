@@ -37,7 +37,12 @@ function parseFinance(s: string | null | undefined): FinancePolicy {
 }
 
 export async function loadMattresses(prisma: PC): Promise<Mattress[]> {
-  const rows = await prisma.mattress.findMany({ include: { pref: true }, orderBy: { landedCostGbp: "asc" } });
+  // Two plain reads joined here: Prisma's `include` on MongoDB costs more than both.
+  const [rows, prefs] = await Promise.all([
+    prisma.mattress.findMany({ orderBy: { landedCostGbp: "asc" } }),
+    prisma.mattressPref.findMany({ select: { mattressId: true, pref: true } }),
+  ]);
+  const prefOf = new Map(prefs.map((p) => [p.mattressId, p.pref as Pref]));
   return rows.map(
     (m): Mattress => ({
       id: m.id,
@@ -101,7 +106,7 @@ export async function loadMattresses(prisma: PC): Promise<Mattress[]> {
 
       notes: m.notes,
       extra: parseJson<Record<string, string>>(m.extra, {}),
-      pref: (m.pref?.pref as Pref | undefined) ?? null,
+      pref: prefOf.get(m.id) ?? null,
     }),
   );
 }

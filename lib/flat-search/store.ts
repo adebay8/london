@@ -101,7 +101,19 @@ export async function upsertAreas(prisma: PC, areas: Area[]): Promise<void> {
 }
 
 export async function loadListings(prisma: PC): Promise<Listing[]> {
-  const rows = await prisma.flatListing.findMany({ include: { sources: true, pref: true } });
+  // Three plain reads joined here: Prisma's `include` on MongoDB costs more than all three.
+  const [rows, sourceRows, prefs] = await Promise.all([
+    prisma.flatListing.findMany(),
+    prisma.flatListingSource.findMany({ select: { listingId: true, platform: true, url: true, agent: true } }),
+    prisma.flatPref.findMany({ select: { listingId: true, pref: true } }),
+  ]);
+  const sourcesOf = new Map<string, Source[]>();
+  for (const s of sourceRows) {
+    const list = sourcesOf.get(s.listingId) ?? [];
+    list.push({ platform: s.platform, url: s.url, agent: s.agent });
+    sourcesOf.set(s.listingId, list);
+  }
+  const prefOf = new Map(prefs.map((p) => [p.listingId, p.pref as Pref]));
   return rows.map((l): Listing => ({
     id: l.id,
     areaId: l.areaId,
@@ -131,8 +143,8 @@ export async function loadListings(prisma: PC): Promise<Listing[]> {
     isNew: l.isNew,
     imageUrl: l.imageUrl,
     note: l.note,
-    sources: l.sources.map((s): Source => ({ platform: s.platform, url: s.url, agent: s.agent })),
-    pref: (l.pref?.pref as Pref | undefined) ?? null,
+    sources: sourcesOf.get(l.id) ?? [],
+    pref: prefOf.get(l.id) ?? null,
   }));
 }
 

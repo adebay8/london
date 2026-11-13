@@ -73,7 +73,12 @@ function parseFinance(s: string | null | undefined): FinancePolicy {
 }
 
 export async function loadConsoles(prisma: PC): Promise<TvConsole[]> {
-  const rows = await prisma.tvConsole.findMany({ include: { pref: true }, orderBy: { landedCostGbp: "asc" } });
+  // Two plain reads joined here: Prisma's `include` on MongoDB costs more than both.
+  const [rows, prefs] = await Promise.all([
+    prisma.tvConsole.findMany({ orderBy: { landedCostGbp: "asc" } }),
+    prisma.consolePref.findMany({ select: { consoleId: true, pref: true } }),
+  ]);
+  const prefOf = new Map(prefs.map((p) => [p.consoleId, p.pref as Pref]));
   return rows.map(
     (c): TvConsole => ({
       id: c.id,
@@ -123,7 +128,7 @@ export async function loadConsoles(prisma: PC): Promise<TvConsole[]> {
 
       notes: c.notes,
       extra: parseExtra(c.extra),
-      pref: (c.pref?.pref as Pref | undefined) ?? null,
+      pref: prefOf.get(c.id) ?? null,
     }),
   );
 }

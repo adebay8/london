@@ -75,7 +75,8 @@ export async function GET() {
     prisma.homeListing.count(),
     prisma.homeListingPref.count({ where: { pref: "want" } }),
     prisma.buyTown.count(),
-    prisma.homeListing.findMany({ distinct: ["townId"], select: { townId: true } }),
+    // groupBy runs in the database; `distinct` would read every home to count towns.
+    prisma.homeListing.groupBy({ by: ["townId"] }),
   ]);
 
   const savedIds = savedFlatIds.map((p) => p.listingId);

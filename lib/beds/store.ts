@@ -34,7 +34,12 @@ function parseFinance(s: string | null | undefined): FinancePolicy {
 }
 
 export async function loadBeds(prisma: PC): Promise<Bed[]> {
-  const rows = await prisma.bed.findMany({ include: { pref: true }, orderBy: { landedCostGbp: "asc" } });
+  // Two plain reads joined here: Prisma's `include` on MongoDB costs more than both.
+  const [rows, prefs] = await Promise.all([
+    prisma.bed.findMany({ orderBy: { landedCostGbp: "asc" } }),
+    prisma.bedPref.findMany({ select: { bedId: true, pref: true } }),
+  ]);
+  const prefOf = new Map(prefs.map((p) => [p.bedId, p.pref as Pref]));
   return rows.map(
     (b): Bed => ({
       id: b.id,
@@ -91,7 +96,7 @@ export async function loadBeds(prisma: PC): Promise<Bed[]> {
 
       notes: b.notes,
       extra: parseExtra(b.extra),
-      pref: (b.pref?.pref as Pref | undefined) ?? null,
+      pref: prefOf.get(b.id) ?? null,
     }),
   );
 }
